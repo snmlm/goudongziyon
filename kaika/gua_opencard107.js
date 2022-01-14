@@ -19,7 +19,7 @@ guaopenwait107="0"
 
 All变量适用
 ————————————————
-入口：[ 1.14~1.20 大牌会员日 (https://lzdz1-isv.isvjcloud.com/dingzhi/bigname/memberday/activity?activityId=dz2201100008884901&shareUuid=)]
+入口：[ 1.14~1.20 大牌会员日 (https://lzdz1-isv.isvjcloud.com/dingzhi/bigname/memberday/activity?activityId=dz2201100008884901&shareUuid=671520bafe644d738959eb8e4667331f)]
 
 请求太频繁会被黑ip
 过10分钟再执行
@@ -94,7 +94,7 @@ let activityCookie =''
     return;
   }
   $.activityId = "dz2201100008884901"
-  $.shareUuid = ""
+  $.shareUuid = "671520bafe644d738959eb8e4667331f"
   console.log(`入口:\nhttps://lzdz1-isv.isvjcloud.com/dingzhi/bigname/memberday/activity?activityId=${$.activityId}&shareUuid=${$.shareUuid}`)
 
   let shareUuidArr = [$.shareUuid,"0b6923dd6e6b4b5ea5c3d00728a8cc0b","7d17c8f76ade4709a9675deadb03c6c9","d7b1b06634814ba88b552d4afdc8495c","dbbb8cf24e114d09b10d33d7bd00f14b","93b198fc1bf346bab73045b8fea82445","2fe410fd0929436ab085e0dcfd23409d","2d909558c379498cbbeb7325e3ba1aeb","eb86278c3bb54146a470dccabbd4620e"]
