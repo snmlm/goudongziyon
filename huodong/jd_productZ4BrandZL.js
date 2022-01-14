@@ -1,7 +1,7 @@
 /**
  特务Z_助力
  脚本没有自动开卡，会尝试领取开卡奖励
- cron 23 6,20 * * * https://github.com/JDWXX/jd_job/blob/master/js/jd_productZ4BrandZL.js
+ cron 23 19,20 * * * https://github.com/JDWXX/jd_job/blob/master/js/jd_productZ4BrandZL.js
  一天要跑2次
  */
 const $ = new Env('特务Z_助力');
