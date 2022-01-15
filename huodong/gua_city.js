@@ -11,11 +11,9 @@ const notify = $.isNode() ? require('./sendNotify') : '';
 //Node.js用户请在jdCookie.js处填写京东ck;
 const jdCookieNode = $.isNode() ? require('./jdCookie.js') : '';
 //自动抽奖 ，环境变量  JD_CITY_EXCHANGE
-let exchangeFlag = $.getdata('JD_CITY_EXCHANGE') || "false";//是否开启自动抽奖，建议活动快结束开启，默认关闭
-exchangeFlag = $.isNode() ? (process.env.JD_CITY_EXCHANGE ? process.env.JD_CITY_EXCHANGE : `${exchangeFlag}`) : ($.getdata('JD_CITY_EXCHANGE') ? $.getdata('JD_CITY_EXCHANGE') : `${exchangeFlag}`);
+let exchangeFlag = "true";
 // 优先助力[助力池]
-let helpShareFlag = "true";//是否优先助力[助力池]，默认是
-helpShareFlag = $.isNode() ? (process.env.JD_CITY_HELPSHARE ? process.env.JD_CITY_HELPSHARE : `${helpShareFlag}`) : ($.getdata('JD_CITY_HELPSHARE') ? $.getdata('JD_CITY_HELPSHARE') : `${helpShareFlag}`);
+let helpShareFlag = "false";//是否优先助力[助力池]，默认是
 let outuserID = "";//屏蔽账号 2,5,7
 let outuserIdArr = [];
 outuserID = $.isNode() ? (process.env.JD_CITY_OUTUSERID ? process.env.JD_CITY_OUTUSERID : `${outuserID}`) : ($.getdata('JD_CITY_OUTUSERID') ? $.getdata('JD_CITY_OUTUSERID') : `${outuserID}`);
