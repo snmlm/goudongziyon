@@ -66,14 +66,13 @@ Object.keys(jdCookieNode).forEach((item) => {
     for (let i = 0; i < cookiesArr.length; i++) {
         cookie = cookiesArr[i]
         const userName = decodeURIComponent(cookie.match(/pt_pin=(.+?);/) && cookie.match(/pt_pin=(.+?);/)[1])
-        const pool = await getShareCodePool('tiger', 5)
         // if (shareCodesHW.length === 0) {
         //     shareCodesHW = await getshareCodeHW('tiger')
         // }
         // index === 0 ?
         //     shareCodes = Array.from(new Set([...shareCodesHW, ...shareCodesSelf, ...temp])) :
         //     shareCodes = Array.from(new Set([...shareCodesSelf, ...shareCodesHW, ...temp]))
-        shareCodes = Array.from(new Set([...shareCodesSelf, ...authorCode, ...pool]))
+        shareCodes = Array.from(new Set([...shareCodesSelf]))
         // console.log(shareCodes)
         for (let code of shareCodes) {
             console.log(`账号${i + 1} 去助力 ${code} ${shareCodesSelf.includes(code) ? '(内部)' : ''}`)
