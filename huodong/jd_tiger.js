@@ -1,12 +1,13 @@
 /*
 萌虎摇摇乐
 https://yearfestival.jd.com
-优先内部互助,剩余次数助力作者
-1 0,10,15 * * * jd_tiger.js
+优先内部互助,剩余次数助力作者和助力池
+0 0,12,18 * * * jd_tiger.js
 转义自HW大佬
+const $ = new Env('萌虎摇摇乐');
 */
 const name = '萌虎摇摇乐'
-let UA
+let UA = process.env.JD_USER_AGENT ? process.env.JD_USER_AGENT : (require('./USER_AGENTS').USER_AGENT)
 const got = require('got')
 const notify = require('./sendNotify')
 const jdCookieNode = require('./jdCookie.js')
@@ -26,7 +27,6 @@ Object.keys(jdCookieNode).forEach((item) => {
         cookie = cookiesArr[i]
         const userName = decodeURIComponent(cookie.match(/pt_pin=(.+?);/) && cookie.match(/pt_pin=(.+?);/)[1])
         console.log(`\n开始【京东账号${i + 1}】${userName}\n`)
-        UA = process.env.JD_USER_AGENT ? process.env.JD_USER_AGENT : (require('./USER_AGENTS').USER_AGENT)
         let res = await api({ "apiMapping": "/api/task/support/getShareId" })
         console.log('助力码：', res.data)
         await wait(1000)
@@ -61,10 +61,11 @@ Object.keys(jdCookieNode).forEach((item) => {
             }
         }
     }
-    
+   
     for (let i = 0; i < cookiesArr.length; i++) {
         cookie = cookiesArr[i]
         const userName = decodeURIComponent(cookie.match(/pt_pin=(.+?);/) && cookie.match(/pt_pin=(.+?);/)[1])
+        const pool = await getShareCodePool('tiger', 5)
         // if (shareCodesHW.length === 0) {
         //     shareCodesHW = await getshareCodeHW('tiger')
         // }
@@ -75,7 +76,7 @@ Object.keys(jdCookieNode).forEach((item) => {
         // console.log(shareCodes)
         for (let code of shareCodes) {
             console.log(`账号${i + 1} 去助力 ${code} ${shareCodesSelf.includes(code) ? '(内部)' : ''}`)
-            res = await api({ "shareId": code, "apiMapping": "/api/task/support/doSupport" })
+            const res = await api({ "shareId": code, "apiMapping": "/api/task/support/doSupport" })
             if (res.data.status === 1) {
                 !res.data.supporterPrize ?
                     console.log('不助力自己') :
@@ -94,11 +95,11 @@ Object.keys(jdCookieNode).forEach((item) => {
         }
     }
     for (let i = 0; i < cookiesArr.length; i++) {
-        ccookie = cookiesArr[i]
+        cookie = cookiesArr[i]
         const userName = decodeURIComponent(cookie.match(/pt_pin=(.+?);/) && cookie.match(/pt_pin=(.+?);/)[1])
         console.log(`\n开始【京东账号${i + 1}】${userName}\n`)
 
-        res = await api({ "apiMapping": "/api/index/indexInfo" })
+        let res = await api({ "apiMapping": "/api/index/indexInfo" })
         let lotteryNum = res.data.lotteryNum
         for (let i = 0; i < lotteryNum; i++) {
             res = await api({ "apiMapping": "/api/lottery/lottery" })
@@ -113,6 +114,25 @@ Object.keys(jdCookieNode).forEach((item) => {
 .finally(() => {
     console.log(`${name} finished}`)
 })
+
+async function getAuthorShareCode(url) {
+    try {
+        const options = {
+            url,
+            "timeout": 10000,
+            headers: {
+                "User-Agent": "Mozilla/5.0 (iPhone; CPU iPhone OS 13_2_3 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/13.0.3 Mobile/15E148 Safari/604.1 Edg/87.0.4280.88"
+            }
+        };
+        const { body } = await got(options)
+        // console.debug('getAuthorShareCode:',body)
+        return JSON.parse(body) || []
+    } catch (e) {
+        // console.warn('getAuthorShareCode:', e)
+        return false
+    }
+
+}
 
 function wait(time) {
     return new Promise(resolve => {
@@ -148,6 +168,27 @@ async function api(r_body) {
     // console.log(body)
     return JSON.parse(body)
 }
+
+async function getShareCodePool(key, num) {
+    let shareCode = []
+    for (let i = 0; i < 2; i++) {
+        try {
+            const { body } = await got(`https://api.jdsharecode.xyz/api/${key}/${num}`)
+            console.debug('getShareCodePool:', body)
+            shareCode = JSON.parse(body).data || []
+            console.log(`随机获取${num}个${key}成功：${JSON.stringify(shareCode)}`)
+            if (shareCode.length !== 0) {
+                break
+            }
+        } catch (e) {
+            // console.warn(e.stack)
+            console.log("getShareCodePool Error, Retry...")
+            await wait(2000 + Math.floor((Math.random() * 4000)))
+        }
+    }
+    return shareCode
+}
+
 
 async function getTaskDetail(taskGroupId) {
     let res = await api({ "taskGroupId": taskGroupId, "apiMapping": "/api/task/brand/getTaskList" })
