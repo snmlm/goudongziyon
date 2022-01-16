@@ -61,7 +61,8 @@ Object.keys(jdCookieNode).forEach((item) => {
             }
         }
     }
-   
+    let authorCode = []
+    
     for (let i = 0; i < cookiesArr.length; i++) {
         cookie = cookiesArr[i]
         const userName = decodeURIComponent(cookie.match(/pt_pin=(.+?);/) && cookie.match(/pt_pin=(.+?);/)[1])
@@ -72,7 +73,7 @@ Object.keys(jdCookieNode).forEach((item) => {
         // index === 0 ?
         //     shareCodes = Array.from(new Set([...shareCodesHW, ...shareCodesSelf, ...temp])) :
         //     shareCodes = Array.from(new Set([...shareCodesSelf, ...shareCodesHW, ...temp]))
-        shareCodes = Array.from(new Set([...shareCodesSelf]))
+        shareCodes = Array.from(new Set([...shareCodesSelf, ...authorCode, ...pool]))
         // console.log(shareCodes)
         for (let code of shareCodes) {
             console.log(`账号${i + 1} 去助力 ${code} ${shareCodesSelf.includes(code) ? '(内部)' : ''}`)
