@@ -6,7 +6,6 @@ https://yearfestival.jd.com
 转义自HW大佬
 */
 const name = '萌虎摇摇乐'
-const $ = new Env(name);
 let UA
 const got = require('got')
 const notify = require('./sendNotify')
