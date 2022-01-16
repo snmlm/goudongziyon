@@ -55,7 +55,7 @@ let activityCookie =''
   $.userId = ''
   $.actId = '897353f1fe1a4958a48_220117'
   $.MixNicks = ''
-  $.inviteNick = ''
+  $.inviteNick = 'Hlciw9EWHlDhoUuC/DLAC14tLNYA4seuA67MOIYQxEk3Vl9+AVo4NF+tgyeIc6A6kdK3rLBQpEQH9V4tdrrh0w=='
   console.log(`请自行测试有水无水。`)
   for (let i = 0; i < cookiesArr.length; i++) {
     cookie = cookiesArr[i];
