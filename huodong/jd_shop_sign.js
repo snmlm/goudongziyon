@@ -3,14 +3,7 @@
 ============Quantumultx===============
 [task_local]
 #店铺签到
-15 2,14 * * * https://raw.githubusercontent.com/KingRan/JDJB/main/jd_shop_sign.js, tag=店铺签到, enabled=true
-===========Loon============
-[Script]
-cron "15 2,14 * * *" script-path=https://raw.githubusercontent.com/KingRan/JDJB/main/jd_shop_sign.js,tag=店铺签到
-============Surge=============
-店铺签到 = type=cron,cronexp="15 2,14 * * *",wake-system=1,timeout=3600,script-path=https://raw.githubusercontent.com/KingRan/JDJB/main/jd_shop_sign.js
-===========小火箭========
-店铺签到 = type=cron,script-path=https://raw.githubusercontent.com/KingRan/JDJB/main/jd_shop_sign.jss, cronexpr="15 2,14 * * *", timeout=3600, enable=true
+0 0 * * * jd_shop_sign.js
 */
 const $ = new Env('店铺签到');
 const notify = $.isNode() ? require('./sendNotify') : '';
@@ -25,32 +18,28 @@ let vender=''
 let num=0
 let shopname=''
 const token = [
-
-  "45DBA1666FC56F3040F2F68396F1CDCE",
-  "C4FF5A919CEE68F9669A32950697694C",
-  "F21F54D77A164114746ABFBFD509393F",
-  "344CDCE624282AB0D50E71F002064A59",
-  "621A2C5B99EC5DDAD2C30EFACC5CE2E0",
-  "91B152F4FE6110D612C16DFD5035B3FB",
-  "020702C2C96800D57EAB2FA017314A42",
-  "6A40E137F769E6857CE9912F0DC42460",
-  "C22CEFD33E8331E6859BEC93C2BDF537",
-  "D7AC12D450812687EF1382C7C03D629E",
-  "88C72E9A4F342606C7C98C601CCB3196",
-  "941BFE17EBA5FDA32D0AFD0119BDD0AC",
-  "F3959D0ED6769CF1FD960FD783D31AAC",
-  "920DD36D15780CD9CCB4CE8C0325D596",
-  "58E02A34335F74AD298E15AAC09FD6CD",
-
-  //20220117
-  "AFC71B4BFEFD168AF0889313EC642ABB",
-  "5AED62EAD871BE2882DA8F3BFA75058C",
-  "3C0B3B434857C1491C6DE08A5EE55C91",
-
+  // "2A8794EC8DA4659DDDA0DF0E1A2AF4AF",
+  // "A1E0F96C1D9DB38AE87202E13CE1FD1F",
+  // "6D180D5A0B6F4A210684757B0DAC6A38",
+  // "6FF6A61279897029F4DE69C341551CFC",
+  // "0FCE1975D7A168F5BE2DE89BF2AA784D",
+  // "9E2F2B62044E1AC059180A38BE06507D",
+  // "C96A69334CA12BCA81DE74335AC1B35E",
+  // "A406C4990D5C50702D8C425A03F8076E",
+  // "E0AB41AAE21BD9CA8E35CC0B9AA92FA7",
+  // "A20223553DF12E06C7644A1BD67314B6",
+  // "9621D787095D0030BE681B535F8499BE",
+  // "C718DA981DBB8CF73FAC7D5480733B43",
+  // "77A6C7B5C2BC9175521931ADE8E3B2E0",
+  // "5BEFC891C256D515C4F0F94F15989055",
+  // "B1482DB6CB72FBF33FFC90B2AB53D32C",
+  // "225A5186B854F5D0A36B5257BAA98739",
+  // "9115177F9D949CFB76D0DE6B8FC9D621",
+  // "AD73E1D98C83593E22802600D5F72B9B",
+  // "447EA174AB8181DD52EFDECEB4E59F16",
+  // "32204A01054F3D8F9A1DF5E5CFB4E7F4",
+  // "6B52B6FDF119B68A42349EEF6CEEC4FF"
 ]
-
-
-
 
 if ($.isNode()) {
   Object.keys(jdCookieNode).forEach((item) => {
@@ -72,12 +61,6 @@ if ($.isNode()) {
     $.msg($.name, '【提示】请先获取京东账号一cookie\n直接使用NobyDa的京东签到获取', 'https://bean.m.jd.com/bean/signIndex.action', {"open-url": "https://bean.m.jd.com/bean/signIndex.action"});
     return;
   }
-
-  console.log(`********更新库【https://github.com/JDWXX/jd_job.git】*******`);
-  console.log(`********新活动请在GitHub提 issue ***********************************`);
-  console.log(`********最新更新时间：【2022-01-17】 *************************`);
-  console.log(`********签到奖励店铺群友贡献列表(本年度恭喜列表)*******************************`);
-  console.log(`******* 星晴 **********************************************`);
   for (let i = 0; i < cookiesArr.length; i++) {
     if (cookiesArr[i]) {
       cookie = cookiesArr[i];
@@ -97,7 +80,6 @@ if ($.isNode()) {
       }
       await dpqd()
       await showMsg()
-      await $.wait(1500)
     }
   }
   if ($.isNode() && allMessage) {
@@ -294,10 +276,10 @@ function taskUrl(token,venderId) {
           console.log(`\n${$.name}: API查询请求失败 ‼️‼️`)
           $.logErr(err);
         } else {
-          //console.log(data)
-          data = JSON.parse(/{(.*)}/g.exec(data)[0])
-          console.log(`已签到：`+data.data.days+`天`)
-          message +=`已签到：`+data.data.days+`天\n`
+            //console.log(data)
+            data = JSON.parse(/{(.*)}/g.exec(data)[0])
+            console.log(`已签到：`+data.data.days+`天`)
+            message +=`已签到：`+data.data.days+`天\n`
         }
       } catch (e) {
         $.logErr(e, resp);
