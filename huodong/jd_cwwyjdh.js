@@ -4,7 +4,7 @@ cron "58 7,15,23 * * *" jd_joy_reward_Mod.js
 //by 标哥丶 20220118
 const $ = new Env('宠汪汪积分兑换有就换修复版');
 const CryptoJS = require('crypto-js');
-const zooFaker = require('./utils/JDJRValidator_Pure');
+const zooFaker = require('./util/JDJRValidator_Pure');
 let allMessage = '';
 //Node.js用户请在jdCookie.js处填写京东ck;
 const jdCookieNode = $.isNode() ? require('./jdCookie.js') : '';
