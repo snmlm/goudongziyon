@@ -25,7 +25,7 @@ cron "15 0-23/2 * * *" script-path=https://raw.githubusercontent.com/Aaron-lv/sy
 */
 //by 标哥丶 20220118
 const $ = new Env('宠汪汪修复版');
-const zooFaker = require('./utils/JDJRValidator_Pure');
+const zooFaker = require('./util/JDJRValidator_Pure');
 const CryptoJS = require('crypto-js');
 $.get = zooFaker.injectToRequest2($.get.bind($));
 $.post = zooFaker.injectToRequest2($.post.bind($));
