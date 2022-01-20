@@ -137,3 +137,32 @@ module.exports.delEnv = async (eid) => {
   }).json();
   return body;
 };
+
+module.exports.getEnvById = async(eid) => {
+    const envs = await this.getEnvs();
+    var tempid = 0;
+    for (let i = 0; i < envs.length; i++) {
+        tempid = 0;
+        if (envs[i]._id) {
+            tempid = envs[i]._id;
+        }
+        if (envs[i].id) {
+            tempid = envs[i].id;
+        }
+        if (tempid == eid) {
+            return envs[i].value;
+        }
+    }
+    return "";
+};
+
+module.exports.getEnvByPtPin = async (Ptpin) => {
+  const envs = await this.getEnvs();
+  for (let i = 0; i < envs.length; i++) {	
+	var tempptpin = decodeURIComponent(envs[i].value.match(/pt_pin=([^; ]+)(?=;?)/) && envs[i].value.match(/pt_pin=([^; ]+)(?=;?)/)[1]);
+	if(tempptpin==Ptpin){		 
+		 return envs[i]; 
+	  }
+  }  
+  return "";
+};
