@@ -1,7 +1,7 @@
 /*
 
 1.21 - 1.26 大牌集结 玩转年货节
-https://lzdz1-isv.isvjcloud.com/dingzhi/dz/openCard/activity?activityId=14e6bdc3ee7a496f87b89eee902a370e&shareUuid=
+https://lzdz1-isv.isvjcloud.com/dingzhi/dz/openCard/activity?activityId=14e6bdc3ee7a496f87b89eee902a370e&shareUuid=dfc72cb1716a4eb28ddbba95741aeffe
 
 cron 37 1,19 21-26 1 * https://raw.githubusercontent.com/KingRan/JDJB/main/jd_opencardL58.js
 
@@ -38,7 +38,7 @@ if (process.env.NO_RUSH && process.env.NO_RUSH != "") {
     }
     
     authorCodeList = [
-            '',
+            'dfc72cb1716a4eb28ddbba95741aeffe',
         ]
 
     for (let i = 0; i < cookiesArr.length; i++) {
