@@ -23,7 +23,7 @@ guaopenwait112="0"
 
 All变量适用
 ————————————————
-入口：[ 1.17～2.15 品质女装 年终狂欢 (https://lzdz1-isv.isvjcloud.com/dingzhi/dz/openCard/activity?activityId=67ba2ad44b8041c9925bf0e72febbdb2&shareUuid=)]
+入口：[ 1.17～2.15 品质女装 年终狂欢 (https://lzdz1-isv.isvjcloud.com/dingzhi/dz/openCard/activity?activityId=67ba2ad44b8041c9925bf0e72febbdb2&shareUuid=1cae1d4b260640b597f4fb0506a15ce2)]
 
 请求太频繁会被黑ip
 过10分钟再执行
@@ -95,7 +95,7 @@ let activityCookie =''
     return;
   }
   $.activityId = "67ba2ad44b8041c9925bf0e72febbdb2"
-  $.shareUuid = ""
+  $.shareUuid = "1cae1d4b260640b597f4fb0506a15ce2"
   console.log(`入口:\nhttps://lzdz1-isv.isvjcloud.com/dingzhi/dz/openCard/activity?activityId=${$.activityId}&shareUuid=${$.shareUuid}`)
   for (let i = 0; i < cookiesArr.length; i++) {
     cookie = cookiesArr[i];
