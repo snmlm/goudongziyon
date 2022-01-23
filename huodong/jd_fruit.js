@@ -28,7 +28,7 @@ export DO_TEN_WATER_AGAIN="" 默认再次浇水
 */
 const $ = new Env('东东农场');
 let cookiesArr = [], cookie = '', jdFruitShareArr = [], isBox = false, notify, newShareCodes, allMessage = '';
-let JDWXX_ZL = "JDWXX";//开启内置助力
+let JDWXX_ZL = "";//开启内置助力
 let shareCodesdq = ""
 let shareCodesArr = []
 //助力好友分享码(最多3个,否则后面的助力失败),原因:京东农场每人每天只有3次助力机会
