@@ -64,7 +64,7 @@ if ($.isNode()) {
             $.ADID = getUUID('xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx', 1);
             $.UUID = getUUID('xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx');
             // $.authorCode = authorCodeList[random(0, authorCodeList.length)]
-            $.authorCode = ownCode ? ownCode : authorCodeList[random(0, authorCodeList.length)]
+            $.authorCode = ownCode
             $.authorNum = `${random(1000000, 9999999)}`
             $.activityId = '9a1508ec3d2549dfa8187dcbfd590a34'
             $.activityShopId = '1000001879'
@@ -141,7 +141,7 @@ async function mt() {
                         } else {
                             $.log("你已经是队长了")
                             ownCode = $.activityContent.signUuid
-                            console.log(ownCode)
+                            $.log(ownCode)
                         }
                     } else {
                         $.log("无法加入队伍")
