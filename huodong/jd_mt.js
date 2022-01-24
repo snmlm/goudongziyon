@@ -2,7 +2,7 @@
 组队分豆-美泰 [jd_mt.js]
 
 ————————————————
-入口：[组队分豆-美泰 (https://lzkjdz-isv.isvjcloud.com/pool/captain/725732?activityId=9a1508ec3d2549dfa8187dcbfd590a34&signUuid=5e5d87e47a8a4f8ab2656e2ce879dc00)]
+入口：[组队分豆-美泰 (https://lzkjdz-isv.isvjcloud.com/pool/captain/725732?activityId=9a1508ec3d2549dfa8187dcbfd590a34&signUuid=0da6910cdb564004b4c1025787f6d60b)]
 IOS等用户直接用NobyDa的jd cookie
 ============Quantumultx===============
 [task_local]
@@ -40,7 +40,7 @@ if ($.isNode()) {
         $.msg($.name, '【提示】请先获取京东账号一cookie\n直接使用NobyDa的京东签到获取', 'https://bean.m.jd.com/bean/signIndex.action', { "open-url": "https://bean.m.jd.com/bean/signIndex.action" });
         return;
     }
-    console.log(`若之前做过该活动，则无法重复入队。\n入口:\nhttps://lzkjdz-isv.isvjcloud.com/pool/captain/725732?activityId=9a1508ec3d2549dfa8187dcbfd590a34&signUuid=5e5d87e47a8a4f8ab2656e2ce879dc00`)
+    console.log(`若之前做过该活动，则无法重复入队。\n入口:\nhttps://lzkjdz-isv.isvjcloud.com/pool/captain/725732?activityId=9a1508ec3d2549dfa8187dcbfd590a34&signUuid=0da6910cdb564004b4c1025787f6d60b`)
     for (let i = 0; i < cookiesArr.length; i++) {
         if (cookiesArr[i]) {
             cookie = cookiesArr[i]
@@ -59,12 +59,12 @@ if ($.isNode()) {
                 }
                 continue
             }
-            authorCodeList = ['']
+            authorCodeList = ['0da6910cdb564004b4c1025787f6d60b']
             $.bean = 0;
             $.ADID = getUUID('xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx', 1);
             $.UUID = getUUID('xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx');
             // $.authorCode = authorCodeList[random(0, authorCodeList.length)]
-            $.authorCode = ownCode
+            $.authorCode = ownCode ? ownCode : authorCodeList[random(0, authorCodeList.length)]
             $.authorNum = `${random(1000000, 9999999)}`
             $.activityId = '9a1508ec3d2549dfa8187dcbfd590a34'
             $.activityShopId = '1000001879'
@@ -107,10 +107,7 @@ async function mt() {
             await task('common/accessLogWithAD', `venderId=${$.activityShopId}&code=99&pin=${encodeURIComponent($.secretPin)}&activityId=${$.activityId}&pageUrl=${$.activityUrl}&subType=app&adSource=null`, 1);
             await $.wait(2000)
             await task('activityContent', `activityId=${$.activityId}&pin=${encodeURIComponent($.secretPin)}&signUuid=${encodeURIComponent($.authorCode)}`)
-            await getShopOpenCardInfo({ "venderId": "1000001879", "channel": 401 }, 1000001879)
-            await bindWithVender({ "venderId": "1000001879", "shopId": "1000001879", "bindByVerifyCodeFlag": 1, "registerExtend": {}, "writeChildFlag": 0, "activityId": 3282318, "channel": 401 }, 100000000000085)
             if ($.activityContent) {
-                console.log($.activityContent.canJoin)
                 if ($.activityContent.canJoin) {
                     $.log("加入队伍成功，请等待队长瓜分京豆")
                     await $.wait(2000)
@@ -141,7 +138,7 @@ async function mt() {
                         } else {
                             $.log("你已经是队长了")
                             ownCode = $.activityContent.signUuid
-                            $.log(ownCode)
+                            console.log(ownCode)
                         }
                     } else {
                         $.log("无法加入队伍")
@@ -281,16 +278,16 @@ function bindWithVender(body, venderId) {
                     console.log(err)
                 } else {
                     res = JSON.parse(data)
-                    // if (res.success) {
-                    //     if (res.result.giftInfo && res.result.giftInfo.giftList) {
-                    //         for (const vo of res.result.giftInfo.giftList) {
-                    //             if (vo.prizeType === 4) {
-                    //                 $.log(`==>获得【${vo.quantity}】京豆`)
-                    //                 $.bean += vo.quantity
-                    //             }
-                    //         }
-                    //     }
-                    // }
+                    if (res.success) {
+                        if (res.result.giftInfo && res.result.giftInfo.giftList) {
+                            for (const vo of res.result.giftInfo.giftList) {
+                                if (vo.prizeType === 4) {
+                                    $.log(`==>获得【${vo.quantity}】京豆`)
+                                    $.bean += vo.quantity
+                                }
+                            }
+                        }
+                    }
                 }
             } catch (error) {
                 console.log(error)
