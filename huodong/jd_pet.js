@@ -5,8 +5,7 @@
 已支持IOS多京东账号,Node.js支持N个京东账号
 脚本兼容: QuantumultX, Surge, Loon, JSBox, Node.js
 
-互助码shareCode请先手动运行脚本查看打印可看到
-一天只能帮助5个人。多出的助力码无效
+互助码shareCode请先手动运行脚本查看打印可看到S
 
 =================================Quantumultx=========================
 [task_local]
