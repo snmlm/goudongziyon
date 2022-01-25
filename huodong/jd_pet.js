@@ -20,7 +20,6 @@ cron "15 6-18/6 * * *" script-path=jd_pet.js,tag=东东萌宠
 */
 const $ = new Env('东东萌宠');
 let cookiesArr = [], cookie = '', jdPetShareArr = [], isBox = false, notify, newShareCodes, allMessage = '';
-let JDWXX_ZL = $.isNode() ? (process.env.JDWXX_ZL ? process.env.JDWXX_ZL : "JDWXX") : "JDWXX";//开启内置助力
 let shareCodesdq = ""
 let shareCodesArr = []
 //助力好友分享码(最多5个,否则后面的助力失败),原因:京东农场每人每天只有四次助力机会
@@ -37,20 +36,6 @@ let randomCount = $.isNode() ? 20 : 5;
   if (!cookiesArr[0]) {
     $.msg($.name, '【提示】请先获取京东账号一cookie\n直接使用NobyDa的京东签到获取', 'https://bean.m.jd.com/bean/signIndex.action', {"open-url": "https://bean.m.jd.com/bean/signIndex.action"});
     return;
-  }
-  if(JDWXX_ZL == "JDWXX"){
-    for (let i = 0; i < cookiesArr.length; i++) {
-      if (cookiesArr[i]) {
-        cookie = cookiesArr[i];
-        $.UserName = decodeURIComponent(cookie.match(/pt_pin=([^; ]+)(?=;?)/) && cookie.match(/pt_pin=([^; ]+)(?=;?)/)[1])
-        $.index = i + 1;
-        $.isLogin = true;
-        $.nickName = '';
-        await getJdPet()
-      }
-    }
-    shareCodesdq = shareCodesdq.substring(0,shareCodesdq.length - 1)
-    // shareCodesArr.push("MTE1NDY3NTMwMDAwMDAwNDk5MjI3MDE=@MTEyNjE4NjQ2MDAwMDAwMDQ5OTIyNjY3@MTE1MzEzNjI2MDAwMDAwMDQ5OTIyNzM5@MTEyNjE4NjQ2MDAwMDAwMDUwODI1MjYx@MTE1NDQ5MzYwMDAwMDAwMzgxNjkyMzM=@MTEzMzI1MTE4NDAwMDAwMDA1MTIzODkyNw==")
   }
 
   for (let i = 0; i < cookiesArr.length; i++) {
@@ -75,10 +60,7 @@ let randomCount = $.isNode() ? 20 : 5;
       goodsUrl = '';
       taskInfoKey = [];
       option = {};
-      if(JDWXX_ZL == "JDWXX")
-        await shareCodesFormatJDWXX();
-      else
-        await shareCodesFormat();
+      await shareCodesFormat();
       await jdPet();
     }
   }
@@ -531,10 +513,6 @@ function requireConfig() {
       cookiesArr = [$.getdata('CookieJD'), $.getdata('CookieJD2'), ...jsonParse($.getdata('CookiesJD') || "[]").map(item => item.cookie)].filter(item => !!item);
     }
     console.log(`共${cookiesArr.length}个京东账号\n`)
-    if(JDWXX_ZL == "JDWXX"){
-      console.log("\n已开启【JDWXX】库内置助力\n");
-    }else {
-      console.log("\n如需启用内置助力 请在环境变量里添加 JDWXX_ZL  值 JDWXX  开启内置助力\n")
       $.shareCodesArr = [];
       if ($.isNode()) {
         Object.keys(jdPetShareCodes).forEach((item) => {
@@ -549,7 +527,7 @@ function requireConfig() {
       // console.log(`$.shareCodesArr::${JSON.stringify($.shareCodesArr)}`)
       // console.log(`jdPetShareArr账号长度::${$.shareCodesArr.length}`)
       console.log(`您提供了${$.shareCodesArr.length}个账号的东东萌宠助力码\n`);
-    }
+    
     resolve()
   })
 }
