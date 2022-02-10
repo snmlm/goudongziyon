@@ -8,6 +8,11 @@ cron: 0 6 */3 * *
 new Env('京东全自动评价');
 '''
 
+if (!["true"].includes(process.env.JD_Evaluation)) {
+    console.log("避免自动运行请设置评价环境变量JD_Evaluation为\"true\"来运行本脚本")
+    return
+}
+
 ################【参数】######################
 # [填写您要批量评价的范围]  ENV设置： export Ev_Scope='1,2,4-5'
 #  目前只支持逗号(,)和减号(-),默认只评价前3个(1-3)
