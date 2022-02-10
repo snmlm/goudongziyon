@@ -42,10 +42,15 @@ except Exception as e:
 
 pwd = os.path.dirname(os.path.abspath(__file__)) + os.sep
 
-print(os.environ["JD_Evaluation"])
-if "true" != os.environ["JD_Evaluation"]:
-    print("避免自动运行请设置评价环境变量JD_Evaluation为\"true\"来运行本脚本")
+try:
+    JD_Evaluation = os.environ["JD_Evaluation"]
+    if "true" != JD_Evaluation:
+        print("避免自动运行请设置评价环境变量JD_Evaluation为true来运行本脚本")
+        exit(3)
+except Exception as e:
+    print("避免自动运行请设置评价环境变量JD_Evaluation为true来运行本脚本")
     exit(3)
+
 
 print("#####【群友：右手余生 分享】#############")
 print("##########【参数设置】#################")
