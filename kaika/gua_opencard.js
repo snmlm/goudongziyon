@@ -69,7 +69,7 @@ let activityCookie =''
     });
     return;
   }
-  $.shareUuid = ""
+  $.shareUuid = "b3a4114f88e3473f802709cfae6eb2b1"
   for (let i = 0; i < cookiesArr.length; i++) {
     cookie = cookiesArr[i];
     if (cookie) {
