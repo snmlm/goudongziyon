@@ -20,11 +20,6 @@ SEVENDAY_LIST,SEVENDAY_LIST2,SEVENDAY_LIST3, 多活动id , 分开,活动具体�
 const $ = new Env('超级无线店铺签到');
 const jdCookieNode = $.isNode() ? require('./jdCookie.js') : '';
 const notify = $.isNode() ? require('./sendNotify') : '';
-let isRunJM= $.isNode() ? (process.env.isRunJM ? process.env.isRunJM : "") : ($.getdata('isRunJM') ? $.getdata('isRunJM') : "")
-if (isRunJM!="true") {
-    console.log("默认不执行加密的脚本，确定要跑请先去环境变量配置isRunJM，值为true，风险未知")
-    return;
-  }
 let cookiesArr = [], cookie = '', message = '';
 // https://lzkj-isv.isvjcloud.com/sign/sevenDay/signActivity?activityId=
 let activityIdList = [
@@ -51,6 +46,12 @@ let activityIdList3 = [
     'e4a77379ca4043b7b20fe09f006b7588',
 ]
 let lz_cookie = {}
+
+let isRunJM= $.isNode() ? (process.env.isRunJM ? process.env.isRunJM : "") : ($.getdata('isRunJM') ? $.getdata('isRunJM') : "")
+if (isRunJM!="true") {
+    console.log("默认不执行加密的脚本，确定要跑请先去环境变量配置isRunJM，值为true，风险未知")
+    return;
+  }
 
 if (process.env.SEVENDAY_LIST && process.env.SEVENDAY_LIST != "") {
     activityIdList = process.env.SEVENDAY_LIST.split(',');
