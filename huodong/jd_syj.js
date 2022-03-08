@@ -44,10 +44,15 @@ if ($.isNode()) {
   cookiesArr = [$.getdata('CookieJD'), $.getdata('CookieJD2'), ...jsonParse($.getdata('CookiesJD') || "[]").map(item => item.cookie)].filter(item => !!item);
 }
 const JD_API_HOST = 'https://api.m.jd.com/api';
+let isRunJM = process.env.isRunJM ? process.env.isRunJM : false;
 !(async () => {
   if (!cookiesArr[0]) {
     $.msg($.name, '【提示】请先获取京东账号一cookie\n直接使用NobyDa的京东签到获取', 'https://bean.m.jd.com/bean/signIndex.action', {"open-url": "https://bean.m.jd.com/bean/signIndex.action"});
     return;
+  }
+  console.log("搬运脚本[搞鸡玩家],有加密部份,不放心的慎用!!!, 需要执行设置环境变量 isRunJM = true")
+  if (isRunJM === false) {
+    return
   }
   for (let i = 0; i < cookiesArr.length; i++) {
     if (cookiesArr[i]) {
