@@ -1,10 +1,25 @@
 
 /* 
-5 0,5,15 * * * jd_fanli.js
-修改自jd_fanli.py
+京东饭粒
+已支持IOS双京东账号,Node.js支持N个京东账号
+脚本兼容: QuantumultX, Surge, Loon, JSBox, Node.js
+============Quantumultx===============
+[task_local]
+#京东饭粒
+40 0,9,17 * * * https://raw.githubusercontent.com/KingRan/JDJB/main/jd_fanli.js, tag=京东饭粒, img-url=https://raw.githubusercontent.com/58xinian/icon/master/jxcfd.png, enabled=true
+
+================Loon==============
+[Script]
+cron "40 0,9,17 * * *" script-path=https://raw.githubusercontent.com/KingRan/JDJB/main/jd_fanli.js,tag=京东饭粒
+
+===============Surge=================
+京东饭粒 = type=cron,cronexp="40 0,9,17 * * *",wake-system=1,timeout=3600,script-path=https://raw.githubusercontent.com/KingRan/JDJB/main/jd_fanli.js
+
+============小火箭=========
+京东饭粒 = type=cron,script-path=https://raw.githubusercontent.com/KingRan/JDJB/main/jd_fanli.js, cronexpr="40 0,9,17 * * *", timeout=3600, enable=true
 */
 
-const $ = new Env('饭粒');
+const $ = new Env('京东饭粒');
 const jdCookieNode = $.isNode() ? require('./jdCookie.js') : '';
 const notify = $.isNode() ? require('./sendNotify') : '';
 let cookiesArr = [], cookie = '', message = '',personMessage='';
@@ -31,57 +46,61 @@ if ($.isNode()) {
         return;
     }
         for (let i = 0; i < cookiesArr.length; i++) {
-            if (cookiesArr[i]) {
-                if ($.runOut) break;
-                $.hasGet = 0
-                cookie = cookiesArr[i]
-                originCookie = cookiesArr[i]
-                newCookie = ''
-                $.UserName = decodeURIComponent(cookie.match(/pt_pin=(.+?);/) && cookie.match(/pt_pin=(.+?);/)[1])
-                $.index = i + 1;
-                $.isLogin = true;
-                $.nickName = '';
-                await checkCookie();
-                console.log(`\n******开始【京东账号${$.index}】${$.nickName || $.UserName}*********\n`);
-                if (!$.isLogin) {
-                    $.msg($.name, `【提示】cookie已失效`, `京东账号${$.index} ${$.nickName || $.UserName}\n请重新登录获取\nhttps://bean.m.jd.com/bean/signIndex.action`, { "open-url": "https://bean.m.jd.com/bean/signIndex.action" });
-                    if ($.isNode()) {
-                        await notify.sendNotify(`${$.name}cookie已失效 - ${$.UserName}`, `京东账号${$.index} ${$.UserName}\n请重新登录获取cookie`);
-                    }
-                    continue
+        if (cookiesArr[i]) {
+            if ($.runOut)
+                break;
+            $.hasGet = 0;
+            cookie = cookiesArr[i];
+            originCookie = cookiesArr[i];
+            newCookie = '';
+            $.UserName = decodeURIComponent(cookie.match(/pt_pin=(.+?);/) && cookie.match(/pt_pin=(.+?);/)[1]);
+            $.index = i + 1;
+            $.isLogin = true;
+            $.nickName = '';
+            await checkCookie();
+            console.log(`\n******开始【京东账号${$.index}】${$.nickName || $.UserName}*********\n`);
+            if (!$.isLogin) {
+                $.msg($.name, `【提示】cookie已失效`, `京东账号${$.index} ${$.nickName || $.UserName}\n请重新登录获取\nhttps://bean.m.jd.com/bean/signIndex.action`, {
+                    "open-url": "https://bean.m.jd.com/bean/signIndex.action"
+                });
+                if ($.isNode()) {
+                    await notify.sendNotify(`${$.name}cookie已失效 - ${$.UserName}`, `京东账号${$.index} ${$.UserName}\n请重新登录获取cookie`);
                 }
-                await getTaskFinishCount(cookiesArr[i])
+                continue
+            }
+            await getTaskFinishCount(cookiesArr[i])
+            await $.wait(2000)
+            if ($.count.finishCount < $.count.maxTaskCount) {
+                
+                let range = $.count.maxTaskCount - $.count.finishCount;
+                await getTaskList(cookie)
                 await $.wait(2000)
-                if($.count.finishCount<$.count.maxTaskCount){
-                    let range = $.count.maxTaskCount-$.count.finishCount
-                    for(let i=0;i<range;i++){
-                        console.log(`开始第${$.count.finishCount+i+1}次`)
-                        await getTaskList(cookie)
-                        await $.wait(2000)
-                        for (let i in $.taskList){
-                            // console.log($.taskList[i])
-                            if($.taskList[i].taskId!==null){
-                                await saveTaskRecord(cookie,$.taskList[i].taskId,$.taskList[i].businessId,$.taskList[i].taskType)
-                                if($.sendBody){
-                                    await $.wait(Number($.taskList[i].watchTime)*1000)
-                                    await saveTaskRecord1(cookie,$.taskList[i].taskId,$.taskList[i].businessId,$.taskList[i].taskType,$.sendBody.uid,$.sendBody.tt)
-                                }
-                                else{
-                                    continue;
-                                }
-                                break;
-                           }
+				var CountDoTask =0;
+				for (let k in $.taskList) {
+                if ($.taskList[k].taskId !== null && $.taskList[k].statusName != "活动结束" && $.taskList[k].statusName != "明日再来") {
+						CountDoTask+=0;
+                        console.log(`开始尝试活动:` + $.taskList[k].taskName);
+                        await saveTaskRecord(cookie, $.taskList[k].taskId, $.taskList[k].businessId, $.taskList[k].taskType);
+                        if ($.sendBody) {
+                            await $.wait(Number($.taskList[k].watchTime) * 1300);
+                            await saveTaskRecord1(cookie, $.taskList[k].taskId, $.taskList[k].businessId, $.taskList[k].taskType, $.sendBody.uid, $.sendBody.tt);
+                        } else {
+                            continue;
+                        }
+                        if ($.count.finishCount == $.count.maxTaskCount) {
+                            console.log(`任务全部完成!`);                           
+                            break;
                         }
                     }
-                    
+
                 }
-                else{
-                    console.log("任务已做完")
-                }
-                
+            } else {
+                console.log("任务已做完")
             }
+
         }
-  
+    }
+
 })()
     .catch((e) => {
         $.log('', `❌ ${$.name}, 失败! 原因: ${e}!`, '')
@@ -170,11 +189,14 @@ function saveTaskRecord1(ck,taskId,businessId,taskType,uid,tt) {
                 if (err) {
                     $.log(err)
                 } else {
-                    // console.log(data)
                     if (data) {
                         data = JSON.parse(data);
-                        // console.log("结果",data)
-                        console.log("浏览结果",data.content.msg)
+                        if (data.content) {
+                            if (data.content.status == 1 && data.content.beans > 0)
+                                $.count.finishCount += 1;
+                            console.log("浏览结果", data.content.msg);
+                        } else
+                            console.log("结果", data);
                     } else {
                         $.log("京东返回了空数据")
                     }
@@ -260,6 +282,8 @@ function getTaskList(ck) {
                         // console.log(data,"活动列表")
                         if(data.content){
                             $.taskList=data.content
+                            $.taskList.sort(function(a,b){
+                                return b.rewardBeans-a.rewardBeans})
                         }
                         else{
                             console.log("未获取到活动列表，请检查活动")
