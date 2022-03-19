@@ -1,3 +1,4 @@
+//问题反馈:https://t.me/Wall_E_Channel
 let mode = __dirname.includes('magic')
 const {Env} = mode ? require('./magic') : require('./magic')
 const $ = new Env('M集卡抽奖');
@@ -106,6 +107,12 @@ $.logic = async function () {
     await api('crm/pageVisit/insertCrmPageVisit',
         `venderId=${$.venderId}&elementId=${encodeURIComponent(
             '邀请')}&pageId=${$.activityId}&pin=${encodeURIComponent($.Pin)}`);
+    
+      await api('wxCollectCard/drawCard',
+        `sourceId=${$.shareUuid}&activityId=${$.activityId}&type=1&pinImg=${encodeURIComponent(
+            $.attrTouXiang)}&pin=${encodeURIComponent(
+            $.Pin)}&jdNick=${encodeURIComponent(
+            $.nickname)}`);
     let saveSource = await api('wxCollectCard/saveSource',
         `activityId=${$.activityId}&pinImg=${encodeURIComponent(
             $.attrTouXiang)}&pin=${encodeURIComponent(
