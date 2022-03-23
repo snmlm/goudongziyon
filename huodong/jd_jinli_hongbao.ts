@@ -150,9 +150,9 @@ async function help() {
     try {
       cookie = value;
       UserName = decodeURIComponent(cookie.match(/pt_pin=([^;]*)/)![1])
-      if (shareCodesHW.length === 0) {
-        shareCodesHW = await getshareCodeHW('jlhb')
-      }
+      //if (shareCodesHW.length === 0) {
+      //  shareCodesHW = await getshareCodeHW('jlhb')
+      //}
       // 2 4 9 12
       if (index === 0 || cookiesArr.length === 2) { // 红包1需2个助力
         shareCodes = Array.from(new Set([...shareCodesHW, ...shareCodesSelf]))
