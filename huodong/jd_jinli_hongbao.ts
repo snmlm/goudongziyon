@@ -10,7 +10,7 @@
  */
 
 import axios from 'axios';
-import {logs} from './utils/jinli_log';
+import {logs} from './jinli_log';
 import {sendNotify} from './sendNotify';
 import {getRandomNumberByRange, getshareCodeHW, o2s, randomString, requireConfig, wait} from "./TS_USER_AGENTS";
 
