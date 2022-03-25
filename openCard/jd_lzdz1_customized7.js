@@ -1,7 +1,7 @@
 /*
 我的新家 超级配
 
-https://lzdz1-isv.isvjcloud.com/dingzhi/dz/openCard/activity?activityId=dz2021101420000sjleowq&shareUuid=
+https://lzdz1-isv.isvjcloud.com/dingzhi/dz/openCard/activity?activityId=dz2021101420000sjleowq&shareUuid=8b8b9c98f3e2487a84e89c2198e1a15d
 */
 const $ = new Env("我的新家 超级配");
 const jdCookieNode = $.isNode() ? require('./jdCookie.js') : '';
@@ -50,7 +50,7 @@ if ($.isNode()) {
             $.ADID = getUUID('xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx', 1);
             $.UUID = getUUID('xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx');
             authorCodeList = [
-                ''
+                '8b8b9c98f3e2487a84e89c2198e1a15d'
             ]
             // $.authorCode = authorCodeList[random(0, authorCodeList.length)]
             $.authorCode = ownCode ? ownCode : authorCodeList[random(0, authorCodeList.length)]
