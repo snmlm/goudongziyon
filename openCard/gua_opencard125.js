@@ -23,7 +23,7 @@ guaopenwait125="0"
 
 All变量适用
 ————————————————
-入口：[ 4.01～4.10 米粉节联合活动 (https://lzdz1-isv.isvjcloud.com/dingzhi/mar2022/miFenJie/activity/563603?activityId=dzlhkk068d4d0ab8a1234853002f66&shareUuid=)]
+入口：[ 4.01～4.10 米粉节联合活动 (https://lzdz1-isv.isvjcloud.com/dingzhi/mar2022/miFenJie/activity/563603?activityId=dzlhkk068d4d0ab8a1234853002f66&shareUuid=bad50856893841a987a034825a0c3ddd)]
 
 请求太频繁会被黑ip
 过10分钟再执行
@@ -89,7 +89,7 @@ let shareUuidArr = []
     return;
   }
   $.activityId = "dzlhkk068d4d0ab8a1234853002f66"
-  $.shareUuid = ""
+  $.shareUuid = "bad50856893841a987a034825a0c3ddd"
   console.log(`入口:\nhttps://lzdz1-isv.isvjcloud.com/dingzhi/mar2022/miFenJie/activity/563603?activityId=${$.activityId}&shareUuid=${$.shareUuid}`)
 
   for (let i = 0; i < cookiesArr.length; i++) {
