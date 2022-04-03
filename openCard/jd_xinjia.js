@@ -1,13 +1,13 @@
 /*
 家装
 
-https://lzdz1-isv.isvjcloud.com/dingzhi/dz/openCard/activity?activityId=dz2021101420000sjleowq&shareUuid=
+https://lzdz1-isv.isvjcloud.com/dingzhi/dz/openCard/activity?activityId=dz2021101420000sjleowq&shareUuid=e5771385ede34810afee776b140602fa
 */
-const $ = new Env("家装");
+const $ = new Env("我的新家 超级配");
 const jdCookieNode = $.isNode() ? require('./jdCookie.js') : '';
 const notify = $.isNode() ? require('./sendNotify') : '';
 let isKaiKa= $.isNode() ? (process.env.isKaiKa ? process.env.isKaiKa : "") : ($.getdata('isKaiKa') ? $.getdata('isKaiKa') : "")
-if (isKaiKa!="true") {
+  if (isKaiKa!="true") {
     console.log("默认不执行开卡脚本，有水时请先去环境变量配置isKaiKa，值为true，没水时请禁用这个环境变量")
     return;
   }
@@ -126,11 +126,6 @@ async function marry() {
             }
             $.log("->->->> 加入店铺会员")
             if ($.openCardStatus) {
-                $.log("模拟上报访问记录")
-                for (let i = 0; i < ($.openCardStatus.cardList1.length + $.openCardStatus.cardList2.length); i++) {
-                    await task('crm/pageVisit/insertCrmPageVisit', `venderId=1000221763&pageId=dz2021101420000sjleowq&elementId=${encodeURIComponent(`去开卡${i}`)}&pin=${encodeURIComponent($.secretPin)}`, 1)
-                    await $.wait(2000)
-                }
                 t1TaskList = []
                 $.openCardStatus.cardList1.filter((x) => { if (x.status === 0) { t1TaskList.push(x) } })
                 t2TaskList = []
@@ -319,16 +314,7 @@ function bindWithVender(body, venderId) {
                     console.log(err)
                 } else {
                     res = JSON.parse(data)
-                    if (res.success) {
-                        if (res.result.giftInfo && res.result.giftInfo.giftList) {
-                            for (const vo of res.result.giftInfo.giftList) {
-                                if (vo.prizeType === 4) {
-                                    $.log(`==>获得【${vo.quantity}】京豆`)
-                                    $.bean += vo.quantity
-                                }
-                            }
-                        }
-                    }
+                    console.log(res)
                 }
             } catch (error) {
                 console.log(error)
