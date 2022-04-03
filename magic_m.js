@@ -1,4 +1,4 @@
- noinspection JSUnresolvedFunction,JSUnresolvedVariable
+//noinspection JSUnresolvedFunction,JSUnresolvedVariable
 
 const axios = require('axios');
 const fs = require(fs);
