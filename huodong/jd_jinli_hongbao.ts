@@ -19,7 +19,6 @@ let log: string = ''
 
 !(async () => {
   cookiesArr = await requireConfig(false)
-  cookiesArr = cookiesArr.slice(0, 9)
   await join()
   await getShareCodeSelf()
   await help()
