@@ -1,6 +1,6 @@
 import axios from 'axios'
 import {requireConfig, wait, o2s} from './TS_USER_AGENTS'
-import {requestAlgo, geth5st} from "./util/V3";
+import {requestAlgo, geth5st} from "./V3";
 import {SHA256} from "crypto-js";
 
 let cookie: string = '', res: any = '', UserName: string = ''
