@@ -1,6 +1,6 @@
 import axios from "axios";
 import {format} from "date-fns";
-import {getBeanShareCode, getFarmShareCode, o2s, randomWord} from "../TS_USER_AGENTS";
+import {getBeanShareCode, getFarmShareCode, o2s, randomWord} from "./TS_USER_AGENTS";
 import {Md5} from "ts-md5";
 
 const CryptoJS = require('crypto-js')
