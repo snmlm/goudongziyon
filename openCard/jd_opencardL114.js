@@ -24,6 +24,11 @@ const jdCookieNode = $.isNode() ? require('./jdCookie.js') : '';
 CryptoScripts()
 $.CryptoJS = $.isNode() ? require('crypto-js') : CryptoJS;
 var timestamp = new Date().getTime()
+let isKaiKa= $.isNode() ? (process.env.isKaiKa ? process.env.isKaiKa : "") : ($.getdata('isKaiKa') ? $.getdata('isKaiKa') : "")
+if (isKaiKa!="true") {
+    console.log("默认不执行开卡脚本，有水时请先去环境变量配置isKaiKa，值为true，没水时请禁用这个环境变量")
+    return;
+  }
 //IOS等用户直接用NobyDa的jd cookie
 let cookiesArr = [],
     cookie = '';
@@ -50,7 +55,7 @@ let activityCookie =''
     return;
   }
   $.activityId = "dz39d46a394915bfa150a01f62shop"
-  $.shareUuid = ""
+  $.shareUuid = "5240e7044a71413a9612ecb2dc68bae8"
   console.log(`入口:\nhttps://lzdz1-isv.isvjcloud.com/dingzhi/shop/league/activity?activityId=${$.activityId}&shareUuid=${$.shareUuid}`)
   for (let i = 0; i < cookiesArr.length; i++) {
     cookie = cookiesArr[i];
