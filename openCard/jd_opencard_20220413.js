@@ -43,6 +43,11 @@ let guaopencard_draw = "3"
 const $ = new Env('4.8~4.22 早鸟派对好物来袭');
 const jdCookieNode = $.isNode() ? require('./jdCookie.js') : '';
 const notify = $.isNode() ? require('./sendNotify') : '';
+let isKaiKa= $.isNode() ? (process.env.isKaiKa ? process.env.isKaiKa : "") : ($.getdata('isKaiKa') ? $.getdata('isKaiKa') : "")
+  if (isKaiKa!="true") {
+    console.log("默认不执行开卡脚本，有水时请先去环境变量配置isKaiKa，值为true，没水时请禁用这个环境变量")
+    return;
+  }
 CryptoScripts()
 $.CryptoJS = $.isNode() ? require('crypto-js') : CryptoJS;
 let cleanCart = ''
@@ -96,7 +101,7 @@ let activityCookie =''
   $.activityId = "dz3fb7e0f64f21afa7ff66d3daf15b"
   
   authorCodeList = [
-                ''];			
+                '0f61376c9836424381f5ba7fe5096633'];			
   $.shareUuid = authorCodeList[random(0, authorCodeList.length)];
   console.log(`入口:\nhttps://lzdz1-isv.isvjcloud.com/dingzhi/april/springUnion3/activity?activityId=${$.activityId}&shareUuid=${$.shareUuid}`)
 
