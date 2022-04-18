@@ -37,8 +37,8 @@ cron:30 3 1-5,18-30/3 4,5 *
 30 1 1-5,18-30/3 4,5 * https://raw.githubusercontent.com/smiek2121/scripts/master/gua_opencard134.js, tag=4.18~5.5 甄选大牌 品质嗨购, enabled=true
 
 */
-let guaopencard_addSku = "false"
-let guaopencard = "false"
+let guaopencard_addSku = "true"
+let guaopencard = "true"
 let guaopenwait = "0"
 let guaopencard_draw = "3"
 
