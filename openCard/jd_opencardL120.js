@@ -57,7 +57,7 @@ let cookies = []
   }
   
   $.activityId = "dz479899c4c94b59984be24e02bcb"
-  $.shareUuid = ""
+  $.shareUuid = "df60ce48c04d4cbd8cc4fdfc54e1ab82"
   console.log(`入口:\nhttps://lzdz1-isv.isvjcloud.com/dingzhi/drinkcategory/piecetoge1/activity?activityId=${$.activityId}&shareUuid=${$.shareUuid}`)
   for (let i = 0; i < cookiesArr.length; i++) {
     cookie = cookiesArr[i];
