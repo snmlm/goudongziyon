@@ -24,6 +24,11 @@
 const $ = new Env("大牌联合通用开卡-加密");
 const jdCookieNode = $.isNode() ? require('./jdCookie.js') : '';
 const notify = $.isNode() ? require('./sendNotify') : '';
+let isRunJM= $.isNode() ? (process.env.isRunJM ? process.env.isRunJM : "") : ($.getdata('isRunJM') ? $.getdata('isRunJM') : "")
+  if (isRunJM!="true") {
+    console.log("默认不执行加密脚本，确认要执行请先去环境变量配置isRunJM，值为true，加密脚本无法确认是否有风险，请自行判断")
+    return;
+  }
 let cookiesArr = [], cookie = '', message = '';
 let ownCode = null;
 if ($.isNode()) {
