@@ -97,7 +97,7 @@ let activityCookie =''
   }
   $.activityId = "dzlhkkc99b60200kk081f1bc4bacd1"
   let authorCodeList = [
-      '']
+      '46450e76f5324a9b8739cda9e38cc620']
 			
   $.shareUuid = authorCodeList[random(0, authorCodeList.length)]  
   console.log(`入口:\nhttps://lzdz1-isv.isvjcloud.com/dingzhi/customized/common/activity?activityId=${$.activityId}&shareUuid=${$.shareUuid}`)
