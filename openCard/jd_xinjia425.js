@@ -5,7 +5,7 @@ let guaopencard_addSku = "true"
 let guaopencard = "true"
 let guaopenwait = "2"
 
-const $ = new Env('xinjia4');
+const $ = new Env('xinjia425');
 const jdCookieNode = $.isNode() ? require('./jdCookie.js') : '';
 const notify = $.isNode() ? require('./sendNotify') : '';
 let isKaiKa= $.isNode() ? (process.env.isKaiKa ? process.env.isKaiKa : "") : ($.getdata('isKaiKa') ? $.getdata('isKaiKa') : "")
