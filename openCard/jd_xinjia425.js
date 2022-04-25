@@ -60,7 +60,7 @@ let activityCookie =''
   }
   $.activityId = "dz5000640649efb279e6a76a111238"
   let authorCodeList = [
-                '']
+                'e5637fd056014fde9105e9e045f9e1e7']
 			
   $.shareUuid = authorCodeList[random(0, authorCodeList.length)]
   
