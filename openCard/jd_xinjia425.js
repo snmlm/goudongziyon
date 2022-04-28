@@ -18,7 +18,7 @@ cron:11 2,13 26-30 4 *
 
 
 */
-let opencard_toShop = "false"
+let opencard_toShop = "true"
 const $ = new Env('4.25-5.1 我的新家 超级配');
 const jdCookieNode = $.isNode() ? require('./jdCookie.js') : '';
 const notify = $.isNode() ? require('./sendNotify') : '';
@@ -40,7 +40,6 @@ if ($.isNode()) {
 } else {
   cookiesArr = [$.getdata('CookieJD'), $.getdata('CookieJD2'), ...jsonParse($.getdata('CookiesJD') || "[]").map(item => item.cookie)].filter(item => !!item);
 }
-opencard_toShop = $.isNode() ? (process.env.opencard_toShop123 ? process.env.opencard_toShop123 : `${opencard_toShop}`) : ($.getdata('opencard_toShop123') ? $.getdata('opencard_toShop123') : `${opencard_toShop}`);
 allMessage = ""
 message = ""
 $.hotFlag = false
