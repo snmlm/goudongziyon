@@ -18,7 +18,7 @@
 #4.29-5.7 51打卡超级品牌
 10 16 29-30,1-7 4,5 *  * jd_opencardL127.js, tag=4.29-5.7 51打卡超级品牌, enabled=true
 */
-let opencard_toShop = "false"
+let opencard_toShop = "true"
 const $ = new Env("4.29-5.7 51打卡超级品牌-加密");
 const jdCookieNode = $.isNode() ? require('./jdCookie.js') : '';
 const notify = $.isNode() ? require('./sendNotify') : '';
@@ -49,7 +49,7 @@ $.activityEnd = false
 let lz_jdpin_token_cookie =''
 let activityCookie =''
 //此处修改助力码
-let shareUuidArr = []
+let shareUuidArr = ["Hlciw9EWHlDhoUuC/DLAC14tLNYA4seuA67MOIYQxEk3Vl9+AVo4NF+tgyeIc6A6kdK3rLBQpEQH9V4tdrrh0w=="]
 let s = Math.floor((Math.random()*3))
 let n = 0
 n = Math.floor((Math.random()*shareUuidArr.length))
