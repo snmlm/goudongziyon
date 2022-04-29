@@ -27,6 +27,11 @@ let isKaiKa= $.isNode() ? (process.env.isKaiKa ? process.env.isKaiKa : "") : ($.
     console.log("默认不执行开卡脚本，有水时请先去环境变量配置isKaiKa，值为true，没水时请禁用这个环境变量")
     return;
   }
+ let isRunJM= $.isNode() ? (process.env.isRunJM ? process.env.isRunJM : "") : ($.getdata('isRunJM') ? $.getdata('isRunJM') : "")
+  if (isRunJM!="true") {
+    console.log("默认不执行加密脚本，确认执行请先去环境变量配置isRunJM，值为true")
+    return;
+  }
 
 //IOS等用户直接用NobyDa的jd cookie
 let cookiesArr = [],
