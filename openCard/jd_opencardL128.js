@@ -55,7 +55,7 @@ let activityCookie =''
     return;
   }
   $.activityId = "dz1f559d18eade52d440dc77bb853d"
-  $.shareUuid = ""
+  $.shareUuid = "08129313221c455b90d54ee2e85b1228"
   console.log(`入口:\nhttps://lzdz1-isv.isvjcloud.com/dingzhi/casio/active/activity?activityId=${$.activityId}&shareUuid=${$.shareUuid}`)
 
   for (let i = 0; i < cookiesArr.length; i++) {
