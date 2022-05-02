@@ -27,9 +27,10 @@ const notify = $.isNode() ? require('./sendNotify') : '';
 //Node.js用户请在jdCookie.js处填写京东ck;
 const jdCookieNode = $.isNode() ? require('./jdCookie.js') : '';
 let cookiesArr = [], cookie = '', message;
-const linkIdArr = ["toxw9c5sy9xllGBr3QFdYg"];
-const signLinkId = 'UtYmOqFJrh4Sl45d4mqg6Q%3D%3D';
+const linkIdArr = ["Eu7-E0CUzqYyhZJo9d3YkQ"];
+const signLinkId = '9WA12jYGulArzWS7vcrwhw';
 let linkId;
+let blackfail;
 if ($.isNode()) {
   Object.keys(jdCookieNode).forEach((item) => {
     cookiesArr.push(jdCookieNode[item])
@@ -70,24 +71,23 @@ if ($.isNode()) {
     }
   }
 })()
-    .catch((e) => {
-      $.log('', `❌ ${$.name}, 失败! 原因: ${e}!`, '')
-    })
-    .finally(() => {
-      $.done();
-    })
+  .catch((e) => {
+    $.log('', `❌ ${$.name}, 失败! 原因: ${e}!`, '')
+  })
+  .finally(() => {
+    $.done();
+  })
 
 async function jsRedPacket() {
   try {
-    // await invite();
     await invite2();
-    await sign();//极速版签到提现
+    // await sign();//极速版签到提现
     await reward_query();
-    for (let i = 0; i < 3; ++i) {
-      await redPacket();//开红包
-      await $.wait(2000)
-    }
-    await getPacketList();//领红包提现
+    // for (let i = 0; i < 3; ++i) {
+    //   await redPacket();//开红包
+    //   await $.wait(2000)
+    // }
+    // await getPacketList();//领红包提现
     await signPrizeDetailList();
     await showMsg()
   } catch (e) {
@@ -151,7 +151,7 @@ async function sign() {
 function reward_query() {
   return new Promise(resolve => {
     $.get(taskGetUrl("spring_reward_query", {
-      "inviter": ["toxw9c5sy9xllGBr3QFdYg"][Math.floor((Math.random() * 1))],
+      "inviter": ["HXZ60he5XxG8XNUF2LSrZg"][Math.floor((Math.random() * 1))],
       linkId
     }), async (err, resp, data) => {
       try {
@@ -161,10 +161,16 @@ function reward_query() {
         } else {
           if (safeGet(data)) {
             data = JSON.parse(data);
-            if (data.code === 0) {
-
-            } else {
-              console.log(data.errMsg)
+            if (data.code != 0) {
+              console.log('账号领红包貌似黑了，请手动进入活动查看')
+              blackfail = true
+			} else {
+			  console.log('领红包次数剩余：' + data.data.remainChance)
+				for (let i = 0; i < data.data.remainChance; ++i) {
+				await redPacket();//开红包
+				await $.wait(5000)
+				}
+				await getPacketList();//领红包提现
             }
           }
         }
@@ -178,7 +184,7 @@ function reward_query() {
 }
 async function redPacket() {
   return new Promise(resolve => {
-    $.get(taskGetUrl("spring_reward_receive",{"inviter":["toxw9c5sy9xllGBr3QFdYg"][Math.floor((Math.random() * 1))], linkId}),
+    $.get(taskGetUrl("spring_reward_receive",{"inviter":["HXZ60he5XxG8XNUF2LSrZg"][Math.floor((Math.random() * 1))], linkId}),
         async (err, resp, data) => {
           try {
             if (err) {
@@ -394,42 +400,9 @@ function cashOut(id,poolBaseId,prizeGroupId,prizeBaseId,) {
   })
 }
 
-function invite() {
-  let t = +new Date()
-  let inviterId = [
-    'UtYmOqFJrh4Sl45d4mqg6Q%3D%3D',
-    'WOthVgy8sELwGTrVkIwITA%3D%3D',
-    '9v56HCBE5cvJerOxwnLQUg%3D%3D',
-    'CESx%2BbJc4LbLt9cktRkbuw%3D%3D'
-  ][Math.floor((Math.random() * 2))]
-  var headers = {
-    'Host': 'api.m.jd.com',
-    'accept': 'application/json, text/plain, */*',
-    'content-type': 'application/x-www-form-urlencoded',
-    'origin': 'https://invite-reward.jd.com',
-    'accept-language': 'zh-cn',
-    'user-agent': $.isNode() ? (process.env.JS_USER_AGENT ? process.env.JS_USER_AGENT : (require('./JS_USER_AGENTS').USER_AGENT)) : ($.getdata('JSUA') ? $.getdata('JSUA') : "'jdltapp;iPad;3.1.0;14.4;network/wifi;Mozilla/5.0 (iPad; CPU OS 14_4 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Mobile/15E148;supportJDSHWK/1"),
-    'referer': 'https://invite-reward.jd.com/',
-    'Cookie': cookie
-  };
-
-  var dataString = `functionId=InviteFriendChangeAssertsService&body={"method":"attendInviteActivity","data":{"inviterPin":"${encodeURIComponent(inviterId)}","channel":1,"token":"","frontendInitStatus":""}}&referer=-1&eid=eidI9b2981202fsec83iRW1nTsOVzCocWda3YHPN471AY78%2FQBhYbXeWtdg%2F3TCtVTMrE1JjM8Sqt8f2TqF1Z5P%2FRPGlzA1dERP0Z5bLWdq5N5B2VbBO&aid=&client=ios&clientVersion=14.4.2&networkType=wifi&fp=-1&uuid=ab048084b47df24880613326feffdf7eee471488&osVersion=14.4.2&d_brand=iPhone&d_model=iPhone10,2&agent=-1&pageClickKey=-1&platform=3&lang=zh_CN&appid=market-task-h5&_t=${t}`;
-  var options = {
-    url: `https://api.m.jd.com/?t=${t}`,
-    headers: headers,
-    body: dataString
-  };
-  $.post(options, (err, resp, data) => {
-    // console.log(data)
-  })
-}
-
 function invite2() {
   let inviterIdArr = [
-    'UtYmOqFJrh4Sl45d4mqg6Q%3D%3D',
-    'WOthVgy8sELwGTrVkIwITA%3D%3D',
-    '9v56HCBE5cvJerOxwnLQUg%3D%3D',
-    'CESx%2BbJc4LbLt9cktRkbuw%3D%3D'
+    "unMarkedPinShare",
   ]
   let inviterId = inviterIdArr[Math.floor((Math.random() * inviterIdArr.length))]
   let options = {
