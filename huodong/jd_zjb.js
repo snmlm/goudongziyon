@@ -24,6 +24,7 @@ if ($.isNode() && process.env.InviterPin) {
 }
 if (InviterPin.length == 0) {
   console.log(`\n您未填写邀请码变量，请去环境变量中填写变量\n`);
+  return;
 }
 if ($.isNode()) {
   Object.keys(jdCookieNode).forEach((item) => {
