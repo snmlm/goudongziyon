@@ -23,7 +23,7 @@ if ($.isNode() && process.env.InviterPin) {
   InviterPin = process.env.InviterPin;
 }
 if (InviterPin.length == 0) {
-  console.log(`\n您未填写邀请码变量，请去环境变量中填写变量\n`);
+  console.log(`\n您未填写邀请码变量，请去配置文件中填写变量export InviterPin="你的邀请码"\n`);
   return;
 }
 if ($.isNode()) {
