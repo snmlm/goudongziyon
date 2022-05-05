@@ -110,7 +110,7 @@ if ($.isNode()) {
     await pasture();
     await $.wait(2000);
   }
-  $.res = [];
+  $.res = []
   await shareCodesFormat()
   for (let i = 0; i < cookiesArr.length; i++) {
     $.cookie = cookiesArr[i];
@@ -159,26 +159,30 @@ async function pasture() {
         console.log(`\n温馨提示：${$.UserName} 请先手动完成【新手指导任务】再运行脚本再运行脚本\n`);
         return;
       }
-      $.currentStep = oc(() => $.homeInfo.finishedtaskId)
-      console.log(`打印新手流程进度：当前进度：${$.currentStep}，下一流程：${$.homeInfo.maintaskId}`)
-      if ($.homeInfo.maintaskId !== "pause" || isNew($.currentStep)) {
-        console.log(`开始初始化`)
-        $.step = isNew($.currentStep) ? isNew($.currentStep, true) : $.homeInfo.maintaskId
-        await takeGetRequest('DoMainTask');
-        for (let i = 0; i < 20; i++) {
-          if ($.DoMainTask.maintaskId !== "pause") {
-            await $.wait(2000)
-            $.currentStep = oc(() => $.DoMainTask.finishedtaskId)
-            $.step = $.DoMainTask.maintaskId
-            await takeGetRequest('DoMainTask');
-          } else if (isNew($.currentStep)) {
-            $.step = isNew($.currentStep, true)
-            await takeGetRequest('DoMainTask');
-          } else {
-            console.log(`初始化成功\n`)
-            break
+      try {
+        $.currentStep = oc(() => $.homeInfo.finishedtaskId)
+        console.log(`打印新手流程进度：当前进度：${$.currentStep}，下一流程：${$.homeInfo.maintaskId}`)
+        if ($.homeInfo.maintaskId !== "pause" || isNew($.currentStep)) {
+          console.log(`开始初始化`)
+          $.step = isNew($.currentStep) ? isNew($.currentStep, true) : $.homeInfo.maintaskId
+          await takeGetRequest('DoMainTask');
+          for (let i = 0; i < 20; i++) {
+            if ($.DoMainTask.maintaskId !== "pause") {
+              await $.wait(2000)
+              $.currentStep = oc(() => $.DoMainTask.finishedtaskId)
+              $.step = $.DoMainTask.maintaskId
+              await takeGetRequest('DoMainTask');
+            } else if (isNew($.currentStep)) {
+              $.step = isNew($.currentStep, true)
+              await takeGetRequest('DoMainTask');
+            } else {
+              console.log(`初始化成功\n`)
+              break
+            }
           }
         }
+      } catch (e) {
+        console.warn('活动初始化错误')
       }
       console.log('获取活动信息成功');
       console.log(`互助码：${$.homeInfo.sharekey}`);
@@ -863,76 +867,17 @@ function randomString(e) {
   return n
 }
 
-function getAuthorShareCode(url) {
-  return new Promise(async resolve => {
-    const options = {
-      url: `${url}?${new Date()}`, "timeout": 10000, headers: {
-        "User-Agent": "Mozilla/5.0 (iPhone; CPU iPhone OS 13_2_3 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/13.0.3 Mobile/15E148 Safari/604.1 Edg/87.0.4280.88"
-      }
-    };
-    if ($.isNode() && process.env.TG_PROXY_HOST && process.env.TG_PROXY_PORT) {
-      const tunnel = require("tunnel");
-      const agent = {
-        https: tunnel.httpsOverHttp({
-          proxy: {
-            host: process.env.TG_PROXY_HOST,
-            port: process.env.TG_PROXY_PORT * 1
-          }
-        })
-      }
-      Object.assign(options, { agent })
-    }
-    $.get(options, async (err, resp, data) => {
-      try {
-        resolve(JSON.parse(data))
-      } catch (e) {
-        // $.logErr(e, resp)
-      } finally {
-        resolve();
-      }
-    })
-    await $.wait(10000)
-    resolve();
-  })
-}
 
 //格式化助力码
 function shareCodesFormat() {
   return new Promise(async resolve => {
     $.newShareCodes = []
-    const readShareCodeRes = await readShareCode();
-    if (readShareCodeRes && readShareCodeRes.code === 200) {
-      $.newShareCodes = [...new Set([...$.inviteCodeList, ...($.res || []), ...(readShareCodeRes.data || [])])];
-    } else {
-      $.newShareCodes = [...new Set([...$.inviteCodeList, ...($.res || [])])];
-    }
+    $.newShareCodes = [...new Set([...$.inviteCodeList, ...($.res || [])])];
     console.log(`\n您将要助力的好友${JSON.stringify($.newShareCodes)}`)
     resolve();
   })
 }
-function readShareCode() {
-  return new Promise(async resolve => {
-    $.get({url: `https://transfer.nz.lu/jxmc`, timeout: 30 * 1000}, (err, resp, data) => {
-      try {
-        if (err) {
-          console.log(JSON.stringify(err))
-          console.log(`${$.name} readShareCode API请求失败，请检查网路重试`)
-        } else {
-          if (data) {
-            console.log(`\n随机取20个码放到您固定的互助码后面(不影响已有固定互助)`)
-            data = JSON.parse(data);
-          }
-        }
-      } catch (e) {
-        $.logErr(e, resp)
-      } finally {
-        resolve(data);
-      }
-    })
-    await $.wait(30 * 1000);
-    resolve()
-  })
-}
+
 function uploadShareCode(code) {
   return new Promise(async resolve => {
     $.post({url: `https://transfer.nz.lu/upload/jxmc?code=${code}&ptpin=${encodeURIComponent(encodeURIComponent($.UserName))}`, timeout: 30 * 1000}, (err, resp, data) => {
