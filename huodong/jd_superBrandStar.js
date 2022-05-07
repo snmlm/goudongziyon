@@ -1,16 +1,11 @@
 /**
 特务之明星送好礼
 一次性脚本。请禁用！
-cron 36 1,10 * * * jd_superBrandStar.js
+cron 36 18 * * * jd_superBrandStar.js
  */
 const $ = new Env('特务之明星送好礼');
 const notify = $.isNode() ? require('./sendNotify') : '';
 const jdCookieNode = $.isNode() ? require('./jdCookie.js') : '';
-let isRunJM= $.isNode() ? (process.env.isRunJM ? process.env.isRunJM : "") : ($.getdata('isRunJM') ? $.getdata('isRunJM') : "")
-  if (isRunJM!="true") {
-    console.log("默认不执行加密脚本，确认执行请先去环境变量配置isRunJM，值为true")
-    return;
-  }
 let cookiesArr = [];
 let UA = ``;
 $.allInvite = [];
