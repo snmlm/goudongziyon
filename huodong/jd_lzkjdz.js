@@ -30,7 +30,7 @@ console.log("脚本部份加密,不喜欢勿跑!!!,10次抽奖机会,3个助力�
         $.msg($.name, '【提示】请先获取京东账号一cookie\n直接使用NobyDa的京东签到获取', 'https://bean.m.jd.com/bean/signIndex.action', { "open-url": "https://bean.m.jd.com/bean/signIndex.action" });
         return;
     }
-    authorCodeList = ['']
+    authorCodeList = ['48f459cc9221417781dbf4b1d3698033']
     
     for (let i = 0; i < cookiesArr.length; i++) {
         if (cookiesArr[i]) {
