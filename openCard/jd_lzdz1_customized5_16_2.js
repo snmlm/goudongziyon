@@ -1,15 +1,28 @@
 /*
-情暖五月 以爱之名
-7 7 7 7 7 jd_lzdz1_customized5_16.js
+5.16-5.23 情暖五月 以爱之名
+开卡脚本,一次性脚本
+
+每日前5名邀请才有奖励，自行调整
+
+第一个账号助力作者 其他依次助力CK1
+第一个CK失效会退出脚本
+————————————————
+入口：[ 5.16-5.23 情暖五月 以爱之名 ]
+
+请求太频繁会被黑ip
+过10分钟再执行
+
+cron:15 21 15-23 5 *
+============Quantumultx===============
+[task_local]
+#5.16-5.23 情暖五月 以爱之名
+15 21 15-23 5 * jd_opencardL146.js, tag=5.16-5.23 情暖五月 以爱之名, enabled=true
+
 */
-const $ = new Env("情暖五月 以爱之名");
+
+const $ = new Env("5.16-5.23 情暖五月 以爱之名");
 const jdCookieNode = $.isNode() ? require("./jdCookie.js") : "";
 const notify = $.isNode() ? require("./sendNotify") : "";
-let isKaiKa= $.isNode() ? (process.env.isKaiKa ? process.env.isKaiKa : "") : ($.getdata('isKaiKa') ? $.getdata('isKaiKa') : "")
-  if (isKaiKa!="true") {
-    console.log("默认不执行开卡脚本，有水时请先去环境变量配置isKaiKa，值为true，没水时请禁用这个环境变量")
-    return;
-  }
 let cookiesArr = [], cookie = "", message = "";
 let ownCode = null;
 let authorCodeList = [];
@@ -33,12 +46,6 @@ if ($.isNode()) {
     $.msg($.name, "【提示】请先获取京东账号一cookie\n直接使用NobyDa的京东签到获取", "https://bean.m.jd.com/bean/signIndex.action", { "open-url": "https://bean.m.jd.com/bean/signIndex.action" });
     return;
   }
-  // authorCodeList = await getAuthorCodeList('https://gitee.com/fatelight/code/raw/master/lzdz112.json')
-  // if ($.getAuthorCodeListerr === false) {
-  //     authorCodeList = [
-  //         '917746a95cae46618c8f6b0ff55dfbc2',
-  //     ]
-  // }
   for (let i = 0; i < cookiesArr.length; i++) {
     if (cookiesArr[i]) {
       cookie = cookiesArr[i];
@@ -189,6 +196,7 @@ function task(function_id, body, isCommon = 0, own = 0) {
                       console.log(ownCode);
                     }
                     $.actorUuid = data.data.actor["actorUuid"];
+					//console.log($.actorUuid);
                   } else {
                     $.log("活动已经结束");
                   }
