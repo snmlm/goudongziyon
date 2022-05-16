@@ -23,6 +23,11 @@ cron:15 21 15-23 5 *
 const $ = new Env("5.16-5.23 情暖五月 以爱之名");
 const jdCookieNode = $.isNode() ? require("./jdCookie.js") : "";
 const notify = $.isNode() ? require("./sendNotify") : "";
+let isKaiKa= $.isNode() ? (process.env.isKaiKa ? process.env.isKaiKa : "") : ($.getdata('isKaiKa') ? $.getdata('isKaiKa') : "")
+  if (isKaiKa!="true") {
+    console.log("默认不执行开卡脚本，有水时请先去环境变量配置isKaiKa，值为true，没水时请禁用这个环境变量")
+    return;
+  }
 let cookiesArr = [], cookie = "", message = "";
 let ownCode = null;
 let authorCodeList = [];
