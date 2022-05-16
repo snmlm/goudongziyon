@@ -1,7 +1,7 @@
 /*
 哆啦宝妈 鲜气驾到
 */
-const $ = new Env("哆啦宝妈 鲜气驾到");
+const $ = new Env("哆啦宝妈  鲜气驾到");
 const jdCookieNode = $.isNode() ? require('./jdCookie.js') : '';
 const notify = $.isNode() ? require('./sendNotify') : '';
 let isKaiKa= $.isNode() ? (process.env.isKaiKa ? process.env.isKaiKa : "") : ($.getdata('isKaiKa') ? $.getdata('isKaiKa') : "")
