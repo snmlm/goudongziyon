@@ -26,6 +26,11 @@ let guaopenwait = '0'
 let guaopencard_draw = '3'
 
 const $ = new Env('5.17~6.1 爱尚夏日 大牌献礼')
+let isKaiKa= $.isNode() ? (process.env.isKaiKa ? process.env.isKaiKa : "") : ($.getdata('isKaiKa') ? $.getdata('isKaiKa') : "")
+if (isKaiKa!="true") {
+    console.log("默认不执行开卡脚本，有水时请先去环境变量配置isKaiKa，值为true，没水时请禁用这个环境变量")
+    return;
+}
 
 var _0xode = 'jsjiami.com.v6',
     _0xode_ = ['‮_0xode'],
