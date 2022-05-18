@@ -32,7 +32,7 @@ allMessage = ""
 message = ""
 let UA = ''
 let configCode = '74e5a50ca1014cdf9e9c7da4a068cc4b'
-let friendPin = ''
+let friendPin = 'fRKEY7AljErnTuUuTDlu5YVI+useK94bdK5BQ6zjgl4='
 let toFriend = 0
 $.temp = [];
 
