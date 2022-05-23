@@ -10,6 +10,11 @@ cron "6 23 * * *" jd_opencard_cpzl.js
 const $ = new Env('5.23~6.20 寻找潮配之旅')
 const jdCookieNode = $.isNode() ? require('./jdCookie.js') : '';
 const notify = $.isNode() ? require('./sendNotify') : '';
+let isKaiKa= $.isNode() ? (process.env.isKaiKa ? process.env.isKaiKa : "") : ($.getdata('isKaiKa') ? $.getdata('isKaiKa') : "")
+if (isKaiKa!="true") {
+    console.log("默认不执行开卡脚本，有水时请先去环境变量配置isKaiKa，值为true，没水时请禁用这个环境变量")
+    return;
+}
 let cookiesArr = [], cookie = '';
 
 
