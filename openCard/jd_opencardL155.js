@@ -22,6 +22,11 @@ cron:20 0 23-31,1-20 5,6 *
 const $ = new Env('5.23-6.20 会员联合狂欢  618百万京豆大派送')
 const jdCookieNode = $.isNode() ? require('./jdCookie.js') : '';
 const notify = $.isNode() ? require('./sendNotify') : '';
+let isKaiKa= $.isNode() ? (process.env.isKaiKa ? process.env.isKaiKa : "") : ($.getdata('isKaiKa') ? $.getdata('isKaiKa') : "")
+if (isKaiKa!="true") {
+    console.log("默认不执行开卡脚本，有水时请先去环境变量配置isKaiKa，值为true，没水时请禁用这个环境变量")
+    return;
+}
 
 //IOS等用户直接用NobyDa的jd cookie
 
@@ -50,7 +55,7 @@ let activityCookie =''
     return;
   }
   $.activityId = "unionkbblnt20220520dzlhkk"
-  $.shareUuid = ""
+  $.shareUuid = "e0f711c043cc4dd6b985336a8a146f71"
   console.log(`入口:\nhttps://lzdz1-isv.isvjcloud.com/dingzhi/customized/common/activity?activityId=${$.activityId}&shareUuid=${$.shareUuid}`)
 
 
