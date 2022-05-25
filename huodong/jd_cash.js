@@ -45,8 +45,8 @@ let allMessage = '';
 let jdPandaToken = '';
 jdPandaToken = $.isNode() ? (process.env.PandaToken ? process.env.PandaToken : `${jdPandaToken}`) : ($.getdata('PandaToken') ? $.getdata('PandaToken') : `${jdPandaToken}`);
 if (!jdPandaToken) {
-    console.log('请填写Panda获取的Token,变量是PandaToken');
-	return;
+  console.log('请填写Panda获取的Token,变量是PandaToken');
+  return;
 }
 
 !(async () => {
@@ -54,8 +54,8 @@ if (!jdPandaToken) {
     $.msg($.name, '【提示】请先获取京东账号一cookie\n直接使用NobyDa的京东签到获取', 'https://bean.m.jd.com/bean/signIndex.action', {"open-url": "https://bean.m.jd.com/bean/signIndex.action"});
     return;
   }
- // await requireConfig()
-  
+  // await requireConfig()
+
   for (let i = 0; i < cookiesArr.length; i++) {
     if (cookiesArr[i]) {
       cookie = cookiesArr[i];
@@ -223,7 +223,7 @@ async function appdoTask(type,taskInfo) {
   let functionId = 'cash_doTask'
   let body = {"type":type,"taskInfo":taskInfo}
   await $.wait(5000)
-  let sign = await getSignfromPanda(functionId, body)  
+  let sign = await getSignfromPanda(functionId, body)
 
   return new Promise((resolve) => {
     $.post(apptaskUrl(functionId, sign), (err, resp, data) => {
@@ -276,54 +276,54 @@ function doTask(type,taskInfo) {
     })
   })
 }
-function getSignfromPanda(functionId, body) {	
-    var strsign = '';
-	let data = {
-      "fn":functionId,
-      "body": body
+function getSignfromPanda(functionId, body) {
+  var strsign = '';
+  let data = {
+    "fn":functionId,
+    "body": body
+  }
+  return new Promise((resolve) => {
+    let url = {
+      url: "https://api.zhezhe.cf/jd/sign",
+      body: JSON.stringify(data),
+      followRedirect: false,
+      headers: {
+        'Accept': '*/*',
+        "accept-encoding": "gzip, deflate, br",
+        'Content-Type': 'application/json',
+        'Authorization': 'Bearer ' + jdPandaToken
+      },
+      timeout: 30000
     }
-    return new Promise((resolve) => {
-        let url = {
-            url: "https://api.zhezhe.cf/jd/sign",
-            body: JSON.stringify(data),
-		    followRedirect: false,
-		    headers: {
-		        'Accept': '*/*',
-		        "accept-encoding": "gzip, deflate, br",
-		        'Content-Type': 'application/json',
-				'Authorization': 'Bearer ' + jdPandaToken
-		    },
-		    timeout: 30000
+    $.post(url, async(err, resp, data) => {
+      try {
+        if (err) {
+          console.log(`衰仔，没有连接上熊猫服务，兄弟帮不了你啦！o(╥﹏╥)o`)
+        } else {
+          data = JSON.parse(data);
+          if (data && data.code == 200) {
+            lnrequesttimes = data.request_times;
+            console.log("衰仔，连接熊猫服务成功(*^▽^*)，当前Token使用次数为:" + lnrequesttimes);
+            if (data.data){
+              strsign = data.data.sign || '';
+            }
+            if (strsign != ''){
+              resolve(strsign);
+            }
+            else {
+              console.log("签名获取失败,可能Token使用次数上限或被封.");
+            }
+          } else {
+            console.log("签名获取失败.");
+          }
         }
-        $.post(url, async(err, resp, data) => {
-            try {				
-				if (err) {
-					console.log(`衰仔，没有连接上熊猫服务，兄弟帮不了你啦！o(╥﹏╥)o`)
-				} else {
-					data = JSON.parse(data);				
-				if (data && data.code == 200) {
-                    lnrequesttimes = data.request_times;
-                    console.log("衰仔，连接熊猫服务成功(*^▽^*)，当前Token使用次数为:" + lnrequesttimes);
-                    if (data.data){
-                        strsign = data.data.sign || '';
-						}
-                    if (strsign != ''){
-                        resolve(strsign);
-					}
-                    else {
-                        console.log("签名获取失败,可能Token使用次数上限或被封.");
-					}
-                } else {
-                    console.log("签名获取失败.");
-                }
-				}
-            }catch (e) {
-                $.logErr(e, resp);
-            }finally {
-				resolve(strsign);
-			}
-        })
+      }catch (e) {
+        $.logErr(e, resp);
+      }finally {
+        resolve(strsign);
+      }
     })
+  })
 }
 
 
