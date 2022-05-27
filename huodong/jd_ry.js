@@ -1,17 +1,13 @@
 /*
 [task_local]
 #荣耀抽奖机活动
-40 0 * * * jd_618jk.js, tag=荣耀抽奖机活动, enabled=true
+2 0 * * * jd_618jk.js, tag=荣耀抽奖机活动, enabled=true
  */
 const $ = new Env('荣耀抽奖机活动');
 const notify = $.isNode() ? require('./sendNotify') : '';
 //Node.js用户请在jdCookie.js处填写京东ck;
 const jdCookieNode = $.isNode() ? require('./jdCookie.js') : '';
-let isKaiKa= $.isNode() ? (process.env.isKaiKa ? process.env.isKaiKa : "") : ($.getdata('isKaiKa') ? $.getdata('isKaiKa') : "")
-if (isKaiKa!="true") {
-    console.log("默认不执行开卡脚本，有水时请先去环境变量配置isKaiKa，值为true，没水时请禁用这个环境变量")
-    return;
-}
+
 let jdNotify = true;//是否关闭通知，false打开通知推送，true关闭通知推送
 $.configCode = "aa6afd716cda497ab83d3f452443ecf6";
 //IOS等用户直接用NobyDa的jd cookie
