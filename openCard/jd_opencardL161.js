@@ -51,7 +51,7 @@ let activityCookie =''
     return;
   }
   $.activityId = "98e71642860340a9b0e13bf395a91368"
-  $.shareUuid = ""
+  $.shareUuid = "b77e44531b4b47a5abec16bf5a2a0f23"
   $.venderIds = "599119"
   console.log(`入口:\nhttps://lzdz-isv.isvjcloud.com/categoryUnion/activity?activityId=${$.activityId}&tplId=0003&friendid=${$.shareUuid}`)
   for (let i = 0; i < cookiesArr.length; i++) {
