@@ -1,7 +1,7 @@
 /*
 
 建议手动先点开一次
-1 0,6-23/2 * * * jd_19E_help.js
+33 0,6-23/2 * * * jd_19E_help.js
 
 */
 
@@ -36,7 +36,7 @@ const JD_API_HOST = 'https://api.m.jd.com/client.action';
         $.msg($.name, '【提示】请先获取京东账号一cookie\n直接使用NobyDa的京东签到获取', 'https://bean.m.jd.com/bean/signIndex.action', { "open-url": "https://bean.m.jd.com/bean/signIndex.action" });
         return;
     }
-    console.log(`\n自行测试\n`);
+    console.log(`\n自行测试,部分加密\n来源于其他作者,自行衡量是否跑不跑！\n`);
     const helpSysInfoArr = []
     for (let i = 0; i < cookiesArr.length; i++) {
         if (cookiesArr[i]) {
@@ -222,28 +222,28 @@ async function travel() {
     } catch (e) {
         console.log(e)
     }
-    if (helpFlag) {
-        try {
-            $.WxUA = getWxUA()
-            const WxHomeData = await doWxApi("getHomeData", { inviteId: "" })
-            $.WxSecretp = WxHomeData?.homeMainInfo?.secretp || $.secretp
-            console.log("\n去做微信小程序任务\n")
-            await doWxTask()
-        } catch (e) {
-            console.log(e)
-        }
+    // if (helpFlag) {
+    // try {
+    // $.WxUA = getWxUA()
+    // const WxHomeData = await doWxApi("getHomeData", { inviteId: "" })
+    // $.WxSecretp = WxHomeData?.homeMainInfo?.secretp || $.secretp
+    // console.log("\n去做微信小程序任务\n")
+    // await doWxTask()
+    // } catch (e) {
+    // console.log(e)
+    // }
 
-        try {
-            console.log("\n去做金融App任务\n")
-            $.sdkToken = "jdd01" + randomUUID({
-                formatData: "X".repeat(103),
-                charArr: [...Array(36).keys()].map(k => k.toString(36).toUpperCase())
-            }) + "0123456"
-            await doJrAppTask()
-        } catch (e) {
-            console.log(e)
-        }
-    }
+    // try {
+    // console.log("\n去做金融App任务\n")
+    // $.sdkToken = "jdd01" + randomUUID({
+    // formatData: "X".repeat(103),
+    // charArr: [...Array(36).keys()].map(k => k.toString(36).toUpperCase())
+    // }) + "0123456"
+    // await doJrAppTask()
+    // } catch (e) {
+    // console.log(e)
+    // }
+    // }
 
     try {
         //await raise(true)
@@ -652,7 +652,7 @@ async function doApi(functionId, prepend = {}, append = {}, needSs = false, getL
                                 if (/加入.*?会员.*?获得/.test(data?.data?.bizMsg)) {
                                     console.log(data?.data?.bizMsg + `（${data?.data?.bizCode}）`)
                                     $.stopCard = true
-                                } else console.log(formatErr(functionId, data?.data?.bizMsg + `（${data?.data?.bizCode}）`, toCurl(option)))
+                                } else console.log(formatErr(data?.data?.bizMsg + `（${data?.data?.bizCode}）`))
                             } else {
                                 res = data?.data?.result || {}
                             }
