@@ -22,7 +22,10 @@ cron:1 22 31,1-10 5,6
 const $ = new Env('5.31~6.10 大牌联合 好物焕新季')
 const jdCookieNode = $.isNode() ? require('./jdCookie.js') : '';
 const notify = $.isNode() ? require('./sendNotify') : '';
-
+let isKaiKa= $.isNode() ? (process.env.isKaiKa ? process.env.isKaiKa : "") : ($.getdata('isKaiKa') ? $.getdata('isKaiKa') : "")
+if (isKaiKa!="true") {
+    console.log("默认不执行开卡脚本，有水时请先去环境变量配置isKaiKa，值为true，没水时请禁用这个环境变量")
+    return;
 //IOS等用户直接用NobyDa的jd cookie
 
 let cookiesArr = [],
