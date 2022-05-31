@@ -1,14 +1,21 @@
 /*
-设置了环境变量FLCODE
+618红包
+
+变量
+export CODE618=""
+
+建议禁用，避免其他问题 需要的请填写自己的码子，
+
 cron 0 0,10,20 * * * jd_618_red.js
-* */
+
+*/
 const $ = new Env('618红包');
-$.flCode = $.isNode() ? (process.env.FLCODE ? process.env.FLCODE : '') : '';
-if(!$.flCode){
-    console.log("请先去环境变量配置自己的返利码FLCODE")
+$.CODE618 = $.isNode() ? (process.env.CODE618 ? process.env.CODE618 : '') : '';
+const jdCookieNode = require('./jdCookie.js');
+if(!$.CODE618){
+    console.log("请先去环境变量配置自己的返利码CODE618")
     return;
 }
-const jdCookieNode = require('./jdCookie.js');
 let cookiesArr = [];
 if ($.isNode()) {
     Object.keys(jdCookieNode).forEach((item) => {
@@ -32,7 +39,7 @@ let appId, fingerprint, token, enCryptMethodJD;
     let fglist = ['6289931560897925', '0403403318679778', '1390288884563462'];
     fingerprint = getRandomArrayElements(fglist, 1)[0];
     await requestAlgo();
-    if ($.flCode !== '9999') {
+    if ($.CODE618 !== '9999') {
         $.show = false;
     } else {
         $.show = true;
@@ -47,16 +54,16 @@ let appId, fingerprint, token, enCryptMethodJD;
     }
 })().catch((e) => { $.log('', `❌ ${$.name}, 失败! 原因: ${e}!`, '') }).finally(() => { $.done(); })
 
-async function main(ck, code = 'lLCZaPf') {
-    let codes = ['lLCZaPf']
-    code = $.flCode ? $.flCode : codes[random(0, codes.length)]
-    // console.log(code)
+async function main(ck, code = 'lKMc48P') {
+    const codes = ['lKMc48P']
+    code = $.CODE618 ? $.CODE618 : codes[random(0, codes.length)]
+    //console.log(code)
     let userName = decodeURIComponent(ck.match(/pt_pin=([^; ]+)(?=;?)/) && ck.match(/pt_pin=([^; ]+)(?=;?)/)[1])
     let jfInfo = await getInfoByUrl($, ck, code);
     ck = jfInfo['ck'];
     let url2 = jfInfo['url'];
     let UA = getUA();
-    let actId = url2.match(/mall\/active\/([^/]+)\/index\.html/) && url2.match(/mall\/active\/([^/]+)\/index\.html/)[1] || '2UboZe4RXkJPrpkp6SkpJJgtRmod';
+    let actId = url2.match(/mall\/active\/([^/]+)\/index\.html/) && url2.match(/mall\/active\/([^/]+)\/index\.html/)[1] || '31e6keDr2FdaUEVSvNZM2kjD7QVx';
     await getHtml(url2, ck, UA)
     await takeRequest(ck, UA, userName, actId, code);
 }
@@ -190,38 +197,36 @@ async function takeRequest(ck, UA, userName, actId, code) {
     return new Promise(async resolve => {
         $.get(myRequest, (err, resp, data) => {
             try {
-                if ($.show) {
-                    if (err) {
-                        console.log(`${$.toStr(err)}`)
-                        console.log(`${userName} API请求失败，请检查网路重试`)
-                    } else {
-                        let res = $.toObj(data, data);
-                        if (typeof res == 'object') {
-                            // if(res.msg){
-                            //     console.log('结果：'+res.msg)
-                            // }
-                            if (res.msg.indexOf('上限') !== -1) {
-                                $.max = true;
-                            }
-                            if ($.shareId && typeof res.data !== 'undefined' && typeof res.data.joinNum !== 'undefined') {
-                                console.log(`当前${res.data.joinSuffix}:${res.data.joinNum}`)
-                            }
-                            if (res.code == 0 && res.data) {
-                                if (res.data.type == 1) {
-                                    console.log(`${userName},获得红包：${res.data.discount}元`)
-                                    //console.log(`${userName},获得优惠券：️满59减8`)
-                                } else if (res.data.type == 3) {
-                                    console.log(`${userName},获得优惠券：️满${res.data.quota}减${res.data.discount}`)
-                                } else if (res.data.type == 6) {
-                                    console.log(`${userName},获得打折券：满${res.data.quota}打${res.data.discount * 10}折`)
-                                } else {
-                                    console.log(`${userName},获得未知${res.data.quota || ''} ${res.data.discount}`)
-                                    console.log(data)
-                                }
-                            }
-                        } else {
-                            console.log(data)
+                if (err) {
+                    console.log(`${$.toStr(err)}`)
+                    console.log(`${userName} API请求失败，请检查网路重试`)
+                } else {
+                    let res = $.toObj(data, data);
+                    if (typeof res == 'object') {
+                        //if(res.msg){
+                        //    console.log('结果：'+res.msg)
+                        //}
+                        if (res.msg.indexOf('上限') !== -1) {
+                            $.max = true;
                         }
+                        if ($.shareId && typeof res.data !== 'undefined' && typeof res.data.joinNum !== 'undefined') {
+                            console.log(`当前${res.data.joinSuffix}:${res.data.joinNum}`)
+                        }
+                        if (res.code == 0 && res.data) {
+                            if (res.data.type == 1) {
+                                console.log(`${userName},获得红包：${res.data.discount}元`)
+                                //console.log(`${userName},获得优惠券：️满59减8`)
+                            } else if (res.data.type == 3) {
+                                console.log(`${userName},获得优惠券：️满${res.data.quota}减${res.data.discount}`)
+                            } else if (res.data.type == 6) {
+                                console.log(`${userName},获得打折券：满${res.data.quota}打${res.data.discount * 10}折`)
+                            } else {
+                                console.log(`${userName},获得未知${res.data.quota || ''} ${res.data.discount}`)
+                                console.log(data)
+                            }
+                        }
+                    } else {
+                        console.log(data)
                     }
                 }
             } catch (e) {
