@@ -27,12 +27,9 @@ if ($.isNode()) {
     $.msg($.name, "【提示】请先获取京东账号一cookie\n直接使用NobyDa的京东签到获取", "https://bean.m.jd.com/bean/signIndex.action", { "open-url": "https://bean.m.jd.com/bean/signIndex.action" });
     return;
   }
-  authorCodeList = await getAuthorCodeList('https://raw.githubusercontent.com/okyyds/duck/master/code/lzdz1.json')
-  console.log(authorCodeList)
-  if ($.getAuthorCodeListerr === false) {
-      authorCodeList = [
-        '']
-  }
+  
+    authorCodeList = [
+        '51915a96a8344185b8e892969efdd09d']
   for (let i = 0; i < cookiesArr.length; i++) {
     if (cookiesArr[i]) {
       cookie = cookiesArr[i];
@@ -55,12 +52,6 @@ if ($.isNode()) {
       $.bean = 0;
       $.ADID = getUUID("xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx", 1);
       $.UUID = getUUID("xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx");
-      // authorCodeList = [
-      //   'ce70b442586945668414fde6d813ab86',
-      //   // '1582a55c4a8442d79819fd90e75b2d66',
-      //   // 'a3b625f7fcc14a3d84237c2543461f0c',
-      // ];
-      // $.authorCode = authorCodeList[random(0, authorCodeList.length)];
       $.authorCode = ownCode ? ownCode : authorCodeList[random(0, authorCodeList.length)]
       $.authorNum = `${random(1000000, 9999999)}`;
       $.randomCode = random(1000000, 9999999);
