@@ -23,7 +23,6 @@ if ($.isNode()) {
     cookiesArr = cookiesArr.filter(item => !!item);
 }
 
-console.log("脚本部份加密,不喜欢勿跑!!!,10次抽奖机会,3个助力一次抽奖,入口 https://lzkjdz-isv.isvjcloud.com/esteelauder/inviteNew/activityPage?activityId=2205100037674501")
 !(async () => {
     $.getAuthorCodeListerr = false
     if (!cookiesArr[0]) {
@@ -31,7 +30,7 @@ console.log("脚本部份加密,不喜欢勿跑!!!,10次抽奖机会,3个助力�
         return;
     }
     authorCodeList = ['48f459cc9221417781dbf4b1d3698033']
-    
+
     for (let i = 0; i < cookiesArr.length; i++) {
         if (cookiesArr[i]) {
             cookie = cookiesArr[i]
@@ -54,15 +53,15 @@ console.log("脚本部份加密,不喜欢勿跑!!!,10次抽奖机会,3个助力�
             $.ADID = getUUID('xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx', 1);
             $.UUID = getUUID('xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx');
             // authorCodeList = [
-            //     // '1f5e9466fdd24c6bb20e91414a7e8e73',
-            //     '54f086a80f404c04971a2fa70ac3f2dd',
-            //     'b78b710b23f145edbc163dcc6eb03dc8'
+            //     'eaee1e93884f4b008b2ff630cb5031b2',
+            //     '5ebde0a8cd9a4b36aab2d602d6eb365b',
+            //     'fd9e4abc20c34a1ebe642e237b49a947'
             // ]
             // $.authorCode = authorCodeList[random(0, authorCodeList.length)]
             $.authorCode = ownCode ? ownCode : authorCodeList[random(0, authorCodeList.length)]
             $.authorNum = `${random(1000000, 9999999)}`
             $.randomCode = random(1000000, 9999999)
-            $.activityId = '2205100037674501'
+            $.activityId = '2206100037674501'
             $.activityShopId = '1000376745'
             $.activityUrl = `https://lzkjdz-isv.isvjcloud.com/esteelauder/inviteNew/activityPage?activityId=${$.activityId}&inviterUuid=${encodeURIComponent($.authorCode)}&shareuserid4minipg=${encodeURIComponent($.secretPin)}&sid=&un_area=`
             await member();
@@ -104,6 +103,7 @@ async function member() {
             await taskaccessLog('common/accessLogWithAD', `venderId=${$.activityShopId}&code=99&pin=${encodeURIComponent($.secretPin)}&activityId=${$.activityId}&pageUrl=${$.activityUrl}&subType=app&adSource=null`, 1);
             // await task('wxActionCommon/getUserInfo', `pin=${encodeURIComponent($.secretPin)}`, 1)
             await $.wait(1000)
+            console.log(cookie)
             if ($.index === 1) {
                 await task('inviteNew/activityContent', `activityId=${$.activityId}&pin=${encodeURIComponent($.secretPin)}&inviterUuid=${encodeURIComponent($.authorCode)}`, 0, 1)
             } else {
@@ -196,6 +196,32 @@ function taskaccessLog(function_id, body, isCommon = 0) {
     })
 }
 
+function getAuthorCodeList(url) {
+    return new Promise(resolve => {
+        const options = {
+            url: `${url}?${new Date()}`, "timeout": 10000, headers: {
+                "User-Agent": "Mozilla/5.0 (iPhone; CPU iPhone OS 13_2_3 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/13.0.3 Mobile/15E148 Safari/604.1 Edg/87.0.4280.88"
+            }
+        };
+        $.get(options, async (err, resp, data) => {
+            try {
+                if (err) {
+                    // $.log(err)
+                    $.getAuthorCodeListerr = false
+                } else {
+                    if (data) data = JSON.parse(data)
+                    $.getAuthorCodeListerr = true
+                }
+            } catch (e) {
+                $.logErr(e, resp)
+                data = null;
+            } finally {
+                resolve(data);
+            }
+        })
+    })
+}
+
 function taskUrl(function_id, body, isCommon) {
     return {
         url: isCommon ? `https://lzkjdz-isv.isvjcloud.com/${function_id}` : `https://lzkjdz-isv.isvjcloud.com/esteelauder/${function_id}`,
@@ -210,7 +236,7 @@ function taskUrl(function_id, body, isCommon) {
             'User-Agent': `jdapp;iPhone;9.5.4;13.6;${$.UUID};network/wifi;ADID/${$.ADID};model/iPhone10,3;addressid/0;appBuild/167668;jdSupportDarkMode/0;Mozilla/5.0 (iPhone; CPU iPhone OS 13_6 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Mobile/15E148;supportJDSHWK/1`,
             Connection: 'keep-alive',
             Referer: $.activityUrl,
-            Cookie: cookie
+            Cookie: $.cookie
         },
         body: body
 
@@ -319,6 +345,7 @@ function getFirstLZCK() {
                             }
                         }
                     }
+                    $.cookie = cookie
                 }
             } catch (error) {
                 console.log(error)
