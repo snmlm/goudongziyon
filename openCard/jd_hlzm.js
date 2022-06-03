@@ -57,7 +57,7 @@ let activityCookie =''
     $.assistStatus = false
     $.activityId = "2203100041074702"
     let authorCodeList = [
-        '']
+        'f3206b566cc14ac2b435121cefc5dcea']
     $.shareUuid = authorCodeList[Math.floor((Math.random() * authorCodeList.length))]
     console.log(`入口:\nhttps://lzkjdz-isv.isvjcloud.com/m/1000410747/99/${$.activityId}/?helpUuid=${$.shareUuid}`)
 
