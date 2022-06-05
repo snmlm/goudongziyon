@@ -177,7 +177,7 @@ async function doCultureBean() {
   await plantBeanIndex();
   if(llerror)
     return;
-  if ($.plantBeanIndexResult && $.plantBeanIndexResult.code === '0') {
+  if ($.plantBeanIndexResult && $.plantBeanIndexResult.code === '0' && $.plantBeanIndexResult.data) {
     const plantBeanRound = $.plantBeanIndexResult.data.roundList[num]
     if (plantBeanRound.roundState === '2') {
       //收取营养液
@@ -409,16 +409,21 @@ function showTaskProcess() {
     await plantBeanIndex();
     if(llerror)
       return;
-    $.taskList = $.plantBeanIndexResult.data.taskList;
-    if ($.taskList && $.taskList.length > 0) {
-      console.log("     任务   进度");
-      for (let item of $.taskList) {
-        console.log(`[${item["taskName"]}]  ${item["gainedNum"]}/${item["totalNum"]}   ${item["isFinished"]}`);
+    if ($.plantBeanIndexResult && $.plantBeanIndexResult.code === '0' && $.plantBeanIndexResult.data) {
+      $.taskList = $.plantBeanIndexResult.data.taskList;
+      if ($.taskList && $.taskList.length > 0) {
+        console.log("     任务   进度");
+        for (let item of $.taskList) {
+          console.log(`[${item["taskName"]}]  ${item["gainedNum"]}/${item["totalNum"]}   ${item["isFinished"]}`);
+        }
       }
+    } else {
+      console.log(`plantBeanIndexResult:${JSON.stringify($.plantBeanIndexResult)}`)
     }
     resolve()
   })
 }
+
 function showMsg() {
   $.log(`\n${message}\n`);
   jdNotify = $.getdata('jdPlantBeanNotify') ? $.getdata('jdPlantBeanNotify') : jdNotify;
