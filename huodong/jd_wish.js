@@ -25,8 +25,8 @@ let message = '', allMessage = '';
 //IOS等用户直接用NobyDa的jd cookie
 let cookiesArr = [], cookie = '';
 const JD_API_HOST = 'https://api.m.jd.com/client.action';
-let appIdArr = ["1EFNUwqeO",'1EFNVyqeH','1FFVQyqw','1EFRWxKuG', '1E1xZy6s'];
-let appNameArr = ['互动抽豪礼','京东电器','1111点心动','许愿抽好礼', 'PLUS生活特权'];
+let appIdArr = ['1EFNVyqeH','1FFVQyqw','1EFRWxKuG', '1E1xZy6s'];
+let appNameArr = ['京东电器','1111点心动','许愿抽好礼', 'PLUS生活特权'];
 let appId, appName;
 $.shareCode = [];
 if ($.isNode()) {
@@ -157,10 +157,10 @@ async function healthyDay_getHomeData(type = true) {
                     console.log(`点击热区`)
                     await harmony_collectScore({ "appId": appId, "taskToken": vo.simpleRecordInfoVo.taskToken, "taskId": vo.taskId, "actionType": "0" }, vo.taskType)
                   } else {
-                  console.log(`【${vo.taskName}】已完成\n`)
+                    console.log(`【${vo.taskName}】已完成\n`)
+                  }
                 }
-				}	
-				}						
+              }
               for (let key of Object.keys(data.data.result.taskVos).reverse()) {
                 let vo = data.data.result.taskVos[key]
                 if (vo.status !== 2) {
@@ -192,7 +192,7 @@ async function healthyDay_getHomeData(type = true) {
                       }
                     }
                   } else if (vo.taskType === 3) {
-					for (let key of Object.keys(vo.shoppingActivityVos)) {
+                    for (let key of Object.keys(vo.shoppingActivityVos)) {
                       let shoppingActivityVos = vo.shoppingActivityVos[key]
                       if (shoppingActivityVos.status !== 2) {
                         console.log(`【${vo.subTitleName}】`)
