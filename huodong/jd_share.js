@@ -1,22 +1,41 @@
-/* 
-7 7 7 7 7
-注意控制ck数量
+/*
+活动地址为：https://lzkjdz-isv.isvjcloud.com/wxShareActivity/activity/6432842?activityId=xxxxx
+一共有2个变量
+jd_fxyl_activityId  活动ID 必需
+
+
+其他变量：
+OWN_COOKIE_NUM  需要被助力的人数
+HELP_COOKIE_NUM 助力的人数
+
+作者：小埋
+
+cron:1 1 1 1 *
+============Quantumultx===============
+[task_local]
+#LZ分享有礼
+1 1 1 1 * jd_share.js, tag=LZ分享有礼, enabled=true
+
 */
-const $ = new Env("分享有礼");
+const $ = new Env("LZ分享有礼");
 const jdCookieNode = $.isNode() ? require('./jdCookie.js') : '';
 const notify = $.isNode() ? require('./sendNotify') : '';
 let cookiesArr = [], cookie = '', message = '';
 let authorCodeList = [];
-let ownCookieNum = 4;
+let ownCookieNum = 3;
+let helpCookieNum = 5;
 let isGetAuthorCodeList = true
 let activityId = ''
 let activityShopId = ''
 
-if (process.env.OWN_COOKIE_NUM && process.env.OWN_COOKIE_NUM != 4) {
+if (process.env.HELP_COOKIE_NUM && process.env.HELP_COOKIE_NUM != 5) {
+    helpCookieNum = process.env.HELP_COOKIE_NUM;
+}
+if (process.env.OWN_COOKIE_NUM && process.env.OWN_COOKIE_NUM != 3) {
     ownCookieNum = process.env.OWN_COOKIE_NUM;
 }
-if (process.env.SHARE_ACTIVITY_ID && process.env.SHARE_ACTIVITY_ID != "") {
-    activityId = process.env.SHARE_ACTIVITY_ID;
+if (process.env.jd_fxyl_activityId && process.env.jd_fxyl_activityId != "") {
+    activityId = process.env.jd_fxyl_activityId;
 }
 
 if ($.isNode()) {
@@ -39,6 +58,7 @@ if ($.isNode()) {
         return;
     }
     isGetAuthorCodeList = true;
+    console.log(`【入口:\nhttps://lzkjdz-isv.isvjcloud.com/wxShareActivity/activity/activity?activityId=${activityId}】`)
     for (let i = 0; i < ownCookieNum; i++) {
         if (cookiesArr[i]) {
             cookie = cookiesArr[i]
@@ -56,7 +76,7 @@ if ($.isNode()) {
                 // }
                 continue
             }
-            
+
             $.bean = 0;
             $.ADID = getUUID('xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx', 1);
             $.UUID = getUUID('xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx');
@@ -66,13 +86,14 @@ if ($.isNode()) {
             $.activityShopId = ''
             $.activityUrl = `https://lzkjdz-isv.isvjcloud.com/wxShareActivity/activity/${$.authorNum}?activityId=${$.activityId}&friendUuid=${encodeURIComponent($.authorCode)}&shareuserid4minipg=null&shopid=${$.activityShopId}`
             await share();
+            await $.wait(1000)
             activityShopId = $.venderId;
         }
     }
     isGetAuthorCodeList = false;
     console.log('需要助力助力码')
     console.log(authorCodeList)
-    for (let i = 0; i < cookiesArr.length; i++) {
+    for (let i = 0; i < helpCookieNum; i++) {
         if (cookiesArr[i]) {
             cookie = cookiesArr[i]
             originCookie = cookiesArr[i]
@@ -80,6 +101,7 @@ if ($.isNode()) {
             $.index = i + 1;
             $.isLogin = true;
             $.nickName = '';
+            $.errorMessage = ''
             await checkCookie();
             console.log(`\n******开始【京东账号${$.index}】${$.nickName || $.UserName}*********\n`);
             if (!$.isLogin) {
@@ -89,7 +111,7 @@ if ($.isNode()) {
                 // }
                 continue
             }
-            
+
             $.bean = 0;
             $.ADID = getUUID('xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx', 1);
             $.UUID = getUUID('xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx');
@@ -103,6 +125,11 @@ if ($.isNode()) {
                 $.authorCode = authorCodeList[i]
                 console.log('去助力: '+$.authorCode)
                 await share();
+                await $.wait(1000)
+                if ($.errorMessage === '活动太火爆，还是去买买买吧') {
+                    break
+                }
+
             }
         }
     }
@@ -119,6 +146,7 @@ if ($.isNode()) {
             $.activityId = activityId
             $.activityShopId = activityShopId
             await getPrize();
+            await $.wait(2000)
         }
     }
 })()
@@ -139,6 +167,7 @@ async function share() {
     if ($.token) {
         await getMyPing();
         if ($.secretPin) {
+            await $.wait(2000)
             await task('common/accessLogWithAD', `venderId=${$.activityShopId}&code=25&pin=${encodeURIComponent($.secretPin)}&activityId=${$.activityId}&pageUrl=${$.activityUrl}&subType=app&adSource=null`, 1);
             await task('activityContent', `activityId=${$.activityId}&pin=${encodeURIComponent($.secretPin)}&friendUuid=${encodeURIComponent($.authorCode)}`)
         } else {
@@ -291,7 +320,8 @@ function getMyPing() {
                             $.secretPin = data.data.secretPin;
                             cookie = `${cookie};AUTH_C_USER=${data.data.secretPin}`
                         } else {
-                            $.log(data.errorMessage)
+                            $.errorMessage = data.errorMessage
+                            $.log($.errorMessage)
                         }
                     } else {
                         $.log("京东返回了空数据")
@@ -337,6 +367,7 @@ function getFirstLZCK() {
                             }
                         }
                     }
+                    $.cookie = cookie
                 }
             } catch (error) {
                 console.log(error)
