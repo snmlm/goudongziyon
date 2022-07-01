@@ -1,12 +1,12 @@
 /**
-汪汪乐园-提现
-5 0 0 * * 5 jd_joy_joy_reward.ts
-new Env('汪汪赛跑提现')
-Modify By Dylan from HW
-**/
+ 汪汪乐园-提现
+ 5 0 0 * * 5 jd_joy_joy_reward.ts
+ new Env('汪汪赛跑提现')
+ Modify By Dylan from HW
+ **/
 
-import {get, post, requireConfig, wait} from '../TS_USER_AGENTS'
-import {H5ST} from "../function/h5st"
+import {get, post, requireConfig, wait} from './TS_USER_AGENTS'
+import {H5ST} from "./function/h5st"
 
 let cookie: string = '', res: any = '', UserName: string = '', fp_448de: string = '' || process.env.FP_448DE, fp_b6ac3: string = '' || process.env.FP_B6AC3
 let h5stTool: H5ST = null
@@ -22,18 +22,18 @@ let h5stTool: H5ST = null
       h5stTool = new H5ST('448de', 'jdltapp;', fp_448de)
       await h5stTool.__genAlgo()
       res = await team('runningMyPrize', {"linkId": "L-sOanK_5RJCz7I314FpnQ", "pageSize": 20, "time": null, "ids": null})
-	  rewardAmount = res.data.rewardAmount
+      rewardAmount = res.data.rewardAmount
       if (res.data.runningCashStatus.currentEndTime && res.data.runningCashStatus.status === 0) {
         console.log('可提现', rewardAmount)
         res = await api('runningPrizeDraw', {"linkId": "L-sOanK_5RJCz7I314FpnQ", "type": 2})
         await wait(2000)
         if (res.success){
-               console.log(res.data.message)
-           } else {
-                console.log('提现失败：', res.errMsg)
-             }
+          console.log(res.data.message)
+        } else {
+          console.log('提现失败：', res.errMsg)
+        }
       }else{
-          console.log('还未到提现时间')
+        console.log('还未到提现时间')
       }
     } catch (e) {
       console.log('Error', e)
