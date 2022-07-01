@@ -3,6 +3,8 @@
 # 17:/椋东送福利，邀请好友，争排行榜排位，大礼送不停，(E1Y7RAtC4b) ，升级新版猄·=·Dσσōngαpρ
 # https://prodev.m.jd.com/mall/active/dVF7gQUVKyUcuSsVhuya5d2XD4F/index.html?code=16dde1860f1b4f1b9a93db6612abf0b9&invitePin=pin值
 # 注意事项 pin 为助力pin 必须保证ck在里面
+
+
 环境变量说明：
 export yhypin="需要助力的pin值"
 export yhyactivityId="活动类型ID"
@@ -92,7 +94,7 @@ async def plogin(ua,cookie):
         'Referer': 'https://prodev.m.jd.com/',
         'User-Agent':ua
     }
-    response = requests.get(url=url,headers=header,timeout=5).text
+    response = requests.get(url=url,headers=header,timeout=30).text
     return response
 
 # 活动接口
