@@ -1,6 +1,6 @@
 /*
 注意：助力码每天会变，旧的不可用。
-助力逻辑：优先助力互助码变量，默认助力前三个可助力的账号，需要修改助力人数修改代码57行的数字即可
+助力逻辑：优先助力互助码变量，默认助力第一个可助力的账号，需要修改助力人数修改代码57行的数字即可
 入口-极速版-推推赚大钱  5元无门槛卷 大概需要50人助力
  [task_local]
 #快速推一推
@@ -53,8 +53,8 @@ if ($.isNode()) {
           await info()
           await coinDozerBackFlow()
           await getCoinDozerInfo()
-          console.log('\n注意助力前三个可助力的账号\n');
-          if (inviteCodes.length >= 3) {
+          console.log('\n注意助力第一个可助力的账号\n');
+          if (inviteCodes.length >= 1) {
                break
           }
      }
