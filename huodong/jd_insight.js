@@ -1,5 +1,7 @@
 /*
-cron "35 9,15,20 * * *" jd_insight.js, tag:京洞察问卷通知
+cron "35 11 * * *" jd_insight.js, tag:京洞察问卷通知
+
+by ccwav
  */
 
 const $ = new Env('京洞察问卷通知');
