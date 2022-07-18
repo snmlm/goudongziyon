@@ -22,6 +22,11 @@ let opencard_draw = "0"
 const $ = new Env('萌宠轻量囤货新势界')
 const jdCookieNode = $.isNode() ? require('./jdCookie.js') : '';
 const notify = $.isNode() ? require('./sendNotify') : '';
+let isKaiKa= $.isNode() ? (process.env.isKaiKa ? process.env.isKaiKa : "") : ($.getdata('isKaiKa') ? $.getdata('isKaiKa') : "")
+if (isKaiKa!="true") {
+    console.log("默认不执行开卡脚本，有水时请先去环境变量配置isKaiKa，值为true，没水时请禁用这个环境变量")
+    return;
+}
 CryptoScripts()
 $.CryptoJS = $.isNode() ? require('crypto-js') : CryptoJS;
 let cleanCart = ''
@@ -210,21 +215,17 @@ async function run() {
         }
         $.log("加购: " + $.addCart)
         if(!$.addCart && !$.outFlag){
-            if(opencard_addSku+"" == "true"){
-                flag = true
-                let goodsArr = []
-                if(cleanCart){
-                    goodsArr = await cleanCart.clean(cookie,'https://jd.11111118/jdcleancatr_21102717','')
-                    if(goodsArr !== false) await $.wait(parseInt(Math.random() * 1000 + 4000, 10))
-                }
-                await takePostRequest('addCart');
-                await $.wait(parseInt(Math.random() * 2000 + 4000, 10))
-                if(cleanCart && goodsArr !== false){
-                    // await $.wait(parseInt(Math.random() * 1000 + 4000, 10))
-                    await cleanCart.clean(cookie,'https://jd.11111118/jdcleancatr_21102717',goodsArr || [ ])
-                }
-            }else{
-                console.log('如需加购请设置环境变量[opencard_addSku134]为"true"');
+            flag = true
+            let goodsArr = []
+            if(cleanCart){
+                goodsArr = await cleanCart.clean(cookie,'https://jd.11111118/jdcleancatr_21102717','')
+                if(goodsArr !== false) await $.wait(parseInt(Math.random() * 1000 + 4000, 10))
+            }
+            await takePostRequest('addCart');
+            await $.wait(parseInt(Math.random() * 2000 + 4000, 10))
+            if(cleanCart && goodsArr !== false){
+                // await $.wait(parseInt(Math.random() * 1000 + 4000, 10))
+                await cleanCart.clean(cookie,'https://jd.11111118/jdcleancatr_21102717',goodsArr || [ ])
             }
         }
         if(flag){
