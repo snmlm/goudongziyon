@@ -8,7 +8,7 @@
 
 All变量适用
 ————————————————
-入口：[ 萌宠轻量囤货新势界 (https://lzdz1-isv.isvjcloud.com/dingzhi/customized/common/activity/8938022?activityId=dzlhkkde95c4481a4859f30fa6f5868&shareUuid=)]
+入口：[ 萌宠轻量囤货新势界 (https://lzdz1-isv.isvjcloud.com/dingzhi/customized/common/activity/8938022?activityId=dzlhkkde95c4481a4859f30fa6f5868&shareUuid=b7fa687f4f6144a4a8d33935da1743b3)]
 
 请求太频繁会被黑ip
 过10分钟再执行
@@ -76,7 +76,7 @@ let lz_cookie={}
         return;
     }
     $.activityId = "dzlhkk5eec5e7da9c549b09e91e356"
-    $.shareUuid = ""
+    $.shareUuid = "b7fa687f4f6144a4a8d33935da1743b3"
     console.log(`入口:\nhttps://lzdz1-isv.isvjcloud.com/dingzhi/customized/common/activity?activityId=${$.activityId}&shareUuid=${$.shareUuid}`)
 
 
