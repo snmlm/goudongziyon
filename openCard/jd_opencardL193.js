@@ -12,15 +12,15 @@
 请求太频繁会被黑ip
 过10分钟再执行
 
-cron:1 19 12-20 7 *
+cron:1 19 13-20 7 *
 ============Quantumultx===============
 [task_local]
-#4.13-4.20 京东粉丝联盟福利社 入会赢专享好礼
-1 19 12-20 7 * jd_opencardL193.js, tag=7.13-7.20 京东粉丝联盟福利社 入会赢专享好礼, enabled=true
+#7.13-7.20 京东粉丝联盟福利社 入会赢专享好礼
+1 19 13-20 7 * jd_opencardL193.js, tag=7.13-7.20 京东粉丝联盟福利社 入会赢专享好礼, enabled=true
 
 */
 
-const $ = new Env('6.1-6.18 京东粉丝联盟福利社');
+const $ = new Env('7.13-7.20 京东粉丝联盟福利社 入会赢专享好礼');
 let isKaiKa= $.isNode() ? (process.env.isKaiKa ? process.env.isKaiKa : "") : ($.getdata('isKaiKa') ? $.getdata('isKaiKa') : "")
 if (isKaiKa!="true") {
     console.log("默认不执行开卡脚本，有水时请先去环境变量配置isKaiKa，值为true，没水时请禁用这个环境变量")
