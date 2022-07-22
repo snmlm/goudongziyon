@@ -5,7 +5,6 @@
 只做普通任务，不做邀请。辣鸡活动不值得开卡
 开卡之后才能抽奖，想要抽的再自己开卡吧
 
-cron: 25 10,20 * * *
 */
 const got = require("got");
 const $ = new Env("欧莱雅追光赛");
@@ -29,7 +28,7 @@ class UserClass {
         this.auth = ''
         this.canDraw = true
     }
-    
+
     populateUrlObject(paramIn={}){
         let host = paramIn.url.replace('//','/').split('/')[1]
         let queryStr = paramIn.queryParam ? '?' + $.json2str({obj:paramIn.queryParam,connector:'&'}) : ''
@@ -67,7 +66,7 @@ class UserClass {
         }
         return urlObject;
     }
-    
+
     async taskApi(paramIn={}) {
         let paramOut = {
             statusCode: -1,
@@ -127,7 +126,7 @@ class UserClass {
             return Promise.resolve(paramOut);
         }
     }
-    
+
     async getAppInfo(paramIn={}) {
         let paramOut = {}
         try {
@@ -156,7 +155,7 @@ class UserClass {
             return Promise.resolve(paramOut)
         }
     }
-    
+
     async isvObfuscator(paramIn={}) {
         let paramOut = {}
         try {
@@ -192,7 +191,7 @@ class UserClass {
             return Promise.resolve(paramOut)
         }
     }
-    
+
     async jdLogin(paramIn={}) {
         let paramOut = {}
         try {
@@ -225,7 +224,7 @@ class UserClass {
             return Promise.resolve(paramOut)
         }
     }
-    
+
     async getMyInfo(paramIn={}) {
         let paramOut = {}
         try {
@@ -263,7 +262,7 @@ class UserClass {
             return Promise.resolve(paramOut)
         }
     }
-    
+
     async getTaskList(paramIn={}) {
         let paramOut = {}
         try {
@@ -293,8 +292,8 @@ class UserClass {
                         }
                     }
                     for(let i=0; i<this.playNum; i++) {
-                       //await $.wait(200);
-                       await this.playGame(); 
+                        //await $.wait(200);
+                        await this.playGame();
                     }
                 } else {
                     console.log(`获取任务列表失败：${result.errorMessage||result.message}`)
@@ -306,7 +305,7 @@ class UserClass {
             return Promise.resolve(paramOut)
         }
     }
-    
+
     async doneTask(task,skuId) {
         let paramOut = {}
         try {
@@ -340,7 +339,7 @@ class UserClass {
             return Promise.resolve(paramOut)
         }
     }
-    
+
     async playGame(paramIn={}) {
         let paramOut = {}
         try {
@@ -369,7 +368,7 @@ class UserClass {
             return Promise.resolve(paramOut)
         }
     }
-    
+
     async gameOver(paramIn={}) {
         let paramOut = {}
         try {
@@ -401,7 +400,7 @@ class UserClass {
             return Promise.resolve(paramOut)
         }
     }
-    
+
     async luckPrize(paramIn={}) {
         let paramOut = {}
         try {
@@ -437,7 +436,7 @@ class UserClass {
             return Promise.resolve(paramOut)
         }
     }
-    
+
     async userTask() {
         try {
             console.log(`\n===== 账号${this.index}[${this.name}] =====`)
@@ -456,14 +455,14 @@ class UserClass {
         await GetRewrite()
     }else {
         if(!(await $.checkEnv())) return;
-        
+
         for(let user of $.userList) {
             await user.userTask();
         }
     }
 })()
-.catch((e) => console.log(e))
-.finally(() => $.done())
+    .catch((e) => console.log(e))
+    .finally(() => $.done())
 
 ////////////////////////////////////////////////////////////////////
 function Env(name,env) {
@@ -528,7 +527,7 @@ function Env(name,env) {
         async done(paramIn={}) {
             await this.showmsg();
             const e = (new Date).getTime(),
-            s = (e - this.startTime) / 1e3;
+                s = (e - this.startTime) / 1e3;
             console.log(`\n${this.name} 运行结束，共运行了 ${s} 秒！`)
             process.exit(0)
         }
