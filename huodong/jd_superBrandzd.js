@@ -3,7 +3,7 @@
  脚本没有自动开卡，会尝试领取开卡奖励
  cron 23 1,14,20 * * * jd_superBrandzd.js
  */
-const $ = new Env('特务Z');
+const $ = new Env('特务Z组队');
 const notify = $.isNode() ? require('./sendNotify') : '';
 const jdCookieNode = $.isNode() ? require('./jdCookie.js') : '';
 let cookiesArr = [];
