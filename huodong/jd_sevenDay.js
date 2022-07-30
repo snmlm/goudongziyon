@@ -23,7 +23,7 @@ let activityIdList3 = [
 
 ]
 let lz_cookie = {}
-let CookieNum = 50;
+let CookieNum = 10;
 if (process.env.SEVENDAY_LIST && process.env.SEVENDAY_LIST != "") {
     activityIdList = process.env.SEVENDAY_LIST.split(',');
 }
@@ -33,7 +33,7 @@ if (process.env.SEVENDAY_LIST2 && process.env.SEVENDAY_LIST2 != "") {
 if (process.env.SEVENDAY_LIST3 && process.env.SEVENDAY_LIST3 != "") {
     activityIdList3 = process.env.SEVENDAY_LIST3.split(',');
 }
-if (process.env.COOKIE_NUM && process.env.COOKIE_NUM != 50) {
+if (process.env.COOKIE_NUM && process.env.COOKIE_NUM != 10) {
     CookieNum = process.env.COOKIE_NUM;
 }
 
@@ -57,7 +57,7 @@ SEVENDAY_LIST、SEVENDAY_LIST2、SEVENDAY_LIST3\n
 SEVENDAY_LIST对应链接中的sign/sevenDay/signActivity\n
 SEVENDAY_LIST2对应链接中sign/signActivity2\n
 SEVENDAY_LIST3对应链接中sign/signActivity\n
-默认跑前50账号，变量为：COOKIE_NUM`)
+默认跑前10账号，变量为：COOKIE_NUM`)
     if (!cookiesArr[0]) {
         $.msg($.name, '【提示】请先获取京东账号一cookie\n直接使用NobyDa的京东签到获取', 'https://bean.m.jd.com/bean/signIndex.action', { "open-url": "https://bean.m.jd.com/bean/signIndex.action" });
         return;
@@ -220,12 +220,12 @@ function task(function_id, body, isCommon = 0) {
                                     if(data){
                                         // console.log(data);
                                         if (data.isOk) {
-                                            console.log("签到成功");
-                                            if (data.signResult && data.signResult.gift) {
-                                                console.log(data.signResult.gift.giftName);
+                                            console.log("结果 -> 签到成功");
+                                            if (data.signResult.gift != null) {
+                                                console.log("🎉 获得奖品：" + data.signResult.gift.giftName);
                                             }
                                         } else {
-                                            console.log(data.msg);
+                                            console.log("结果 -> " + data.msg);
                                         }
                                     }
                                     break
@@ -233,12 +233,12 @@ function task(function_id, body, isCommon = 0) {
                                     if(data){
                                         // console.log(data);
                                         if (data.isOk) {
-                                            console.log("签到成功");
-                                            if (data.gift.giftName && data.signResult.gift) {
-                                                console.log(data.gift.giftName);
+                                            console.log("结果 -> 签到成功");
+                                            if (data.gift != null) {
+                                                console.log("🎉 获得奖品：" + data.gift.giftName);
                                             }
                                         } else {
-                                            console.log(data.msg);
+                                            console.log("结果 -> " + data.msg);
                                         }
                                     }
                                     break
@@ -288,24 +288,24 @@ function task2(function_id, body, isCommon = 0) {
                                 case 'sign/sevenDay/wx/signUp':
                                     if(data){
                                         if (data.isOk) {
-                                            console.log("签到成功");
-                                            if (data.signResult.giftName) {
-                                                console.log(data.signResult.giftName);
+                                            console.log("结果 -> 签到成功");
+                                            if (data.signResult.gift != null) {
+                                                console.log("🎉 获得奖品：" + data.signResult.gift.giftName);
                                             }
                                         } else {
-                                            console.log(data.msg);
+                                            console.log("结果 -> " + data.msg);
                                         }
                                     }
                                     break
                                 case 'sign/wx/signUp':
                                     if(data){
                                         if (data.isOk) {
-                                            console.log("签到成功");
-                                            if (data.gift.giftName) {
-                                                console.log(data.gift.giftName);
+                                            console.log("结果 -> 签到成功");
+                                            if (data.gift != null) {
+                                                console.log("🎉 获得奖品：" + data.gift.giftName);
                                             }
                                         } else {
-                                            console.log(data.msg);
+                                            console.log("结果 -> " + data.msg);
                                         }
                                     }
                                     break
@@ -401,7 +401,7 @@ function getMyPing() {
                     if (data) {
                         data = JSON.parse(data)
                         if (data.result) {
-                            $.log(`你好：${data.data.nickname}`)
+                            //$.log(`你好：${data.data.nickname}`)
                             $.pin = data.data.nickname;
                             $.secretPin = data.data.secretPin;
                         } else {
@@ -456,7 +456,7 @@ function getMyPing2() {
                     if (data) {
                         data = JSON.parse(data)
                         if (data.result) {
-                            $.log(`你好：${data.data.nickname}`)
+                            //$.log(`你好：${data.data.nickname}`)
                             $.pin = data.data.nickname;
                             $.secretPin = data.data.secretPin;
                         } else {
