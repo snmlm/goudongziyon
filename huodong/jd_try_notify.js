@@ -23,16 +23,16 @@ $.notifyMsg = ''
 let cookiesArr = [], cookie = '', message;
 
 if ($.isNode()) {
-  Object.keys(jdCookieNode).forEach((item) => {
-    cookiesArr.push(jdCookieNode[item])
-  })
-  if (process.env.JD_DEBUG && process.env.JD_DEBUG === 'false') console.log = () => { };
+    Object.keys(jdCookieNode).forEach((item) => {
+        cookiesArr.push(jdCookieNode[item])
+    })
+    if (process.env.JD_DEBUG && process.env.JD_DEBUG === 'false') console.log = () => { };
 } else {
-  cookiesArr = [$.getdata('CookieJD'), $.getdata('CookieJD2'), ...jsonParse($.getdata('CookiesJD') || "[]").map(item => item.cookie)].filter(item => !!item);
+    cookiesArr = [$.getdata('CookieJD'), $.getdata('CookieJD2'), ...jsonParse($.getdata('CookiesJD') || "[]").map(item => item.cookie)].filter(item => !!item);
 }
 
 !(async () => {
-	await requireConfig()
+    await requireConfig()
     if (!cookiesArr[0]) {
         $.msg($.name, '【提示】请先获取京东账号一cookie\n直接使用NobyDa的京东签到获取', 'https://bean.m.jd.com/', {
             "open-url": "https://bean.m.jd.com/"
@@ -40,23 +40,23 @@ if ($.isNode()) {
         return
     }
     // for (let i = 0; i < 200; i++) {
-		  for (let i = 0; i < cookiesArr.length; i++) {
-			if (cookiesArr[i]) {
-			  $.cookie = $.cookiesArr[i];
-			  $.UserName = decodeURIComponent(cookie.match(/pt_pin=([^; ]+)(?=;?)/) && cookie.match(/pt_pin=([^; ]+)(?=;?)/)[1])
-			  $.index = i + 1;
-			  $.isLogin = true;
-			  $.nickName = '';
-			  $.canRun = true;
-			  await TotalBean();
-			  console.log(`\n开始【京东账号${$.index}】${$.nickName || $.UserName}\n`);
-			  if (!$.isLogin) {
-				$.msg($.name, `【提示】cookie已失效`, `京东账号${$.index} ${$.nickName || $.UserName}\n请重新登录获取\nhttps://bean.m.jd.com/bean/signIndex.action`, { "open-url": "https://bean.m.jd.com/bean/signIndex.action" });
-				if ($.isNode()) {
-				  await notify.sendNotify(`${$.name}cookie已失效 - ${$.UserName}`, `京东账号${$.index} ${$.UserName}\n请重新登录获取cookie`);
-				}
-				continue
-			  }
+    for (let i = 0; i < cookiesArr.length; i++) {
+        if (cookiesArr[i]) {
+            $.cookie = $.cookiesArr[i];
+            $.UserName = decodeURIComponent(cookie.match(/pt_pin=([^; ]+)(?=;?)/) && cookie.match(/pt_pin=([^; ]+)(?=;?)/)[1])
+            $.index = i + 1;
+            $.isLogin = true;
+            $.nickName = '';
+            $.canRun = true;
+            //await TotalBean();
+            console.log(`\n开始【京东账号${$.index}】${$.nickName || $.UserName}\n`);
+            if (!$.isLogin) {
+                $.msg($.name, `【提示】cookie已失效`, `京东账号${$.index} ${$.nickName || $.UserName}\n请重新登录获取\nhttps://bean.m.jd.com/bean/signIndex.action`, { "open-url": "https://bean.m.jd.com/bean/signIndex.action" });
+                if ($.isNode()) {
+                    await notify.sendNotify(`${$.name}cookie已失效 - ${$.UserName}`, `京东账号${$.index} ${$.UserName}\n请重新登录获取cookie`);
+                }
+                continue
+            }
             let data = await try_list()
             try {
                 list = data.data.list
@@ -65,7 +65,7 @@ if ($.isNode()) {
                     if (item.leftTime) {
                         if (new Date().getTime() < item.endTime + 60 * 60 * 24 * 1000 * 2) {
                             let title=item.trialName.length>15?item.trialName.substr(0,30)+'...':item.trialName
-							console.log(`可免费领取-${title}`)
+                            console.log(`可免费领取-${title}`)
                             $.notifyMsg += `【账号】${$.index}.${$.UserName}  可免费领取-${title}\n入口:京东-我的-更多工具-新品试用\n`;
                         } else {
                             console.log("开始领取两天后不再推")
@@ -78,8 +78,8 @@ if ($.isNode()) {
         }
     }
     //console.log($.notifyMsg)
-	if ($.isNode() && $.notifyMsg) {
-		await notify.sendNotify(`${$.name}`, `${$.notifyMsg}`);
+    if ($.isNode() && $.notifyMsg) {
+        await notify.sendNotify(`${$.name}`, `${$.notifyMsg}`);
     }
 
 })().catch((e) => {
@@ -97,11 +97,11 @@ async function try_list() {
                 } else {
                     data = JSON.parse(data);
 
-					for (const vo of data.data.list) {
-					if($.runFalag == false) break
-					  $.trialNames = vo.trialName
-					//console.log(`\n${$.trialNames}`);
-					}
+                    for (const vo of data.data.list) {
+                        if($.runFalag == false) break
+                        $.trialNames = vo.trialName
+                        //console.log(`\n${$.trialNames}`);
+                    }
                 }
             } catch (e) {
                 reject(`⚠️ ${arguments.callee.name.toString()} API返回结果解析出错\n${e}\n${JSON.stringify(data)}`)
@@ -114,15 +114,15 @@ async function try_list() {
 
 function taskurl_xh() {
     return {
-			url: "https://api.m.jd.com/client.action",
-            body: `appid=newtry&functionId=try_MyTrials&clientVersion=10.3.6&client=wh5&body=%7B%22page%22%3A1%2C%22selected%22%3A2%2C%22previewTime%22%3A%22%22%7D`,
-            headers: {
-                'origin': 'https://prodev.m.jd.com',
-				'user-agent': 'jdapp;iPhone;10.1.2;15.0;ff2caa92a8529e4788a34b3d8d4df66d9573f499;network/wifi;model/iPhone13,4;addressid/2074196292;appBuild/167802;jdSupportDarkMode/1;Mozilla/5.0 (iPhone; CPU iPhone OS 15_0 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Mobile/15E148;supportJDSHWK/1',
-                'referer': 'https://prodev.m.jd.com/',
-                'cookie': `${$.cookie} __jda=1.1.1.1.1.1;`
-            },
-			}
+        url: "https://api.m.jd.com/client.action",
+        body: `appid=newtry&functionId=try_MyTrials&clientVersion=10.3.6&client=wh5&body=%7B%22page%22%3A1%2C%22selected%22%3A2%2C%22previewTime%22%3A%22%22%7D`,
+        headers: {
+            'origin': 'https://prodev.m.jd.com',
+            'user-agent': 'jdapp;iPhone;10.1.2;15.0;ff2caa92a8529e4788a34b3d8d4df66d9573f499;network/wifi;model/iPhone13,4;addressid/2074196292;appBuild/167802;jdSupportDarkMode/1;Mozilla/5.0 (iPhone; CPU iPhone OS 15_0 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Mobile/15E148;supportJDSHWK/1',
+            'referer': 'https://prodev.m.jd.com/',
+            'cookie': `${$.cookie} __jda=1.1.1.1.1.1;`
+        },
+    }
 }
 function TotalBean() {
     return new Promise(async resolve => {
