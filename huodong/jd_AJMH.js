@@ -8,11 +8,11 @@
 请求太频繁会被黑ip
 过10分钟再执行
 
-cron:1 20 1-31 8 *
+cron:7 7 7 7 7
 ============Quantumultx===============
 [task_local]
 #8.1-8.31 安佳做任务开盲盒，赢好礼
-1 20 1-31 8 * jd_AJMH.js, tag=8.1-8.31 安佳做任务开盲盒，赢好礼, enabled=true
+7 7 7 7 7 jd_AJMH.js, tag=8.1-8.31 安佳做任务开盲盒，赢好礼, enabled=true
 
 */
 
