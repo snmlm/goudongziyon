@@ -36,7 +36,7 @@
 #大牌联合通用开卡
 1 1 1 1 * jd_opencardDPLHTY.js, tag=大牌联合通用开卡, enabled=true
 */
-let opencard_toShop = "true"
+let opencard_toShop = "false"
 const $ = new Env("大牌联合通用开卡");
 const jdCookieNode = $.isNode() ? require('./jdCookie.js') : '';
 const notify = $.isNode() ? require('./sendNotify') : '';
@@ -52,6 +52,8 @@ if ($.isNode()) {
 } else {
     cookiesArr = [$.getdata('CookieJD'), $.getdata('CookieJD2'), ...jsonParse($.getdata('CookiesJD') || "[]").map(item => item.cookie)].filter(item => !!item);
 }
+let opencard_draw = "0"
+opencard_draw = $.isNode() ? (process.env.opencard_draw ? process.env.opencard_draw : opencard_draw) : ($.getdata('opencard_draw') ? $.getdata('opencard_draw') : opencard_draw);
 opencard_toShop = $.isNode() ? (process.env.opencard_toShop ? process.env.opencard_toShop : `${opencard_toShop}`) : ($.getdata('opencard_toShop') ? $.getdata('opencard_toShop') : `${opencard_toShop}`);
 
 allMessage = ""
