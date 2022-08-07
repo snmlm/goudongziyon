@@ -11,11 +11,11 @@
 请求太频繁会被黑ip
 请更换IP后再执行脚本
 
-cron:29 8,17 3-10 8 *
+cron:7 7 7 7 7
 ============Quantumultx===============
 [task_local]
 #8.3-8.10 飞利浦88会员狂欢日
-29 8,17 3-10 8 * jd_opencardL212.js, tag=8.3-8.10 飞利浦88会员狂欢日, enabled=true
+7 7 7 7 7 jd_opencardL212.js, tag=8.3-8.10 飞利浦88会员狂欢日, enabled=true
 
 */
 
