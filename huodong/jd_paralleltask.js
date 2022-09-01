@@ -1,7 +1,7 @@
 /*
 搬运他们的
 建议手动先点开一次
-33 6 * * * jd_paralleltask.js
+33 9 * * * jd_paralleltask.js
 
 */
 const $ = new Env('平行时空任务');
