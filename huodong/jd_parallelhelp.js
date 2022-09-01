@@ -1,7 +1,7 @@
 /*
 搬运他们的
 建议手动先点开一次
-33 2 * * * jd_parallelhelp.js
+33 9 * * * jd_parallelhelp.js
 
 */
 const CryptoJS = require("crypto-js");
