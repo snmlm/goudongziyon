@@ -218,13 +218,15 @@ async function turntableFarm() {
                 continue
             }
             await lotteryMasterHelp(code);
-            if ($.lotteryMasterHelpRes.helpResult.code === '0') {
-                console.log(`天天抽奖-助力${$.lotteryMasterHelpRes.helpResult.masterUserInfo.nickName}成功\n`)
-            } else if ($.lotteryMasterHelpRes.helpResult.code === '11') {
-                console.log(`天天抽奖-不要重复助力${$.lotteryMasterHelpRes.helpResult.masterUserInfo.nickName}\n`)
-            } else if ($.lotteryMasterHelpRes.helpResult.code === '13') {
-                console.log(`天天抽奖-助力${$.lotteryMasterHelpRes.helpResult.masterUserInfo.nickName}失败,助力次数耗尽\n`);
-                break;
+            if ($.lotteryMasterHelpRes.helpResult) {
+                if ($.lotteryMasterHelpRes.helpResult.code === '0') {
+                    console.log(`天天抽奖-助力${$.lotteryMasterHelpRes.helpResult.masterUserInfo.nickName}成功\n`)
+                } else if ($.lotteryMasterHelpRes.helpResult.code === '11') {
+                    console.log(`天天抽奖-不要重复助力${$.lotteryMasterHelpRes.helpResult.masterUserInfo.nickName}\n`)
+                } else if ($.lotteryMasterHelpRes.helpResult.code === '13') {
+                    console.log(`天天抽奖-助力${$.lotteryMasterHelpRes.helpResult.masterUserInfo.nickName}失败,助力次数耗尽\n`);
+                    break;
+                }
             }
         }
         console.log(`天天抽奖次数共-${remainLotteryTimes}次`)
