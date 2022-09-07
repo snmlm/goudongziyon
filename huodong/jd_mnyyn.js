@@ -10,11 +10,11 @@
 请求太频繁会被黑ip
 过10分钟再执行
 
-cron:1 1 1 1 *
+cron:0 * * * *
 ============Quantumultx===============
 [task_local]
 #9.1-9.29 云养牛，免费赢好礼
-1 1 1 1 * jd_mnyyn.js, tag=9.1-9.29 云养牛，免费赢好礼, enabled=true
+0 * * * * jd_mnyyn.js, tag=9.1-9.29 云养牛，免费赢好礼, enabled=true
 
 */
 
