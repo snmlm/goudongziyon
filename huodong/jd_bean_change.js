@@ -13,6 +13,62 @@ const JXUserAgent = $.isNode() ? (process.env.JX_USER_AGENT ? process.env.JX_USE
 //Node.js用户请在jdCookie.js处填写京东ck;
 const jdCookieNode = $.isNode() ? require('./jdCookie.js') : '';
 let NowHour = new Date().getHours();
+
+let checkbeanDetailMode=0;
+if ($.isNode() && process.env.BEANCHANGE_BEANDETAILMODE){
+	checkbeanDetailMode=process.env.BEANCHANGE_BEANDETAILMODE*1;
+}
+
+const fs = require('fs');
+let yesterday="";
+let TodayDate="";
+let startDate="";
+let endDate="";
+try {
+	const moment = require("moment");
+	yesterday = moment().subtract(1, 'days').format('YYYY-MM-DD');
+	TodayDate = moment().format("YYYY-MM-DD");
+	startDate = moment().startOf("month").format("YYYY_MM");
+	endDate = moment().endOf("month").format("YYYY-MM-DD");
+} catch (e) {
+	console.log("依赖缺失，请先安装依赖moment!");
+	return
+}
+
+if (!fs.existsSync("./BeanCache")) {
+	fs.mkdirSync("./BeanCache");
+}
+
+let strBeanCache = "./BeanCache/" + yesterday + ".json";
+let strNewBeanCache = "./BeanCache/" + TodayDate + ".json";
+let TodayCache = [];
+let Fileexists = fs.existsSync(strBeanCache);
+let TempBeanCache = [];
+if(!Fileexists){
+	yesterday=TodayDate;
+	strBeanCache=strNewBeanCache;
+	Fileexists = fs.existsSync(strBeanCache);
+}
+if (Fileexists) {
+	console.log("检测到资产变动缓存文件"+yesterday+".json，载入...");
+	TempBeanCache = fs.readFileSync(strBeanCache, 'utf-8');
+	if (TempBeanCache) {
+		TempBeanCache = TempBeanCache.toString();
+		TempBeanCache = JSON.parse(TempBeanCache);
+	}
+}
+
+Fileexists = fs.existsSync(strNewBeanCache);
+if (Fileexists) {
+	console.log("检测到资产变动缓存文件"+TodayDate+".json，载入...");
+	TodayCache = fs.readFileSync(strNewBeanCache, 'utf-8');
+	if (TodayCache) {
+		TodayCache = TodayCache.toString();
+		TodayCache = JSON.parse(TodayCache);
+	}
+}
+
+
 let allMessage = '';
 let allMessage2 = '';
 let allReceiveMessage = '';
@@ -217,7 +273,7 @@ if(DisableIndex!=-1){
 }
 
 //京喜牧场
-let EnableJxMC=true;
+let EnableJxMC=false;
 DisableIndex= strDisableList.findIndex((item) => item === "京喜牧场");
 if(DisableIndex!=-1){
 	console.log("检测到设定关闭京喜牧场查询");
@@ -284,18 +340,11 @@ if(DisableIndex!=-1){
 }
 
 //汪汪赛跑
-let EnableJoyRun=true;
+let EnableJoyRun=false;
 DisableIndex=strDisableList.findIndex((item) => item === "汪汪赛跑");
 if(DisableIndex!=-1){
 	console.log("检测到设定关闭汪汪赛跑查询");
 	EnableJoyRun=false
-}
-
-let EnableCheckEcard=true;
-DisableIndex=strDisableList.findIndex((item) => item === "E卡查询");
-if(DisableIndex!=-1){
-	console.log("检测到设定关闭E卡查询");
-	EnableCheckEcard=false
 }
 
 //京豆收益查询
@@ -369,13 +418,22 @@ if(DisableIndex!=-1){
 			$.JoyRunningAmount = "";
 			$.ECardinfo = "";
 			$.PlustotalScore=0;
+			$.CheckTime="";
+			$.beanCache=0;
 			TempBaipiao = "";
 			strGuoqi="";
 			console.log(`******开始查询【京东账号${$.index}】${$.nickName || $.UserName}*********`);
 
-			await Promise.all([
-				TotalBean(),
-				TotalBean2()])
+			await TotalBean();
+			//await TotalBean2();
+
+			if ($.beanCount == 0) {
+				var userdata = await getuserinfo();
+				if (userdata.code == 1) {
+					$.beanCount = userdata.content.jdBean;
+				}
+			}
+
 
 			if (!$.isLogin) {
 				await isLoginByX1a0He();
@@ -391,11 +449,57 @@ if(DisableIndex!=-1){
 				continue
 			}
 
+			if (TempBeanCache) {
+				for (let j = 0; j < TempBeanCache.length; j++) {
+					if (TempBeanCache[j].pt_pin == $.UserName) {
+						$.CheckTime = TempBeanCache[j].CheckTime;
+						$.beanCache = TempBeanCache[j].BeanNum;
+						break;
+					}
+				}
+			}
+
+			var llfound = false;
+			var timeString = "";
+			var nowHour = new Date().getHours();
+			var nowMinute = new Date().getMinutes();
+			if (nowHour < 10)
+				timeString += "0" + nowHour + ":";
+			else
+				timeString += nowHour + ":";
+
+			if (nowMinute < 10)
+				timeString += "0" + nowMinute;
+			else
+				timeString += nowMinute;
+
+			if (TodayCache) {
+				for (let j = 0; j < TodayCache.length; j++) {
+					if (TodayCache[j].pt_pin == $.UserName) {
+						TodayCache[j].CheckTime = TodayDate + " " + timeString;
+						TodayCache[j].BeanNum = $.beanCount;
+						llfound = true;
+						break;
+					}
+				}
+			}
+			if (!llfound) {
+
+				var tempAddCache = {
+					"pt_pin": $.UserName,
+					"CheckTime": TodayDate + " " + timeString,
+					"BeanNum": $.beanCount
+				};
+				TodayCache.push(tempAddCache);
+			}
+
+			await getjdfruitinfo() //东东农场
+			await $.wait(1000);
+
 			await Promise.all([
 				getJoyBaseInfo(), //汪汪乐园
 				getJdZZ(), //京东赚赚
 				getMs(), //京东秒杀
-				getjdfruitinfo(), //东东农场
 				cash(), //极速金币
 				jdJxMCinfo(), //京喜牧场
 				bean(), //京豆查询
@@ -405,7 +509,6 @@ if(DisableIndex!=-1){
 				GetJxBeaninfo(), //喜豆查询
 				GetPigPetInfo(), //金融养猪
 				GetJoyRuninginfo(), //汪汪赛跑
-				CheckEcard(), //E卡查询
 				queryScores()
 			])
 
@@ -434,6 +537,17 @@ if(DisableIndex!=-1){
 			}
 		}
 	}
+
+	var str = JSON.stringify(TodayCache, null, 2);
+	fs.writeFile(strNewBeanCache, str, function (err) {
+		if (err) {
+			console.log(err);
+			console.log("添加缓存" + TodayDate + ".json失败!");
+		} else {
+			console.log("添加缓存" + TodayDate + ".json成功!");
+		}
+	})
+
 	//组1通知
 	if (ReceiveMessageGp4) {
 		allMessage2Gp4 = `【⏰商品白嫖活动领取提醒⏰】\n` + ReceiveMessageGp4;
@@ -695,20 +809,35 @@ async function showMsg() {
 
 	}
 	if (EnableCheckBean) {
-		ReturnMessage += `【今日京豆】收${$.todayIncomeBean}豆`;
-		strsummary += `【今日京豆】收${$.todayIncomeBean}豆`;
-		if ($.todayOutcomeBean != 0) {
-			ReturnMessage += `,支${$.todayOutcomeBean}豆`;
-			strsummary += `,支${$.todayOutcomeBean}豆`;
-		}
-		ReturnMessage += `\n`;
-		strsummary += `\n`;
-		ReturnMessage += `【昨日京豆】收${$.incomeBean}豆`;
+		if (checkbeanDetailMode == 0) {
+			ReturnMessage += `【今日京豆】收${$.todayIncomeBean}豆`;
+			strsummary += `【今日京豆】收${$.todayIncomeBean}豆`;
+			if ($.todayOutcomeBean != 0) {
+				ReturnMessage += `,支${$.todayOutcomeBean}豆`;
+				strsummary += `,支${$.todayOutcomeBean}豆`;
+			}
+			ReturnMessage += `\n`;
+			strsummary += `\n`;
+			ReturnMessage += `【昨日京豆】收${$.incomeBean}豆`;
 
-		if ($.expenseBean != 0) {
-			ReturnMessage += `,支${$.expenseBean}豆`;
+			if ($.expenseBean != 0) {
+				ReturnMessage += `,支${$.expenseBean}豆`;
+			}
+			ReturnMessage += `\n`;
+		} else {
+			if (TempBeanCache){
+				ReturnMessage += `【京豆变动】 ${$.beanCount-$.beanCache}豆(与${$.CheckTime}比较)`;
+				strsummary += `【京豆变动】 ${$.beanCount-$.beanCache}豆(与${$.CheckTime}比较)`;
+				ReturnMessage += `\n`;
+				strsummary += `\n`;
+			}
+			else{
+				ReturnMessage += `【京豆变动】未找到缓存,下次出结果统计`;
+				strsummary += `【京豆变动】未找到缓存,下次出结果统计`;
+				ReturnMessage += `\n`;
+				strsummary += `\n`;
+			}
 		}
-		ReturnMessage += `\n`;
 	}
 
 
@@ -1033,7 +1162,9 @@ async function showMsg() {
 	//$.msg($.name, '', ReturnMessage , {"open-url": "https://bean.m.jd.com/beanDetail/index.action?resourceValue=bean"});
 }
 async function bean() {
-	if (EnableCheckBean) {
+
+	if (EnableCheckBean && checkbeanDetailMode==0) {
+
 		// console.log(`北京时间零点时间戳:${parseInt((Date.now() + 28800000) / 86400000) * 86400000 - 28800000}`);
 		// console.log(`北京时间2020-10-28 06:16:05::${new Date("2020/10/28 06:16:05+08:00").getTime()}`)
 		// 不管哪个时区。得到都是当前时刻北京时间的时间戳 new Date().getTime() + new Date().getTimezoneOffset()*60*1000 + 8*60*60*1000
@@ -1097,17 +1228,16 @@ async function bean() {
 		}
 		$.todayOutcomeBean = -$.todayOutcomeBean;
 		$.expenseBean = -$.expenseBean;
-
-		decExBean = 0;
-		if (EnableOverBean) {
-			await queryexpirejingdou(); //过期京豆
-			if (decExBean && doExJxBeans == "true") {
-				var jxbeans = await exchangejxbeans(decExBean);
-				if (jxbeans) {
-					$.beanChangeXi = decExBean;
-					console.log(`已为您将` + decExBean + `临期京豆转换成喜豆！`);
-					strGuoqi += `已为您将` + decExBean + `临期京豆转换成喜豆！\n`;
-				}
+	}
+	decExBean = 0;
+	if (EnableOverBean) {
+		await queryexpirejingdou(); //过期京豆
+		if (decExBean && doExJxBeans == "true") {
+			var jxbeans = await exchangejxbeans(decExBean);
+			if (jxbeans) {
+				$.beanChangeXi = decExBean;
+				console.log(`已为您将` + decExBean + `临期京豆转换成喜豆！`);
+				strGuoqi += `已为您将` + decExBean + `临期京豆转换成喜豆！\n`;
 			}
 		}
 	}
@@ -1204,29 +1334,6 @@ async function jdCash() {
 	if (!EnableCash)
 		return;
 	let functionId = "cash_homePage";
-	/* let body = {};
-	console.log(`正在获取领现金任务签名...`);
-	isSignError = false;
-	let sign = await getSign(functionId, body);
-		if (isSignError) {
-			console.log(`领现金任务签名获取失败,等待2秒后再次尝试...`)
-			await $.wait(2 * 1000);
-			isSignError = false;
-			sign =await getSign(functionId, body);
-		}
-		if (isSignError) {
-			console.log(`领现金任务签名获取失败,等待2秒后再次尝试...`)
-			await $.wait(2 * 1000);
-			isSignError = false;
-			sign = await getSign(functionId, body);
-		}
-		if (!isSignError) {
-			console.log(`领现金任务签名获取成功...`)
-		} else {
-			console.log(`领现金任务签名获取失败...`)
-			$.jdCash = 0;
-			return
-		} */
 	let sign = `body=%7B%7D&build=167968&client=apple&clientVersion=10.4.0&d_brand=apple&d_model=iPhone13%2C3&ef=1&eid=eidI25488122a6s9Uqq6qodtQx6rgQhFlHkaE1KqvCRbzRnPZgP/93P%2BzfeY8nyrCw1FMzlQ1pE4X9JdmFEYKWdd1VxutadX0iJ6xedL%2BVBrSHCeDGV1&ep=%7B%22ciphertype%22%3A5%2C%22cipher%22%3A%7B%22screen%22%3A%22CJO3CMeyDJCy%22%2C%22osVersion%22%3A%22CJUkDK%3D%3D%22%2C%22openudid%22%3A%22CJSmCWU0DNYnYtS0DtGmCJY0YJcmDwCmYJC0DNHwZNc5ZQU2DJc3Zq%3D%3D%22%2C%22area%22%3A%22CJZpCJCmC180ENcnCv80ENc1EK%3D%3D%22%2C%22uuid%22%3A%22aQf1ZRdxb2r4ovZ1EJZhcxYlVNZSZz09%22%7D%2C%22ts%22%3A1648428189%2C%22hdid%22%3A%22JM9F1ywUPwflvMIpYPok0tt5k9kW4ArJEU3lfLhxBqw%3D%22%2C%22version%22%3A%221.0.3%22%2C%22appname%22%3A%22com.360buy.jdmobile%22%2C%22ridx%22%3A-1%7D&ext=%7B%22prstate%22%3A%220%22%2C%22pvcStu%22%3A%221%22%7D&isBackground=N&joycious=104&lang=zh_CN&networkType=3g&networklibtype=JDNetworkBaseAF&partner=apple&rfs=0000&scope=11&sign=98c0ea91318ef1313786d86d832f1d4d&st=1648428208392&sv=101&uemps=0-0&uts=0f31TVRjBSv7E8yLFU2g86XnPdLdKKyuazYDek9RnAdkKCbH50GbhlCSab3I2jwM04d75h5qDPiLMTl0I3dvlb3OFGnqX9NrfHUwDOpTEaxACTwWl6n//EOFSpqtKDhg%2BvlR1wAh0RSZ3J87iAf36Ce6nonmQvQAva7GoJM9Nbtdah0dgzXboUL2m5YqrJ1hWoxhCecLcrUWWbHTyAY3Rw%3D%3D`
 	return new Promise((resolve) => {
 		$.post(apptaskUrl(functionId, sign), async (err, resp, data) => {
@@ -1242,57 +1349,6 @@ async function jdCash() {
 							return
 						}
 					}
-				}
-			} catch (e) {
-				$.logErr(e, resp)
-			}
-			finally {
-				resolve(data);
-			}
-		})
-	})
-}
-
-async function CheckEcard() {
-	if (!EnableCheckEcard)
-		return;
-	var balEcard = 0;
-	var body = "pageNo=1&queryType=1&cardType=-1&pageSize=20";
-	var stroption = {
-		url: 'https://mygiftcard.jd.com/giftcard/queryGiftCardItem/app?source=JDAP',
-		body,
-		headers: {
-			"accept": "application/json, text/plain, */*",
-			"accept-encoding": "gzip, deflate, br",
-			"accept-language": "zh-CN,zh-Hans;q=0.9",
-			"content-length": "44",
-			"content-type": "application/x-www-form-urlencoded",
-			"cookie": cookie,
-			"origin": "https://mygiftcard.jd.com",
-			"referer": "https://mygiftcard.jd.com/giftcardForM.html?source=JDAP&sid=9f55a224c8286baa2fe3a7545bbd411w&un_area=16_1303_48712_48758",
-			"user-agent": "jdapp;iPhone;10.1.2;15.0;network/wifi;Mozilla/5.0 (iPhone; CPU iPhone OS 15_0 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Mobile/15E148;supportJDSHWK/1"
-		},
-		timeout: 10000
-	}
-	return new Promise((resolve) => {
-		$.post(stroption, async(err, resp, data) => {
-			try {
-				if (err) {
-					console.log(`${JSON.stringify(err)}`)
-					console.log(`jdCash API请求失败，请检查网路重试`)
-				} else {
-					//console.log(data);
-					data = JSON.parse(data);
-					let useable = data.couponVOList;
-					if (useable) {
-						for (let k = 0; k < useable.length; k++) {
-							if(useable[k].balance>0)
-								balEcard += useable[k].balance;
-						}
-						if(balEcard)
-							$.ECardinfo = '共' + useable.length + '张E卡,合计' + parseFloat(balEcard).toFixed(2) + '元';
-					}
-
 				}
 			} catch (e) {
 				$.logErr(e, resp)
@@ -1356,7 +1412,7 @@ function getSign(functionId, body) {
 		})
 	})
 }
-function TotalBean() {
+/* function TotalBean() {
 	return new Promise(async resolve => {
 		const options = {
 			url: "https://me-api.jd.com/user_new/info/GetJDUserInfoUnion",
@@ -1371,9 +1427,9 @@ function TotalBean() {
 				if (err) {
 					$.logErr(err)
 				} else {
+					console.log(data);
 					if (data) {
 						data = JSON.parse(data);
-
 						if (data['retcode'] === "1001") {
 							$.isLogin = false; //cookie过期
 							return;
@@ -1402,7 +1458,58 @@ function TotalBean() {
 			}
 		})
 	})
+} */
+
+function TotalBean() {
+	return new Promise(async resolve => {
+		const options = {
+			"url": `https://wq.jd.com/user/info/QueryJDUserInfo?sceneval=2`,
+			"headers": {
+				"Accept": "application/json,text/plain, */*",
+				"Content-Type": "application/x-www-form-urlencoded",
+				"Accept-Encoding": "gzip, deflate, br",
+				"Accept-Language": "zh-cn",
+				"Connection": "keep-alive",
+				"Cookie": cookie,
+				"Referer": "https://wqs.jd.com/my/jingdou/my.shtml?sceneval=2",
+				"User-Agent": $.isNode() ? (process.env.JD_USER_AGENT ? process.env.JD_USER_AGENT : (require('./USER_AGENTS').USER_AGENT)) : ($.getdata('JDUA') ? $.getdata('JDUA') : "jdapp;iPhone;9.4.4;14.3;network/4g;Mozilla/5.0 (iPhone; CPU iPhone OS 14_3 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Mobile/15E148;supportJDSHWK/1")
+			}
+		}
+		$.post(options, (err, resp, data) => {
+			try {
+				if (err) {
+					console.log(`${JSON.stringify(err)}`)
+					console.log(`${$.name} API请求失败，请检查网路重试`)
+				} else {
+					if (data) {
+						data = JSON.parse(data);
+						if (data['retcode'] === 13) {
+							$.isLogin = false; //cookie过期
+							return
+						}
+						if (data['retcode'] === 0) {
+							$.nickName = (data['base'] && data['base'].nickname) || $.UserName;
+							$.isPlusVip=data['isPlusVip'];
+							$.beanCount=(data['base'] && data['base'].jdNum) || 0 ;
+						} else {
+							$.nickName = $.UserName
+						}
+
+
+
+					} else {
+						console.log(`京东服务器返回空数据`)
+					}
+				}
+			} catch (e) {
+				$.logErr(e, resp)
+			} finally {
+				resolve();
+			}
+		})
+	})
 }
+
 function TotalBean2() {
 	return new Promise(async(resolve) => {
 		const options = {
@@ -1425,6 +1532,7 @@ function TotalBean2() {
 				} else {
 					if (data) {
 						data = JSON.parse(data);
+
 						if (!data.user) {
 							return;
 						}
@@ -2952,6 +3060,110 @@ async function queryScores() {
 
 }
 
+async function getuserinfo() {
+	var body={"pin": "$cooMrdGatewayUid$"};
+	var ua = `jdapp;iPhone;${random(["11.1.0", "10.5.0", "10.3.6"])};${random(["13.5", "14.0", "15.0"])};${uuidRandom()};network/wifi;supportApplePay/0;hasUPPay/0;hasOCPay/0;model/iPhone11,6;addressid/7565095847;supportBestPay/0;appBuild/167541;jdSupportDarkMode/0;Mozilla/5.0 (iPhone; CPU iPhone OS 13_5 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Mobile/15E148;supportJDSHWK/1`;
+
+	let config = {
+		url: 'https://lop-proxy.jd.com/JingIntegralApi/userAccount',
+		body: JSON.stringify(body),
+		headers: {
+			"host": "lop-proxy.jd.com",
+			"jexpress-report-time": Date.now().toString(),
+			"access": "H5",
+			"source-client": "2",
+			"accept": "application/json, text/plain, */*",
+			"d_model": "iPhone11,6",
+			"accept-encoding": "gzip",
+			"lop-dn": "jingcai.jd.com",
+			"user-agent": ua,
+			"partner": "",
+			"screen": "375*812",
+			"cookie": cookie,
+			"x-requested-with": "XMLHttpRequest",
+			"version": "1.0.0",
+			"uuid": randomNumber(10),
+			"clientinfo": "{\"appName\":\"jingcai\",\"client\":\"m\"}",
+			"d_brand": "iPhone",
+			"appparams": "{\"appid\":158,\"ticket_type\":\"m\"}",
+			"sdkversion": "1.0.7",
+			"area": area(),
+			"client": "iOS",
+			"referer": "https://jingcai-h5.jd.com/",
+			"eid": "",
+			"osversion": random(["13.5", "14.0", "15.0"]),
+			"networktype": "wifi",
+			"jexpress-trace-id": uuid(),
+			"origin": "https://jingcai-h5.jd.com",
+			"app-key": "jexpress",
+			"event-id": uuid(),
+			"clientversion": random(["11.1.0", "10.5.0", "10.3.6"]),
+			"content-type": "application/json;charset=utf-8",
+			"build": "167541",
+			"biz-type": "service-monitor",
+			"forcebot": "0"
+		}
+	}
+	return new Promise(resolve => {
+		$.post(config, async(err, resp, data) => {
+			try {
+				//console.log(data)
+				if (err) {
+					console.log(err)
+				} else {
+					data = JSON.parse(data);
+				}
+			} catch (e) {
+				$.logErr(e, resp)
+			}
+			finally {
+				resolve(data || '');
+			}
+		})
+	})
+}
+function area() {
+	let i = getRand(1, 30)
+	let o = getRand(70, 3000)
+	let x = getRand(900, 60000)
+	let g = getRand(600, 30000)
+	let a = i + '_' + o + '_' + x + '_' + g;
+	return a
+};
+function getRand(min, max) {
+	return parseInt(Math.random() * (max - min)) + min;
+};
+function uuid() {
+	var s = [];
+	var hexDigits = "0123456789abcdef";
+	for (var i = 0; i < 36; i++) {
+		s[i] = hexDigits.substr(Math.floor(Math.random() * 0x10), 1);
+	}
+	s[14] = "4";
+	s[19] = hexDigits.substr((s[19] & 0x3) | 0x8, 1);
+	s[8] = s[13] = s[18] = s[23] = "-";
+	var uuid = s.join("");
+	return uuid;
+};
+function uuidRandom() {
+	return Math.random().toString(16).slice(2, 10) +
+		Math.random().toString(16).slice(2, 10) +
+		Math.random().toString(16).slice(2, 10) +
+		Math.random().toString(16).slice(2, 10) +
+		Math.random().toString(16).slice(2, 10);
+}
+function random(arr) {
+	return arr[Math.floor(Math.random() * arr.length)];
+}
+function randomNumber(len) {
+	let chars = '0123456789';
+	let maxPos = chars.length;
+	let str = '';
+	for (let i = 0; i < len; i++) {
+		str += chars.charAt(Math.floor(Math.random() * maxPos));
+	}
+	return Date.now() + str;
+}
 // prettier-ignore
 function Env(t, e) {
 	"undefined" != typeof process && JSON.stringify(process.env).indexOf("GITHUB") > -1 && process.exit(0);
