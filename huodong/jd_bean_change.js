@@ -432,7 +432,7 @@ if(DisableIndex!=-1){
 			//await TotalBean2();
 			if ($.beanCount == 0) {
 				console.log("数据获取失败，等待30秒后重试....")
-				await $.wait(30*1000);
+				await $.wait(50*1000);
 				await TotalBean();
 			}
 			if ($.beanCount == 0) {
