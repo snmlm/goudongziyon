@@ -1,19 +1,19 @@
 /*
-618红包
+锁佣红包
 
 变量
-export CODE618=""
+export RDECODE=""
 
 建议禁用，避免其他问题 需要的请填写自己的码子，
 
-cron 0 0,10,20 * * * jd_618_red.js
+cron 0 0,10,20 * * * jd_red.js
 
 */
-const $ = new Env('618红包');
-$.CODE618 = $.isNode() ? (process.env.CODE618 ? process.env.CODE618 : '') : '';
+const $ = new Env('锁佣红包');
+$.RDECODE = $.isNode() ? (process.env.RDECODE ? process.env.RDECODE : '') : '';
 const jdCookieNode = require('./jdCookie.js');
-if(!$.CODE618){
-    console.log("请先去环境变量配置自己的返利码CODE618")
+if(!$.RDECODE){
+    console.log("请先去环境变量配置自己的返利码RDECODE")
     return;
 }
 let cookiesArr = [];
@@ -39,7 +39,7 @@ let appId, fingerprint, token, enCryptMethodJD;
     let fglist = ['6289931560897925', '0403403318679778', '1390288884563462'];
     fingerprint = getRandomArrayElements(fglist, 1)[0];
     await requestAlgo();
-    if ($.CODE618 !== '9999') {
+    if ($.RDECODE !== '9999') {
         $.show = false;
     } else {
         $.show = true;
@@ -55,7 +55,7 @@ let appId, fingerprint, token, enCryptMethodJD;
 })().catch((e) => { $.log('', `❌ ${$.name}, 失败! 原因: ${e}!`, '') }).finally(() => { $.done(); })
 
 async function main(ck, code = 'lKMc48P') {
-    code = $.CODE618 ;
+    code = $.RDECODE ;
     //console.log(code)
     let userName = decodeURIComponent(ck.match(/pt_pin=([^; ]+)(?=;?)/) && ck.match(/pt_pin=([^; ]+)(?=;?)/)[1])
     let jfInfo = await getInfoByUrl($, ck, code);
