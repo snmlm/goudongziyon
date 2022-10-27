@@ -2,7 +2,7 @@
 锁佣红包
 
 变量
-export RDECODE=""
+export REDCODE=""
 
 建议禁用，避免其他问题 需要的请填写自己的码子，
 
@@ -10,10 +10,10 @@ cron 0 0,10,20 * * * jd_red.js
 
 */
 const $ = new Env('锁佣红包');
-$.RDECODE = $.isNode() ? (process.env.RDECODE ? process.env.RDECODE : '') : '';
+$.REDCODE = $.isNode() ? (process.env.REDCODE ? process.env.REDCODE : '') : '';
 const jdCookieNode = require('./jdCookie.js');
 if(!$.RDECODE){
-    console.log("请先去环境变量配置自己的返利码RDECODE")
+    console.log("请先去环境变量配置自己的返利码REDCODE")
     return;
 }
 let cookiesArr = [];
@@ -39,7 +39,7 @@ let appId, fingerprint, token, enCryptMethodJD;
     let fglist = ['6289931560897925', '0403403318679778', '1390288884563462'];
     fingerprint = getRandomArrayElements(fglist, 1)[0];
     await requestAlgo();
-    if ($.RDECODE !== '9999') {
+    if ($.REDCODE !== '9999') {
         $.show = false;
     } else {
         $.show = true;
@@ -55,7 +55,7 @@ let appId, fingerprint, token, enCryptMethodJD;
 })().catch((e) => { $.log('', `❌ ${$.name}, 失败! 原因: ${e}!`, '') }).finally(() => { $.done(); })
 
 async function main(ck, code = 'lKMc48P') {
-    code = $.RDECODE ;
+    code = $.REDCODE ;
     //console.log(code)
     let userName = decodeURIComponent(ck.match(/pt_pin=([^; ]+)(?=;?)/) && ck.match(/pt_pin=([^; ]+)(?=;?)/)[1])
     let jfInfo = await getInfoByUrl($, ck, code);
