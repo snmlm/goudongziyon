@@ -12,7 +12,7 @@ cron 0 0,10,20 * * * jd_red.js
 const $ = new Env('锁佣红包');
 $.REDCODE = $.isNode() ? (process.env.REDCODE ? process.env.REDCODE : '') : '';
 const jdCookieNode = require('./jdCookie.js');
-if(!$.RDECODE){
+if(!$.REDCODE){
     console.log("请先去环境变量配置自己的返利码REDCODE")
     return;
 }
