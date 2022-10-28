@@ -4,7 +4,7 @@
 变量
 export CODE1111 =""
 
-cron:1 12,20 * * *
+cron:0 0,12,20 * * *
 ============Quantumultx===============
 [task_local]
 #双十一助力
