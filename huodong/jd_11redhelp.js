@@ -2,7 +2,7 @@
 双十一助力
 
 变量
-export CODE1111 =""
+export CODE1111=""
 
 cron:0 0,12,20 * * *
 ============Quantumultx===============
