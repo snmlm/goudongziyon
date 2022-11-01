@@ -2,6 +2,22 @@
 环境变量 
 开卡延迟,默认 4000
 opencard_delayTime
+新增开卡脚本，一次性脚本
+
+第一个账号助力作者 其他依次助力CK1
+第一个CK失效会退出脚本
+
+————————————————
+入口：[ 狂欢抢先购 入会下单有惊喜]
+
+请求太频繁会被黑ip
+过10分钟再执行
+
+cron:1 1 1 1 *
+============Quantumultx===============
+[task_local]
+#狂欢抢先购 入会下单有惊喜
+1 1 1 1 * jd_opencardL255.js, tag=狂欢抢先购 入会下单有惊喜, enabled=true
 */
 const $ = new Env("狂欢抢先购 入会下单有惊喜");
 const jdCookieNode = $.isNode() ? require("./jdCookie.js") : "";
