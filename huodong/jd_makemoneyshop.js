@@ -2,10 +2,14 @@
 /*
 京东特价APP首页-赚钱大赢家
 进APP看看，能不能进去，基本都黑的！！！
-默认定时不跑！只打扫和助力
+有的能进去，助力确是黑的！！
+默认定时不跑！助力和领取任务奖励
+运行流程：设置助力码--过滤黑号--助力--领取任务奖励！！！
 助理吗变量：多个用&号隔开
 DYJSHAREID = 'xxx&xxx&xxx'
 10 10 10 10 * https://raw.githubusercontent.com/6dylan6/jdpro/main/jd_makemoneyshop.js
+By: https://github.com/6dylan6/jdpro
+updatetime: 2022/11/3 自动领取邀请奖励，其他优化
  */
 
 const $ = new Env('特价版大赢家');
@@ -35,7 +39,8 @@ let helpinfo = {};
         $.msg($.name, '【提示】请先获取京东账号一cookie\n直接使用NobyDa的京东签到获取', 'https://bean.m.jd.com/bean/signIndex.action', { "open-url": "https://bean.m.jd.com/bean/signIndex.action" });
         return;
     }
-    console.log('\n运行一遍可以看到助力码，然后设置需要助力的！基本都是黑的！！\n')
+    console.log('\n运行一遍可以看到助力码，然后设置需要助力的！')
+    console.log('\n运行流程：设置助力码--过滤黑号--助力--领取任务奖励！！！\n')
     for (let i = 0; i < cookiesArr.length; i++) {
         if (cookiesArr[i]) {
             cookie = cookiesArr[i];
@@ -46,6 +51,7 @@ let helpinfo = {};
             $.canUseCoinAmount = 0;
             helpinfo[$.UserName] = {};
             UA = require('./USER_AGENTS').UARAM();
+            helpinfo[$.UserName].ua = UA;
             await TotalBean();
             console.log(`\n******开始【京东账号${$.index}】${$.nickName || $.UserName}*********\n`);
             if (!$.isLogin) {
@@ -57,13 +63,7 @@ let helpinfo = {};
             }
 
             await getinfo(1);
-            if (helpinfo[$.UserName].hot) continue;
-            await $.wait(500);
-            await gettask();
-            await $.wait(500);
-            if ($.taskstate !==1) await Award();
-            await $.wait(2000);
-
+            await $.wait(1000);
         }
     }
     if (shareId.length > 0) {
@@ -75,18 +75,43 @@ let helpinfo = {};
                     cookie = cookiesArr[i];
                     $.UserName = decodeURIComponent(cookie.match(/pt_pin=([^; ]+)(?=;?)/) && cookie.match(/pt_pin=([^; ]+)(?=;?)/)[1]);
                     $.index = i + 1;
+                    UA = helpinfo[$.UserName].ua;
                     console.log(`\n开始【账号${$.index}】${$.nickName || $.UserName}`);
                     if (helpinfo[$.UserName].nohelp) { console.log('已无助力次数了'); continue };
                     if (helpinfo[$.UserName].hot) { console.log('可能黑了，跳过！'); continue };
                     await help(shareId[j]);
-                    console.log('随机等待');
+                    console.log('随机等待2-5秒');
                     await $.wait(parseInt(Math.random() * 3000 + 2000, 10))
                 }
             }
         }
     } else {
-        console.log('无助立马请设置！！')
+        console.log('无助立马请设置！！\n')
     }
+
+    console.log('开始领取任务奖励...')
+
+    for (let i = 0; i < cookiesArr.length; i++) {
+        if (cookiesArr[i]) {
+            cookie = cookiesArr[i];
+            $.UserName = decodeURIComponent(cookie.match(/pt_pin=([^; ]+)(?=;?)/) && cookie.match(/pt_pin=([^; ]+)(?=;?)/)[1])
+            $.index = i + 1;
+            UA = helpinfo[$.UserName].ua;
+            console.log(`\n开始【账号${$.index}】${$.UserName}`);
+            if (helpinfo[$.UserName].hot) continue;
+            await gettask();
+            await $.wait(500);
+            for (let item of $.tasklist) {
+                if (item.completedTimes < item.realCompletedTimes) {
+                    console.log(`去领取${item.taskName}奖励`);
+                    await Award(item.taskId);
+                    await $.wait(500);
+                }
+            }
+            await $.wait(1000);
+        }
+    }
+
 })()
     .catch((e) => {
         $.log('', `❌ ${$.name}, 失败! 原因: ${e}!`, '')
@@ -108,6 +133,7 @@ function getinfo(xc) {
                     if (data.code == 0) {
                         if (xc) {
                             let sId = data.data.shareId;
+                            helpinfo[$.UserName].sId = `${sId}`;
                             console.log('助力码：' + sId);
                             console.log('当前营业金：' + data.data.canUseCoinAmount);
                         }
@@ -137,7 +163,7 @@ function gettask() {
                     let tostr = data.match(/\((\{.*?\})\n\)/)[1];
                     data = eval('(' + tostr + ')');
                     if (data.ret == 0) {
-                        $.taskstate = data.data.userTaskStatusList[0].awardStatus;
+                        $.tasklist = data.data.userTaskStatusList;
                     } else {
                         console.log(data.msg);
                     }
@@ -150,9 +176,9 @@ function gettask() {
         })
     })
 }
-function Award() {
+function Award(id) {
     return new Promise(async (resolve) => {
-        $.get(taskUrl('newtasksys/newtasksys_front/Award', `__t=${Date.now()}&source=makemoneyshop&taskId=3532&bizCode=makemoneyshop`), async (err, resp, data) => {
+        $.get(taskUrl('newtasksys/newtasksys_front/Award', `__t=${Date.now()}&source=makemoneyshop&taskId=${id}&bizCode=makemoneyshop`), async (err, resp, data) => {
             try {
                 if (err) {
                     console.log(`${JSON.stringify(err)}`)
@@ -161,7 +187,7 @@ function Award() {
                     let tostr = data.match(/\((\{.*?\})\n\)/)[1];
                     data = eval('(' + tostr + ')');
                     if (data.ret == 0) {
-                        console.log('打扫成功，获得：' + data.data.prizeInfo + '分');
+                        console.log('获得营业金：' + (data.data.prizeInfo / 100) + '元');
                     } else {
                         console.log(data.msg);
                     }
