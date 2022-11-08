@@ -31,7 +31,7 @@ const JD_API_HOST = 'https://api.m.jd.com/api';
     $.msg($.name, '【提示】请先获取京东账号一cookie\n直接使用NobyDa的京东签到获取', 'https://bean.m.jd.com/bean/signIndex.action', {"open-url": "https://bean.m.jd.com/bean/signIndex.action"});
     return;
   }
-  
+
   for (let i = 0; i < cookiesArr.length; i++) {
     if (cookiesArr[i]) {
       await getToken();
@@ -454,13 +454,13 @@ function getCcTaskList(functionId, body, type = '3') {
             if (data['code'] === '600' && !hasSend) {
               hasSend = true;
               $.msg(
-                $.name,
-                '',
-                `${type === '3' ? '点击首页领券图标(进入领券中心浏览15s)任务' : '点击“券后9.9”任务'}ID已变更\n请联系作者等待更新`
+                  $.name,
+                  '',
+                  `${type === '3' ? '点击首页领券图标(进入领券中心浏览15s)任务' : '点击“券后9.9”任务'}ID已变更\n请联系作者等待更新`
               )
               if ($.isNode()) await notify.sendNotify(
-                $.name,
-                `${type === '3' ? '点击首页领券图标(进入领券中心浏览15s)任务' : '点击“券后9.9”任务'}ID已变更\n请联系作者等待更新`
+                  $.name,
+                  `${type === '3' ? '点击首页领券图标(进入领券中心浏览15s)任务' : '点击“券后9.9”任务'}ID已变更\n请联系作者等待更新`
               )
             }
           }
@@ -495,10 +495,10 @@ function taskPostUrl(function_id, body = {}) {
 }
 function randomString() {
   return Math.random().toString(16).slice(2, 10) +
-    Math.random().toString(16).slice(2, 10) +
-    Math.random().toString(16).slice(2, 10) +
-    Math.random().toString(16).slice(2, 10) +
-    Math.random().toString(16).slice(2, 10)
+      Math.random().toString(16).slice(2, 10) +
+      Math.random().toString(16).slice(2, 10) +
+      Math.random().toString(16).slice(2, 10) +
+      Math.random().toString(16).slice(2, 10)
 }
 function getToken(timeout = 0){
   return new Promise((resolve) => {
