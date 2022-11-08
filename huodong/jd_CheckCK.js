@@ -214,7 +214,7 @@ if ($.isNode() && process.env.CHECKCK_ALLNOTIFY) {
                 TempOErrorMessage = $.error;
 
             } else {
-                const strnowstatus = await getstatus(tempid);
+                let strnowstatus = await getstatus(tempid);
                 if (strnowstatus == 99) {
                     strnowstatus = envs[i].status;
                 }
