@@ -445,7 +445,7 @@ function getJdLogs(url) {
 async function requireConfig() {
     return new Promise(resolve => {
         const jdCookieNode = $.isNode() ? require('./jdCookie.js') : '';
-        const jdLogNode = $.isNode() ? require('./jdMsLogs.js') : '';
+        const jdLogNode = $.isNode() ? require('../function/jdMsLogs.js') : '';
         if ($.isNode()) {
             Object.keys(jdCookieNode).forEach((item) => {
                 if (jdCookieNode[item]) {
