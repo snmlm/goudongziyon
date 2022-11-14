@@ -9,7 +9,7 @@
 DYJSHAREID = 'xxx&xxx&xxx'
 10 10 10 10 * https://raw.githubusercontent.com/6dylan6/jdpro/main/jd_makemoneyshop.js
 By: https://github.com/6dylan6/jdpro
-updatetime: 2022/11/13 修复已知bug
+updatetime: 2022/11/13 不过滤黑号了，直接助力
  */
 
 const $ = new Env('特价版大赢家');
@@ -40,33 +40,33 @@ let helpinfo = {};
         return;
     }
     console.log('\n运行一遍可以看到助力码，然后设置需要助力的！')
-    console.log('\n运行流程：设置助力码--过滤黑号--助力--领取任务奖励！！！\n')
-    for (let i = 0; i < cookiesArr.length; i++) {
-        if (cookiesArr[i]) {
-            cookie = cookiesArr[i];
-            $.UserName = decodeURIComponent(cookie.match(/pt_pin=([^; ]+)(?=;?)/) && cookie.match(/pt_pin=([^; ]+)(?=;?)/)[1])
-            $.index = i + 1;
-            $.isLogin = true;
-            $.nickName = '';
-            $.canUseCoinAmount = 0;
-            helpinfo[$.UserName] = {};
-            UA = require('./USER_AGENTS').UARAM();
-            helpinfo[$.UserName].ua = UA;
-            await TotalBean();
-            console.log(`\n******开始【京东账号${$.index}】${$.nickName || $.UserName}*********\n`);
-            if (!$.isLogin) {
-                $.msg($.name, `【提示】cookie已失效`, `京东账号${$.index} ${$.nickName || $.UserName}\n请重新登录获取\nhttps://bean.m.jd.com/bean/signIndex.action`, { "open-url": "https://bean.m.jd.com/bean/signIndex.action" });
-                if ($.isNode()) {
-                    await notify.sendNotify(`${$.name}cookie已失效 - ${$.UserName}`, `京东账号${$.index} ${$.UserName}\n请重新登录获取cookie`);
-                }
-                continue
-            }
+    console.log('\n运行流程：助力--领取任务奖励！！！\n')
+    // for (let i = 0; i < cookiesArr.length; i++) {
+    //     if (cookiesArr[i]) {
+    //         cookie = cookiesArr[i];
+    //         $.UserName = decodeURIComponent(cookie.match(/pt_pin=([^; ]+)(?=;?)/) && cookie.match(/pt_pin=([^; ]+)(?=;?)/)[1])
+    //         $.index = i + 1;
+    //         $.isLogin = true;
+    //         $.nickName = '';
+    //         $.canUseCoinAmount = 0;
+    //         helpinfo[$.UserName] = {};
+    //         UA = require('./USER_AGENTS').UARAM();
+    //         helpinfo[$.UserName].ua = UA;
+    //         await TotalBean();
+    //         console.log(`\n******开始【京东账号${$.index}】${$.nickName || $.UserName}*********\n`);
+    //         if (!$.isLogin) {
+    //             $.msg($.name, `【提示】cookie已失效`, `京东账号${$.index} ${$.nickName || $.UserName}\n请重新登录获取\nhttps://bean.m.jd.com/bean/signIndex.action`, { "open-url": "https://bean.m.jd.com/bean/signIndex.action" });
+    //             if ($.isNode()) {
+    //                 await notify.sendNotify(`${$.name}cookie已失效 - ${$.UserName}`, `京东账号${$.index} ${$.UserName}\n请重新登录获取cookie`);
+    //             }
+    //             continue
+    //         }
 
-            await getinfo(1);
-            await $.wait(1000);
-        }
+    //         await getinfo(1);
+    //         await $.wait(1000);
+    //     }
 
-    }
+    // }
     if (shareId.length > 0) {
         console.log('\n\n开始助力...')
         $.index = 1;
@@ -76,15 +76,17 @@ let helpinfo = {};
         for (let j = 0; j < shareId.length; j++) {
             console.log('\n去助力--> ' + shareId[j]);
             helpnum = 0;
-            if ($.index === m) {console.log('已无账号可用于助力！结束\n');break};
+            if ($.index === m) { console.log('已无账号可用于助力！结束\n'); break };
             for (let i = k; i < m; i++) {
-                if (helpnum == 10) {console.log('助力已满，跳出！\n');k = i;break};
-                if ($.fullhelp) {console.log('助力已满，跳出！\n');k = i-1;break};
+                if (helpnum == 10) { console.log('助力已满，跳出！\n'); k = i; break };
+                if ($.fullhelp) { console.log('助力已满，跳出！\n'); k = i - 1; break };
                 if (cookiesArr[i]) {
                     cookie = cookiesArr[i];
                     $.UserName = decodeURIComponent(cookie.match(/pt_pin=([^; ]+)(?=;?)/) && cookie.match(/pt_pin=([^; ]+)(?=;?)/)[1]);
                     $.index = i + 1;
-                    UA = helpinfo[$.UserName].ua;
+                    helpinfo[$.UserName] = {};
+                    UA = require('./USER_AGENTS').UARAM();
+                    helpinfo[$.UserName].ua = UA;
                     console.log(`\n开始【账号${$.index}】${$.nickName || $.UserName}`);
                     if (helpinfo[$.UserName].nohelp) { console.log('已无助力次数了'); continue };
                     if (helpinfo[$.UserName].hot) { console.log('可能黑了，跳过！'); continue };
@@ -105,9 +107,16 @@ let helpinfo = {};
             cookie = cookiesArr[i];
             $.UserName = decodeURIComponent(cookie.match(/pt_pin=([^; ]+)(?=;?)/) && cookie.match(/pt_pin=([^; ]+)(?=;?)/)[1])
             $.index = i + 1;
-            UA = helpinfo[$.UserName].ua;
+            $.canUseCoinAmount = 0;
+            try {
+                UA = helpinfo[$.UserName].ua;
+            } catch (e) {
+                UA = require('./USER_AGENTS').UARAM();
+            }
             console.log(`\n开始【账号${$.index}】${$.UserName}`);
-            if (helpinfo[$.UserName].hot) continue;
+            //if (helpinfo[$.UserName].hot) continue;
+            await getinfo(1);
+            await $.wait(200);
             await gettask();
             await $.wait(500);
             for (let item of $.tasklist) {
@@ -148,9 +157,10 @@ function getinfo(xc) {
                             console.log('助力码：' + sId);
                             console.log('当前营业金：' + data.data.canUseCoinAmount);
                         }
+                    } else if (data.msg.indexOf('火爆') > -1) {
+                        console.log('此CK可能黑了！');
                     } else {
                         console.log(data.msg);
-                        $.hotflag = true;
                         helpinfo[$.UserName].hot = 1;
                     }
                 }
@@ -238,6 +248,8 @@ function help(shareid) {
                         // $.qqq.push($.index);
                     } else if (data.code === 1008) {
                         console.log('今日无助力次数了！');
+                    } else if (data.msg.indexOf('火爆') > -1) {
+                        console.log('此CK助力可能黑了！');
                     } else {
                         console.log(data.msg);
                     }
