@@ -73,9 +73,9 @@ let lnrun = 0;
       option = {};
       lnrun++;
       await jdPlantBean();
-      if(lnrun == 3){
+      if (lnrun == 3) {
         console.log(`\n【访问接口次数达到3次，休息一分钟.....】\n`);
-        await $.wait(60*1000);
+        await $.wait(60 * 1000);
         lnrun = 0;
       }
       //await showMsg();
@@ -254,7 +254,7 @@ async function doTask() {
         console.log(`${item.taskName} 任务已完成\n`);
         continue;
       } else {
-        switch(item.taskType){
+        switch (item.taskType) {
           case 92:
             await farmtask();
             continue;
@@ -267,12 +267,12 @@ async function doTask() {
             await $.wait(1000);
             continue;
           case 96:
-            await tjdoublesign('https://wq.jd.com/tjjdsignin/SignedInfo?channel=jx_zdddsq&_t=1665408290789&h5st=20221010212450810%3B6918147264530298%3B0f6ed%3Btk02wc5421cb218nIrUUKibebHSO9xcuoGghWvuYMwC0SFXJaDjbIH5j0m1wTODJ7fc1RtfXsa5cpPVqYaFcfWpgnN63%3Badb2b487bdc5153c21cdb5904f6341286fda615ab4ebcf9a3e88e2d6b82ae05e%3B3.1%3B1665408290810%3B62f4d401ae05799f14989d31956d3c5f0a269d1342e4ecb6ab00268fc69555cdc3295f00e681fd72cd76a48b9fb3faf3579d80b37c85b023e9e8ba94d8d2b852b9cbef42726bbe41ffd8c74540f4a1ced584468ba9e46bfbef62144b678f5532e02456edc95e6131cb12c2dd5fa5c6c0496017f4d3b47ccd5533601d6637bade7c708817b3649de05cdc0f31e890c46e&_stk=_t%2Cchannel&_=1665408290814&sceneval=2&g_login_type=1&g_ty=ajax&appCode=msc588d6d5');
-            await $.wait(2000);
-            await tjdoublesign('https://wq.jd.com/tjjdsignin/IssueReward?channel=jx_zdddsq&_t=1665408290397&h5st=20221010212450410%3B6918147264530298%3B0f6ed%3Btk02wc5421cb218nIrUUKibebHSO9xcuoGghWvuYMwC0SFXJaDjbIH5j0m1wTODJ7fc1RtfXsa5cpPVqYaFcfWpgnN63%3Bbe06e2e3ebb5fde9e89c2126456346c7c8b75462d1d0e60c41f9e46c11838a6e%3B3.1%3B1665408290410%3B62f4d401ae05799f14989d31956d3c5f0a269d1342e4ecb6ab00268fc69555cdc3295f00e681fd72cd76a48b9fb3faf3579d80b37c85b023e9e8ba94d8d2b852b9cbef42726bbe41ffd8c74540f4a1ced584468ba9e46bfbef62144b678f5532e02456edc95e6131cb12c2dd5fa5c6c0496017f4d3b47ccd5533601d6637bade7c708817b3649de05cdc0f31e890c46e&_stk=_t%2Cchannel&sceneval=2&g_login_type=1&g_ty=ajax&appCode=msc588d6d5');
-            await $.wait(1000);
-            await tjdoublesign('https://wq.jd.com/tjjdsignin/SignedInfo?channel=jx_zdddsq&_t=1665408290789&h5st=20221010212450810%3B6918147264530298%3B0f6ed%3Btk02wc5421cb218nIrUUKibebHSO9xcuoGghWvuYMwC0SFXJaDjbIH5j0m1wTODJ7fc1RtfXsa5cpPVqYaFcfWpgnN63%3Badb2b487bdc5153c21cdb5904f6341286fda615ab4ebcf9a3e88e2d6b82ae05e%3B3.1%3B1665408290810%3B62f4d401ae05799f14989d31956d3c5f0a269d1342e4ecb6ab00268fc69555cdc3295f00e681fd72cd76a48b9fb3faf3579d80b37c85b023e9e8ba94d8d2b852b9cbef42726bbe41ffd8c74540f4a1ced584468ba9e46bfbef62144b678f5532e02456edc95e6131cb12c2dd5fa5c6c0496017f4d3b47ccd5533601d6637bade7c708817b3649de05cdc0f31e890c46e&_stk=_t%2Cchannel&_=1665408290814&sceneval=2&g_login_type=1&g_ty=ajax&appCode=msc588d6d5');
-            await $.wait(1000);
+            // await tjdoublesign(`https://wq.jd.com/tjjdsignin/SignedInfo?channel=jx_zdddsq&_t=${Date.now()}&h5st=20221119212121629%3B7235812274907393%3B0f6ed%3Btk02w6ce01aef18nu1BI7ITY0GRHzGZYm4QAgvUlNI7sDNMkIIRWB5yQBcmGs48B1Kd89giyM6WMEBZoTeyTRE2yi6cO%3B97dcee4e91efeb5f884eb7feb1c8da1ef52ad53a90a0e3a3c74eb38f0136382d%3B3.0%3B1668864081629&_stk=_t%2Cchannel&_=1665408290814&sceneval=2&g_login_type=1&g_ty=ajax&appCode=msc588d6d5`);
+            // await $.wait(2000);
+            // await tjdoublesign(`https://wq.jd.com/tjjdsignin/IssueReward?channel=jx_zdddsq&_t=${Date.now()}&h5st=20221119212121629%3B7235812274907393%3B0f6ed%3Btk02w6ce01aef18nu1BI7ITY0GRHzGZYm4QAgvUlNI7sDNMkIIRWB5yQBcmGs48B1Kd89giyM6WMEBZoTeyTRE2yi6cO%3B97dcee4e91efeb5f884eb7feb1c8da1ef52ad53a90a0e3a3c74eb38f0136382d%3B3.0%3B1668864081629&_stk=_t%2Cchannel&sceneval=2&g_login_type=1&g_ty=ajax&appCode=msc588d6d5`);
+            // await $.wait(1000);
+            // await tjdoublesign(`https://wq.jd.com/tjjdsignin/SignedInfo?channel=jx_zdddsq&_t=${Date.now()}&h5st=20221119212121629%3B7235812274907393%3B0f6ed%3Btk02w6ce01aef18nu1BI7ITY0GRHzGZYm4QAgvUlNI7sDNMkIIRWB5yQBcmGs48B1Kd89giyM6WMEBZoTeyTRE2yi6cO%3B97dcee4e91efeb5f884eb7feb1c8da1ef52ad53a90a0e3a3c74eb38f0136382d%3B3.0%3B1668864081629&_stk=_t%2Cchannel&_=1665408290814&sceneval=2&g_login_type=1&g_ty=ajax&appCode=msc588d6d5`);
+            // await $.wait(1000);
             continue;
           case 94:
             continue;
@@ -284,7 +284,7 @@ async function doTask() {
             }
             await shopTaskList();
             const { data } = $.shopTaskListRes;
-            let goodShopListARR = [],moreShopListARR = [], shopList = [];
+            let goodShopListARR = [], moreShopListARR = [], shopList = [];
             const { goodShopList, moreShopList } = data;
             if (goodShopList) {
               for (let i of goodShopList) {
@@ -313,7 +313,7 @@ async function doTask() {
               console.log(`shopRes结果:${JSON.stringify(shopRes)}`);
               if (shopRes && shopRes.code === '0') {
                 if (shopRes.data && shopRes.data.nutrState && shopRes.data.nutrState === '1') {
-                  unFinishedShopNum --;
+                  unFinishedShopNum--;
                 }
               }
               if (unFinishedShopNum <= 0) {
@@ -335,7 +335,7 @@ async function doTask() {
             let productListARR = [], productList = [];
             const { productInfoList } = $.productTaskList.data;
             for (let i = 0; i < productInfoList.length; i++) {
-              for (let j = 0; j < productInfoList[i].length; j++){
+              for (let j = 0; j < productInfoList[i].length; j++) {
                 productListARR.push(productInfoList[i][j]);
               }
             }
@@ -356,7 +356,7 @@ async function doTask() {
                 // console.log('nutrState', productRes)
                 //这里添加多重判断,有时候会出现活动太火爆的问题,导致nutrState没有
                 if (productRes.data && productRes.data.nutrState && productRes.data.nutrState === '1') {
-                  unFinishedProductNum --;
+                  unFinishedProductNum--;
                 }
               }
               if (unFinishedProductNum <= 0) {
@@ -399,7 +399,7 @@ async function doTask() {
               console.log(`channelRes结果:${JSON.stringify(channelRes)}`);
               if (channelRes && channelRes.code === '0') {
                 if (channelRes.data && channelRes.data.nutrState && channelRes.data.nutrState === '1') {
-                  unFinishedChannelNum --;
+                  unFinishedChannelNum--;
                 }
               }
               if (unFinishedChannelNum <= 0) {
@@ -445,7 +445,7 @@ function showMsg() {
   }
 }
 // ================================================此处是API=================================
-async function farmtask(){
+async function farmtask() {
   await receivefruit();
   await $.wait(500);
   await dofarm('gotConfigDataForBrand');
@@ -459,22 +459,22 @@ async function farmtask(){
   await dofarm('initForFarm');
   await $.wait(500);
 }
-async function receivefruit(){
+async function receivefruit() {
   const body = {
     "monitor_refer": "plant_receiveNutrientsTask",
     "monitor_source": "plant_app_plant_index",
     "awardType": "92",
     "version": "9.2.4.2"
   }
-  await request('receiveNutrientsTask',body)
+  await request('receiveNutrientsTask', body)
 }
-async function dofarm(function_id){
-  let body ={
+async function dofarm(function_id) {
+  let body = {
     "version": 17,
     "channel": 1,
     "babelChannel": "45"
   }
-  if (function_id == 'gotConfigDataForBrand'){
+  if (function_id == 'gotConfigDataForBrand') {
     body["type"] = "json";
     body["k"] = "farmShareConfig";
   }
@@ -508,15 +508,15 @@ async function dofarm(function_id){
 
 }
 
-function jxdoublesign1(url){
+function jxdoublesign1(url) {
   let opt = {
     url,
     headers: {
       //'Host': 'wq.jd.com',
-      'accept':'application/json',
+      'accept': 'application/json',
       'referer': 'https://st.jingxi.com/',
       'User-Agent': 'jdpingou;iPhone;4.13.0;14.4.2;${randomString(40)};network/wifi;model/iPhone10,2;appBuild/100609;supportApplePay/1;hasUPPay/0;pushNoticeIsOpen/1;hasOCPay/0;supportBestPay/0;session/${Math.random * 98 + 1};pap/JA2019_3111789;brand/apple;supportJDSHWK/1;Mozilla/5.0 (iPhone; CPU iPhone OS 14_6 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Mobile/15E148',
-      'Cookie': 'cid=4;'+cookie
+      'Cookie': 'cid=4;' + cookie
     }
   }
   return new Promise(async resolve => {
@@ -541,11 +541,11 @@ function jxdoublesign1(url){
   })
 }
 //每轮种豆活动获取结束后,自动收取京豆
-function tjdoublesign(url){
+function tjdoublesign(url) {
   let opt = {
     url,
     headers: {
-      'Accept':'application/json',
+      'Accept': 'application/json',
       'Referer': 'https://wqs.jd.com/',
       'User-Agent': $.isNode() ? (process.env.JD_USER_AGENT ? process.env.JD_USER_AGENT : (require('./USER_AGENTS').USER_AGENT)) : ($.getdata('JDUA') ? $.getdata('JDUA') : "jdapp;iPhone;9.4.4;14.3;network/4g;Mozilla/5.0 (iPhone; CPU iPhone OS 14_3 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Mobile/15E148;supportJDSHWK/1"),
       'Cookie': cookie
@@ -791,7 +791,7 @@ function TotalBean() {
     })
   })
 }
-function request(function_id, body = {}){
+function request(function_id, body = {}) {
   return new Promise(async resolve => {
     await $.wait(5000);
     $.post(taskUrl(function_id, body), (err, resp, data) => {
@@ -800,7 +800,7 @@ function request(function_id, body = {}){
           console.log('\n种豆得豆: API查询请求失败 ‼️‼️')
           console.log(`function_id:${function_id}`)
           $.logErr(err);
-        } else if (data.indexOf('data') > -1){
+        } else if (data.indexOf('data') > -1) {
           data = JSON.parse(data);
         } else {
           data = JSON.parse(data);
@@ -817,7 +817,7 @@ function request(function_id, body = {}){
 function taskUrl(function_id, body) {
   body["version"] = "9.2.4.2";
   body["monitor_source"] = "plant_app_plant_index";
-  if (!body["monitor_refer"]){
+  if (!body["monitor_refer"]) {
     body["monitor_refer"] = "";
   }
   return {
