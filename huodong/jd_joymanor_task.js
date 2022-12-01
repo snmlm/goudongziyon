@@ -36,7 +36,11 @@ if ($.isNode()) {
   cookiesArr = [$.getdata('CookieJD'), $.getdata('CookieJD2'), ...jsonParse($.getdata('CookiesJD') || "[]").map(item => item.cookie)].filter(item => !!item);
 }
 $.invitePinTaskList = []
-$.invitePin = []
+$.invitePin = [
+  "VxQJC6Sr0QZkcOHwxoTjrw",
+  "oRY9YryofcNg71MZeKSZseKD6P6BJzKv2NBGxfiuJ20",
+  "EDPUVDhR7nUPh3jUGDJ_GyiLt77-wROqWVP2aesRUt8"
+]
 const JD_API_HOST = `https://api.m.jd.com/client.action`;
 message = ""
 !(async () => {
@@ -54,10 +58,10 @@ message = ""
       $.isLogin = true;
       $.nickName = '';
       $.openIndex = 0;
-	  $.UA = `jdapp;iPhone;10.1.4;13.1.2;${randomString(40)};network/wifi;model/iPhone8,1;addressid/2308460611;appBuild/167814;jdSupportDarkMode/0;Mozilla/5.0 (iPhone; CPU iPhone OS 13_1_2 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Mobile/15E148;supportJDSHWK/1`
+      $.UA = `jdapp;iPhone;10.1.4;13.1.2;${randomString(40)};network/wifi;model/iPhone8,1;addressid/2308460611;appBuild/167814;jdSupportDarkMode/0;Mozilla/5.0 (iPhone; CPU iPhone OS 13_1_2 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Mobile/15E148;supportJDSHWK/1`
 
       console.log(`\n******开始【京东账号${$.index}】${$.nickName || $.UserName}*********\n`);
-	  if (!$.isLogin) {
+      if (!$.isLogin) {
         $.msg($.name, `【提示】cookie已失效`, `京东账号${$.index} ${$.nickName || $.UserName}\n请重新登录获取\nhttps://bean.m.jd.com/bean/signIndex.action`, {
           "open-url": "https://bean.m.jd.com/bean/signIndex.action"
         });
@@ -66,14 +70,14 @@ message = ""
         }
         continue
       }
-	  await getJoyBaseInfo()
-	  await $.wait(1000)
-	  if ($.joyBaseInfo && $.joyBaseInfo.invitePin) {
-		$.log(`${$.name} - ${$.UserName}  助力码: ${$.joyBaseInfo.invitePin}`);
-		$.invitePinTaskList.push($.joyBaseInfo.invitePin);
-	  } else {
-		// $.log(`${$.name} - ${$.UserName}  助力码: null`);
-	  }
+      await getJoyBaseInfo()
+      await $.wait(1000)
+      if ($.joyBaseInfo && $.joyBaseInfo.invitePin) {
+        $.log(`${$.name} - ${$.UserName}  助力码: ${$.joyBaseInfo.invitePin}`);
+        $.invitePinTaskList.push($.joyBaseInfo.invitePin);
+      } else {
+        // $.log(`${$.name} - ${$.UserName}  助力码: null`);
+      }
       await getTaskList();
 
       // 签到 / 逛会场 / 浏览商品
@@ -194,8 +198,8 @@ message = ""
     }
   }
 })()
-  .catch((e) => $.logErr(e))
-  .finally(() => $.done())
+    .catch((e) => $.logErr(e))
+    .finally(() => $.done())
 //获取活动信息
 
 //任务列表
@@ -233,27 +237,27 @@ function getTaskList() {
  * @returns {Promise<unknown>}
  */
 function getJoyBaseInfo(taskId = '', inviteType = '', inviterPin = '') {
-    //await $.wait(20)
-    return new Promise(resolve => {
-        $.post(taskPostClientActionUrl(`body={"taskId":"${taskId}","inviteType":"${inviteType}","inviterPin":"${inviterPin}","linkId":"Vr5e5qokLNCRxNmi4VTW4Q"}&appid=activities_platform&t=${Date.now()}&client=activities_platform&h5st=20220509105406529%3B9112909836479988%3B4abce%3Btk02w774b1bbd18nGS0GgF00CXWFenyTPHs%2Bp26eYf9ZmlZVf%2BvEe3Gf0Zd80IGUasS%2FWd%2FoZlsJdtXKnoeXyciIpR1U%3B367214d88c1dbeda0cee50036420f60572854e94d718de89adee91dc59e42668%3B3.0%3B1652064846529&cthr=1`, `joyBaseInfo`), async (err, resp, data) => {
-            try {
-                if (err) {
-                    console.log(`${JSON.stringify(err)}`)
-                    console.log(`${$.name} API请求失败，请检查网路重试`)
-                } else {
-                    data = JSON.parse(data);
-                    $.joyBaseInfo = data.data
-					//console.log(`${JSON.stringify(data)}`)
-                }
-            } catch (e) {
-                $.logErr(e, resp)
-            } finally {
-                //$.log(`resolve start`)
-                resolve(data);
-                //$.log(`resolve end`)
-            }
-        })
+  //await $.wait(20)
+  return new Promise(resolve => {
+    $.post(taskPostClientActionUrl(`body={"taskId":"${taskId}","inviteType":"${inviteType}","inviterPin":"${inviterPin}","linkId":"Vr5e5qokLNCRxNmi4VTW4Q"}&appid=activities_platform&t=${Date.now()}&client=activities_platform&h5st=20220509105406529%3B9112909836479988%3B4abce%3Btk02w774b1bbd18nGS0GgF00CXWFenyTPHs%2Bp26eYf9ZmlZVf%2BvEe3Gf0Zd80IGUasS%2FWd%2FoZlsJdtXKnoeXyciIpR1U%3B367214d88c1dbeda0cee50036420f60572854e94d718de89adee91dc59e42668%3B3.0%3B1652064846529&cthr=1`, `joyBaseInfo`), async (err, resp, data) => {
+      try {
+        if (err) {
+          console.log(`${JSON.stringify(err)}`)
+          console.log(`${$.name} API请求失败，请检查网路重试`)
+        } else {
+          data = JSON.parse(data);
+          $.joyBaseInfo = data.data
+          //console.log(`${JSON.stringify(data)}`)
+        }
+      } catch (e) {
+        $.logErr(e, resp)
+      } finally {
+        //$.log(`resolve start`)
+        resolve(data);
+        //$.log(`resolve end`)
+      }
     })
+  })
 }
 
 
@@ -348,7 +352,7 @@ function apTaskDrawAward(taskId, taskType) {
 
 function taskPostClientActionUrl(body, functionId) {
   return {
-    url: `https://api.m.jd.com/client.action?${functionId ? `functionId=${functionId}` : ``}`,
+    url: `https://api.m.jd.com/client.action${functionId ? `?functionId=${functionId}` : ''}`,
     body: body,
     headers: {
       'User-Agent': $.UA,
