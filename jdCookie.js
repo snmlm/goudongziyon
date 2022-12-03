@@ -41,7 +41,7 @@ for (let i = 0; i < CookieJDs.length; i++) {
 }
 
 // 以下为注入互助码环境变量（仅nodejs内起效）的代码
-function SetShareCodesEnv(nameConfig = "", envName = "") {
+function SetShareCodesEnv(nameChinese = "", nameConfig = "", envName = "") {
   let rawCodeConfig = {}
 
   // 读取互助码
@@ -88,13 +88,16 @@ function SetShareCodesEnv(nameConfig = "", envName = "") {
   let shareCodesStr = shareCodes.join('&')
   process.env[envName] = shareCodesStr
 
-  console.info(`【风之凌殇】 友情提示：为避免ck超过45以上时，互助码环境变量过大而导致调用一些系统命令（如date/cat）时报 Argument list too long，改为在nodejs中设置 ${nameConfig} 的 互助码环境变量 ${envName}，共计 ${totalCodeCount} 组互助码，总大小为 ${shareCodesStr.length}`)
+  console.info(`${nameChinese} 的 互助码环境变量 ${envName}，共计 ${totalCodeCount} 组互助码，总大小为 ${shareCodesStr.length} 字节`)
 }
 
 // 若在task_before.sh 中设置了要设置互助码环境变量的活动名称和环境变量名称信息，则在nodejs中处理，供活动使用
+let nameChinese = process.env.ShareCodeConfigChineseName
 let nameConfig = process.env.ShareCodeConfigName
 let envName = process.env.ShareCodeEnvName
-if (nameConfig && envName) {
-  SetShareCodesEnv(nameConfig, envName)
+if (nameChinese && nameConfig && envName) {
+  SetShareCodesEnv(nameChinese, nameConfig, envName)
 } else {
-  console.debug(`JDWXX 友情提示：您的脚本正常运行中`)}
+  console.debug(`KingRan 频道通知：https://t.me/KingRan521\n`)
+  console.debug(`云服务器IP须知：域名前缀为 'lzdz' 的禁用勿跑容易黑号\n`)
+}
