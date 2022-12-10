@@ -85,8 +85,8 @@ $.token = 'wbvfunwflgtvzjwf'
             $.index = i + 1;
             await getUA()
             await getInviteId();
-            if($.index >= (10 + $.collectAllCount)) {
-                console.log(`已获取超过10个`)
+            if($.index >= (1 + $.collectAllCount)) {
+                console.log(`已获取超过1个`)
                 break
             }
         }
