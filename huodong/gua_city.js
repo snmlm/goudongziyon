@@ -456,7 +456,7 @@ function shareCodesFormat() {
         } catch (e) {
             console.log(e);
         }
-        console.log(`第${$.index}个京东账号将要助力的好友${JSON.stringify($.newShareCodes.slice(0,10))}`)
+        console.log(`第${$.index}个京东账号将要助力的好友${JSON.stringify($.newShareCodes.slice(0,1))}`)
         resolve();
     })
 }
