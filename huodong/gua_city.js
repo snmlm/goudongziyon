@@ -3,10 +3,10 @@
 
 [task_local]
 #城城领现金
-0 0-23/5,22 * 12 * gua_city.js, tag=城城领现金, enabled=false
+11 11 11 11 * gua_city.js, tag=城城领现金, enabled=true
 
  */
-const $ = new Env('青蛙城城领现金');
+const $ = new Env('城城领现金');
 //Node.js用户请在jdCookie.js处填写京东ck;
 const jdCookieNode = $.isNode() ? require('./jdCookie.js') : '';
 const notify = $.isNode() ? require('./sendNotify') : '';
@@ -14,8 +14,8 @@ const notify = $.isNode() ? require('./sendNotify') : '';
 let exchangeFlag = $.getdata('JD_CITY_EXCHANGE') || "true";//是否开启自动抽奖，建议活动快结束开启，默认关闭
 exchangeFlag = $.isNode() ? (process.env.JD_CITY_EXCHANGE ? process.env.JD_CITY_EXCHANGE : `${exchangeFlag}`) : ($.getdata('JD_CITY_EXCHANGE') ? $.getdata('JD_CITY_EXCHANGE') : `${exchangeFlag}`);
 // 优先助力[助力池]
-let helpShareFlag = "false";//是否优先助力[助力池]，默认是
-//helpShareFlag = $.isNode() ? (process.env.JD_CITY_HELPSHARE ? process.env.JD_CITY_HELPSHARE : `${helpShareFlag}`) : ($.getdata('JD_CITY_HELPSHARE') ? $.getdata('JD_CITY_HELPSHARE') : `${helpShareFlag}`);
+let helpShareFlag = "false";//是否优先助力[助力池]，默认否
+helpShareFlag = $.isNode() ? (process.env.JD_CITY_HELPSHARE ? process.env.JD_CITY_HELPSHARE : `${helpShareFlag}`) : ($.getdata('JD_CITY_HELPSHARE') ? $.getdata('JD_CITY_HELPSHARE') : `${helpShareFlag}`);
 $.whitelist = "";// 优先获取助力码的ckPin 用&隔开 pin值(填中文
 $.whitelist = $.isNode() ? (process.env.JD_CITY_WHITELIST ? process.env.JD_CITY_WHITELIST : `${$.whitelist}`) : ($.getdata('JD_CITY_WHITELIST') ? $.getdata('JD_CITY_WHITELIST') : `${$.whitelist}`);
 
@@ -37,8 +37,7 @@ let inviteCodes = [
 $.shareCodesArr = [];
 $.toStatus = false
 let token = ''
-//$.token = process.env.gua_log_token || token // token
-$.token = 'wbvfunwflgtvzjwf'
+$.token = process.env.gua_log_token || token // token
 
 !(async () => {
     if (!cookiesArr[0]) {
@@ -46,8 +45,8 @@ $.token = 'wbvfunwflgtvzjwf'
         return;
     }
     if(!$.token){
-      console.log("填写log token[gua_log_token]")
-      return
+        console.log("填写log token[gua_log_token]")
+        return
     }
     getWhitelist()
     console.log("\nTOKEN："+$.token.replace(/(.{5}).+(.{5})/, '$1***$2')+"\n")
@@ -76,7 +75,7 @@ $.token = 'wbvfunwflgtvzjwf'
     } else {
         console.log(`脚本不会自动抽奖，建议活动快结束开启，默认关闭(在12.12日自动开启抽奖),如需自动抽奖请设置环境变量  JD_CITY_EXCHANGE 为true`);
     }
-    $.collectAllCount = 0
+    $.collectAllCount = 1
     $.inviteIdCodesArr = {}
     for (let i = 0; i < cookiesArr.length && true; i++) {
         if (cookiesArr[i]) {
@@ -85,12 +84,19 @@ $.token = 'wbvfunwflgtvzjwf'
             $.index = i + 1;
             await getUA()
             await getInviteId();
-            if($.index >= (1 + $.collectAllCount)) {
-                console.log(`已获取超过1个`)
+            await $.wait(3000)
+            if(Object.getOwnPropertyNames($.inviteIdCodesArr).length >= $.collectAllCount) {
+                console.log(`已获取超过${$.collectAllCount}个`)
                 break
             }
         }
     }
+    // let sssss = ''
+    // for(let i in $.inviteIdCodesArr){
+    //     sssss += $.inviteIdCodesArr[i]+"&";
+    // }
+    // console.log(sssss);
+    // return
     if (Object.getOwnPropertyNames($.inviteIdCodesArr).length > 0) {
         for (let i = 0; i < cookiesArr.length && true; i++) {
             if (cookiesArr[i]) {
@@ -141,28 +147,29 @@ $.token = 'wbvfunwflgtvzjwf'
                         console.log(`助力 【${$.newShareCodes[i]}】:${res.data.result.toasts[0].msg}`)
                     }
                 }
+                // {"code":410} 疑似黑ip
                 if ((res && res['status'] && res['status'] === '3') || (res && res.data && res.data.bizCode === -11)) {
                     // 助力次数耗尽 || 黑号
                     break
                 }
-                if(/火爆|已有账号参与活动/.test($.toStr(res, res))){
+                if(/火爆|已有账号参与活动|结束/.test($.toStr(res, res))){
                     break
                 }else if(/登陆失败/.test($.toStr(res, res))){
                     isLogin = false
                     break
                 }
-                // await $.wait(3000)
+                await $.wait(3000)
             }
             if(!isLogin){
                 continue
             }
             let jd_blog_joyytoken = $.getdata("jd_blog_joyytoken") || {}
             if($.joyytokenb){
-              jd_blog_joyytoken[$.UserName] = $.joyytokenb
-              $.setdata(jd_blog_joyytoken, 'jd_blog_joyytoken')
+                jd_blog_joyytoken[$.UserName] = $.joyytokenb
+                $.setdata(jd_blog_joyytoken, 'jd_blog_joyytoken')
             }else if (jd_blog_joyytoken[$.UserName]){
-              delete jd_blog_joyytoken[$.UserName]
-              $.setdata(jd_blog_joyytoken, 'jd_blog_joyytoken')
+                delete jd_blog_joyytoken[$.UserName]
+                $.setdata(jd_blog_joyytoken, 'jd_blog_joyytoken')
             }
             // await getInfo($.newShareCodes[i], true)
             await getInviteInfo();//雇佣
@@ -180,8 +187,8 @@ $.token = 'wbvfunwflgtvzjwf'
                 }
             } else {
                 var times = new Date(new Date().getTime() + new Date().getTimezoneOffset()*60*1000 + 8*60*60*1000)
-                //默认10.29开启抽奖
-                if ($.time("MM", times) == "12" && $.time("dd", times) >= 12) {
+                //默认1.9开启抽奖
+                if ($.time("MM", times) == 1 && $.time("dd", times) >= 9) {
                     const res = await city_lotteryAward();//抽奖
                     if (res && res > 0) {
                         for (let i = 0; i < new Array(res).fill('').length; i++) {
@@ -207,7 +214,7 @@ function taskPostUrl(functionId, body) {
         url: `${JD_API_HOST}`,
         body: `functionId=${functionId}&appid=signed_wh5&body=${(JSON.stringify(body))}&client=wh5&clientVersion=1.0.0`,
         headers: {
-            'Cookie': cookie,
+            'Cookie': ($.abcv ? $.abcv : "")+cookie,
             'Connection': 'keep-alive',
             'Content-Type': 'application/x-www-form-urlencoded',
             "User-Agent": $.UA,
@@ -448,15 +455,15 @@ function shareCodesFormat() {
             }
         }
         if (inviteCodes.length) $.newShareCodes = [...inviteCodes, ...$.newShareCodes]
-        /*try {
-            const readShareCodeRes = await readShareCode();
+        try {
+            const readShareCodeRes = [];
             if (readShareCodeRes && readShareCodeRes.code === 200) {
-              $.newShareCodes = [...new Set([...$.newShareCodes, ...(readShareCodeRes.data || [])])];
+                $.newShareCodes = [...new Set([...$.newShareCodes, ...(readShareCodeRes.data || [])])];
             }
         } catch (e) {
             console.log(e);
-        }*/
-        console.log(`第${$.index}个京东账号将要助力的好友${JSON.stringify($.newShareCodes.slice(0,1))}`)
+        }
+        console.log(`第${$.index}个京东账号将要助力的好友(前10条数据)${JSON.stringify($.newShareCodes.slice(0,1))}`)
         resolve();
     })
 }
@@ -509,7 +516,7 @@ async function getLogs(functionId, body = {}) {
         $.joyytokenb = await gettoken("50999")
     }
     joyytokenb = $.joyytokenb
-    let resBody = { "fn": "city", "id": functionId, "riskData": '', "pin": $.UserName, "joyytoken": joyytoken, "uid": $.uid || "", "joyytokenb": joyytokenb }
+    let resBody = { "fn": "city1", "id": functionId, "riskData": '', "pin": $.UserName, "joyytoken": joyytoken, "uid": $.uid || "", "joyytokenb": joyytokenb }
     let log_res = await getLog(resBody)
     res = log_res.data
     let resCount = 0
@@ -520,7 +527,7 @@ async function getLogs(functionId, body = {}) {
         res = log_res.data
         await $.wait(2000)
     }
-    
+
     if (!res) {
         console.log('获取不到算法')
         process.exit(1)
