@@ -13,22 +13,19 @@ let showMsg = '';
     for (let i = 0; i < $.cookieArr.length; i++) {
         $.currentCookie = $.cookieArr[i];
         $.index = i + 1;
-        if ($.currentCookie) {
+
+        if (i === 0) {
             const userName = decodeURIComponent(
                 $.currentCookie.match(/pt_pin=(.+?);/) && $.currentCookie.match(/pt_pin=(.+?);/)[1],
             );
-            $.log(`\n开始【京东账号${i + 1}】${userName}`);
+            console.log(`\n开始【京东账号${i + 1}】${userName}\n`);
+            await $.wait(1000)
             await getCommodityList();
-
             console.log(showMsg);
-
-            //只发送给第一个号
-            if (i ===0) {
-                // 账号${$.index} - ${$.UserName}
-                await notify.sendNotify(`${$.name}`, `${showMsg}`);
-                break
-            }
-
+            await $.wait(1000)
+            // 账号${$.index} - ${$.UserName}
+            await notify.sendNotify(`${$.name}`, `${showMsg}`);
+            break;
         }
     }
 })()
@@ -80,9 +77,9 @@ function getCommodityDetail(commodityId, num) {
                     const { ret, data: { commodityList = [] } = {}, msg } = JSON.parse(data);
                     // $.log(`\n获取商品详情：${msg}\n${$.showLog ? data : ''}`);
                     const { starLevel, name, price, productLimSeconds } = commodityList[0];
-                        showMsg += `⭐️商品--${name}, 所需等级 ${starLevel}，所需电力: ${price / 100} 万，限时 ${
-                            productLimSeconds / 60 / 60 / 24
-                        } 天，📦库存：${num}，最短需要 ${(price / 864 / 2).toFixed(2)} \n`;
+                    showMsg += `⭐️商品--${name}, 所需等级 ${starLevel}，所需电力: ${price / 100} 万，限时 ${
+                        productLimSeconds / 60 / 60 / 24
+                    } 天，📦库存：${num}，最短需要 ${(price / 864 / 2).toFixed(2)} \n`;
                     ;
                 } catch (e) {
                     $.logErr(e, resp);
