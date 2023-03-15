@@ -9,17 +9,17 @@
 ===================quantumultx================
 [task_local]
 #东东健康社区收集能量
-5-45/20 * * * * jd_health_collect.js, tag=东东健康社区收集能量, img-url=https://raw.githubusercontent.com/Orz-3/mini/master/Color/jd.png, enabled=true
+15 2/23 * * * jd_health_collect.js, tag=东东健康社区收集能量, img-url=https://raw.githubusercontent.com/Orz-3/mini/master/Color/jd.png, enabled=true
 
 =====================Loon================
 [Script]
-cron "5-45/20 * * * *" script-path=jd_health_collect.js, tag=东东健康社区收集能量
+cron "15 2/23 * * *" script-path=jd_health_collect.js, tag=东东健康社区收集能量
 
 ====================Surge================
-东东健康社区收集能量 = type=cron,cronexp="5-45/20 * * * *",wake-system=1,timeout=3600,script-path=jd_health_collect.js
+东东健康社区收集能量 = type=cron,cronexp="15 2/23 * * *",wake-system=1,timeout=3600,script-path=jd_health_collect.js
 
 ============小火箭=========
-东东健康社区收集能量 = type=cron,script-path=jd_health_collect.js, cronexpr="5-45/20 * * * *", timeout=3600, enable=true
+东东健康社区收集能量 = type=cron,script-path=jd_health_collect.js, cronexpr="15 2/23 * * *", timeout=3600, enable=true
  */
 const $ = new Env("东东健康社区收集能量收集");
 const jdCookieNode = $.isNode() ? require("./jdCookie.js") : "";
@@ -115,8 +115,8 @@ function taskUrl(function_id, body = {}) {
 					? process.env.JD_USER_AGENT
 					: require("./USER_AGENTS").USER_AGENT
 				: $.getdata("JDUA")
-				? $.getdata("JDUA")
-				: "jdapp;iPhone;9.4.4;14.3;network/4g;Mozilla/5.0 (iPhone; CPU iPhone OS 14_3 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Mobile/15E148;supportJDSHWK/1",
+					? $.getdata("JDUA")
+					: "jdapp;iPhone;9.4.4;14.3;network/4g;Mozilla/5.0 (iPhone; CPU iPhone OS 14_3 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Mobile/15E148;supportJDSHWK/1",
 		},
 	};
 }
