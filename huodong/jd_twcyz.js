@@ -1,8 +1,8 @@
 /**
-特务-春意值，首页下拉
-不自动开卡，会尝试领取开卡奖励
-第一个CK获取不到活动信息，自动退出
-35 10,15 * * * jd_twcyz.js
+ 特务-春意值，首页下拉
+ 不自动开卡，会尝试领取开卡奖励
+ 第一个CK获取不到活动信息，自动退出
+ 35 10,15 * * * jd_twcyz.js
  */
 const $ = new Env('特务春意值抽奖');
 const notify = $.isNode() ? require('./sendNotify') : '';
@@ -180,7 +180,7 @@ async function takeRequest(type) {
             url = `https://api.m.jd.com/?uuid=&client=wh5&appid=ProductZ4Brand&functionId=showSecondFloorRunInfo&t=1680485439158&body=%7B%22source%22:%22run%22%7D`;
             break;
         case 'superBrandTaskList':
-            url = `https://api.m.jd.com/?uuid=&client=wh5&appid=ProductZ4Brand&functionId=superBrandTaskList&t=1680485439481&body=%7B%22source%22:%22run%22,%22activityId%22:1013398,%22assistInfoFlag%22:1%7D`;
+            url = `https://api.m.jd.com/?uuid=&client=wh5&appid=ProductZ4Brand&functionId=superBrandTaskList&t=1680485439481&body=%7B%22source%22:%22run%22,%22activityId%22:1013466,%22assistInfoFlag%22:1%7D`;
             break;
         case 'superBrandDoTask':
             if ($.runInfo.itemId === null) {
