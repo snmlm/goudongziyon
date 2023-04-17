@@ -31,7 +31,7 @@ const querystring = require('querystring');
 const exec = require('child_process').exec;
 const $ = new Env();
 const timeout = 15000; //超时时间(单位毫秒)
-console.log("加载sendNotify，当前版本: 20230314");
+console.log("加载sendNotify，当前版本: 20230415");
 // =======================================go-cqhttp通知设置区域===========================================
 //gobot_url 填写请求地址http://127.0.0.1/send_private_msg
 //gobot_token 填写在go-cqhttp文件设置的访问密钥
@@ -126,6 +126,13 @@ let WP_UIDS_ONE = "";
 let GOTIFY_URL = '';
 let GOTIFY_TOKEN = '';
 let GOTIFY_PRIORITY = 0;
+
+// =======================================BncrBot通知设置区域==============================================
+//BncrHost 填写BncrHost地址,如https://192.168.31.192:9090
+//BncrToken 填写Bncr的消息应用Token
+let BncrHost = '';
+let BncrToken = '';
+
 let PushErrorTime = 0;
 let strTitle = "";
 let ShowRemarkType = "1";
@@ -139,12 +146,12 @@ const {
 } = require('./ql');
 const fs = require('fs');
 let isnewql = fs.existsSync('/ql/data/config/auth.json');
-let strCKFile="";
-let strUidFile ="";
-if(isnewql){
+let strCKFile = "";
+let strUidFile = "";
+if (isnewql) {
     strCKFile = '/ql/data/scripts/CKName_cache.json';
     strUidFile = '/ql/data/scripts/CK_WxPusherUid.json';
-}else{
+} else {
     strCKFile = '/ql/scripts/CKName_cache.json';
     strUidFile = '/ql/scripts/CK_WxPusherUid.json';
 }
@@ -248,7 +255,7 @@ async function sendNotify(text, desp, params = {}, author = '\n\n本通知 By ht
         var Use_WxPusher = true;
         var strtext = text;
         var strdesp = desp;
-        var titleIndex =-1;
+        var titleIndex = -1;
         if (process.env.NOTIFY_NOCKFALSE) {
             Notify_NoCKFalse = process.env.NOTIFY_NOCKFALSE;
         }
@@ -300,7 +307,7 @@ async function sendNotify(text, desp, params = {}, author = '\n\n本通知 By ht
                                     tempid = temptest._id;
                                 }
                                 if (temptest.id) {
-                                    tempid =temptest.id;
+                                    tempid = temptest.id;
                                 }
                                 const DisableCkBody = await DisableCk(tempid);
                                 strPtPin = temptest.value;
@@ -496,9 +503,9 @@ async function sendNotify(text, desp, params = {}, author = '\n\n本通知 By ht
                 if (strCustomTempArr.length > 1) {
                     if (strTitle == strCustomTempArr[0]) {
                         console.log("检测到自定义设定,开始执行配置...");
-                        if(strCustomTempArr[1].indexOf("组")!=-1){
-                            UseGroupNotify = strCustomTempArr[1].replace("组","") * 1;
-                            console.log("自定义设定强制使用组"+UseGroupNotify+"配置通知...");
+                        if (strCustomTempArr[1].indexOf("组") != -1) {
+                            UseGroupNotify = strCustomTempArr[1].replace("组", "") * 1;
+                            console.log("自定义设定强制使用组" + UseGroupNotify + "配置通知...");
                         } else {
                             UseGroupNotify = 1;
                         }
@@ -678,6 +685,12 @@ async function sendNotify(text, desp, params = {}, author = '\n\n本通知 By ht
         if (process.env["GOTIFY_PRIORITY" + UseGroupNotify]) {
             GOTIFY_PRIORITY = process.env["GOTIFY_PRIORITY" + UseGroupNotify];
         }
+        if (process.env["BncrHost" + UseGroupNotify]) {
+            BncrHost = process.env["BncrHost" + UseGroupNotify];
+        }
+        if (process.env["BncrToken" + UseGroupNotify]) {
+            BncrToken = process.env["BncrToken" + UseGroupNotify];
+        }
         //检查是否在不使用Remark进行名称替换的名单
         const notifySkipRemarkList = process.env.NOTIFY_SKIP_NAMETYPELIST ? process.env.NOTIFY_SKIP_NAMETYPELIST.split('&') : [];
         const titleIndex3 = notifySkipRemarkList.findIndex((item) => item === strTitle);
@@ -756,13 +769,13 @@ async function sendNotify(text, desp, params = {}, author = '\n\n本通知 By ht
                             text = text.replace(new RegExp(`${$.UserName}|${$.nickName}`, 'gm'), $.Remark);
                             if (text == "京东资产变动" || text == "京东资产变动#2" || text == "京东资产变动#3" || text == "京东资产变动#4") {
                                 var Tempinfo = "";
-                                if(envs[i].created)
-                                    Tempinfo=getQLinfo(cookie, envs[i].created, envs[i].timestamp, envs[i].remarks);
+                                if (envs[i].created)
+                                    Tempinfo = getQLinfo(cookie, envs[i].created, envs[i].timestamp, envs[i].remarks);
                                 else
-                                if(envs[i].updatedAt)
-                                    Tempinfo=getQLinfo(cookie, envs[i].createdAt, envs[i].updatedAt, envs[i].remarks);
+                                if (envs[i].updatedAt)
+                                    Tempinfo = getQLinfo(cookie, envs[i].createdAt, envs[i].updatedAt, envs[i].remarks);
                                 else
-                                    Tempinfo=getQLinfo(cookie, envs[i].createdAt, envs[i].timestamp, envs[i].remarks);
+                                    Tempinfo = getQLinfo(cookie, envs[i].createdAt, envs[i].timestamp, envs[i].remarks);
                                 if (Tempinfo) {
                                     $.Remark += Tempinfo;
                                 }
@@ -850,6 +863,7 @@ async function sendNotify(text, desp, params = {}, author = '\n\n本通知 By ht
         iGotNotify(text, desp, params), //iGot
         gobotNotify(text, desp), //go-cqhttp
         gotifyNotify(text, desp), //gotify
+        bncrNotify(text, desp), //bncr
         wxpusherNotify(text, desp) // wxpusher
     ]);
 }
@@ -1002,13 +1016,13 @@ async function sendNotifybyWxPucher(text, desp, PtPin, author = '\n\n本通知 B
                             $.nickName = $.nickName.replace(new RegExp(`[*]`, 'gm'), "[*]");
 
                             var Tempinfo = "";
-                            if(tempEnv.created)
-                                Tempinfo=getQLinfo(cookie, tempEnv.created, tempEnv.timestamp, tempEnv.remarks);
+                            if (tempEnv.created)
+                                Tempinfo = getQLinfo(cookie, tempEnv.created, tempEnv.timestamp, tempEnv.remarks);
                             else
-                            if(tempEnv.updatedAt)
-                                Tempinfo=getQLinfo(cookie, tempEnv.createdAt, tempEnv.updatedAt, tempEnv.remarks);
+                            if (tempEnv.updatedAt)
+                                Tempinfo = getQLinfo(cookie, tempEnv.createdAt, tempEnv.updatedAt, tempEnv.remarks);
                             else
-                                Tempinfo=getQLinfo(cookie, tempEnv.createdAt, tempEnv.timestamp, tempEnv.remarks);
+                                Tempinfo = getQLinfo(cookie, tempEnv.createdAt, tempEnv.timestamp, tempEnv.remarks);
 
                             if (Tempinfo) {
                                 Tempinfo = $.nickName + Tempinfo;
@@ -1119,6 +1133,43 @@ async function isLoginByX1a0He(cookie) {
                 resolve();
             }
         });
+    });
+}
+
+function bncrNotify(text, desp) {
+    return new Promise(resolve => {
+        try {
+            if (BncrHost && BncrToken) {
+                const options = {
+                    url: `${BncrHost}/api/qinglongMessage`,
+                    body: `title=${encodeURIComponent(text)}&message=${encodeURIComponent(
+                        desp
+                    )}&token=${BncrToken}`,
+                    headers: {
+                        'Content-Type': 'application/x-www-form-urlencoded',
+                    },
+                };
+                $.post(options, (err, resp, data) => {
+                    if (err) {
+                        console.log('\nBncr发送通知调用API失败！！\n');
+                        console.log(err);
+                    } else {
+                        data = JSON.parse(data);
+                        if (data.code === 200) {
+                            console.log('\nBncr发送通知消息成功🎉\n');
+                        } else {
+                            console.log(`\nBncr发送通知调用API失败：${data.msg}\n`);
+                        }
+                    }
+                });
+            } else {
+                resolve();
+            }
+        } catch (e) {
+            $.logErr(`\nBncr发送通知调用API失败：`, e);
+        } finally {
+            resolve();
+        }
     });
 }
 
@@ -1336,7 +1387,7 @@ function tgBotNotify(text, desp) {
                 json: {
                     chat_id: `${TG_USER_ID}`,
                     text: `${text}\n\n${desp}`,
-                    disable_web_page_preview:true
+                    disable_web_page_preview: true
                 },
                 headers: {
                     'Content-Type': 'application/json',
@@ -1354,7 +1405,7 @@ function tgBotNotify(text, desp) {
                         }
                     })
                 }
-                Object.assign(options, {agent})
+                Object.assign(options, { agent })
             }
             $.post(options, (err, resp, data) => {
                 try {
@@ -1584,7 +1635,7 @@ function qywxamNotify(text, desp, strsummary = "") {
                                     content_source_url: ``,
                                     content: `${html}`,
                                     digest: `${strsummary}`,
-                                }, ],
+                                },],
                             },
                         };
                 }
@@ -1959,7 +2010,7 @@ function GetnickName() {
 }
 
 function GetnickName2() {
-    return new Promise(async(resolve) => {
+    return new Promise(async (resolve) => {
         const options = {
             "url": `https://wq.jd.com/user/info/QueryJDUserInfo?sceneval=2`,
             "headers": {
@@ -2009,7 +2060,7 @@ module.exports = {
 
 // prettier-ignore
 function Env(t, s) {
-    return new(class {
+    return new (class {
         constructor(t, s) {
             (this.name = t),
                 (this.data = null),
@@ -2046,7 +2097,7 @@ function Env(t, s) {
                 let o = this.getdata('@chavy_boxjs_userCfgs.httpapi_timeout');
                 (o = o ? 1 * o : 20),
                     (o = s && s.timeout ? s.timeout : o);
-                const[h, a] = i.split('@'),
+                const [h, a] = i.split('@'),
                     r = {
                         url: `http://${a}/v1/scripting/evaluate`,
                         body: {
@@ -2108,7 +2159,7 @@ function Env(t, s) {
         getdata(t) {
             let s = this.getval(t);
             if (/^@/.test(t)) {
-                const[, e, i] = /^@(.*?)\.(.*?)$/.exec(t),
+                const [, e, i] = /^@(.*?)\.(.*?)$/.exec(t),
                     o = e ? this.getval(e) : '';
                 if (o)
                     try {
@@ -2123,7 +2174,7 @@ function Env(t, s) {
         setdata(t, s) {
             let e = !1;
             if (/^@/.test(s)) {
-                const[, i, o] = /^@(.*?)\.(.*?)$/.exec(s),
+                const [, i, o] = /^@(.*?)\.(.*?)$/.exec(s),
                     h = this.getval(i),
                     a = i ? ('null' === h ? null : h || '{}') : '{}';
                 try {
@@ -2151,7 +2202,7 @@ function Env(t, s) {
                 (this.ckjar = this.ckjar ? this.ckjar : new this.cktough.CookieJar()),
             t && ((t.headers = t.headers ? t.headers : {}), void 0 === t.headers.Cookie && void 0 === t.cookieJar && (t.cookieJar = this.ckjar));
         }
-        get(t, s = () => {}) {
+        get(t, s = () => { }) {
             t.headers && (delete t.headers['Content-Type'], delete t.headers['Content-Length']),
                 this.isSurge() || this.isLoon() ? $httpClient.get(t, (t, e, i) => {
                     !t && e && ((e.body = i), (e.statusCode = e.status)),
@@ -2192,7 +2243,7 @@ function Env(t, s) {
                     }, h);
                 }, (t) => s(t)));
         }
-        post(t, s = () => {}) {
+        post(t, s = () => { }) {
             if ((t.body && t.headers && !t.headers['Content-Type'] && (t.headers['Content-Type'] = 'application/x-www-form-urlencoded'), delete t.headers['Content-Length'], this.isSurge() || this.isLoon()))
                 $httpClient.post(t, (t, e, i) => {
                     !t && e && ((e.body = i), (e.statusCode = e.status)),
