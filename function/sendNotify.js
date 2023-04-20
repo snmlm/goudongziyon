@@ -31,7 +31,7 @@ const querystring = require('querystring');
 const exec = require('child_process').exec;
 const $ = new Env();
 const timeout = 15000; //超时时间(单位毫秒)
-console.log("加载sendNotify，当前版本: 20221118");
+console.log("加载sendNotify，当前版本: 20230415");
 // =======================================go-cqhttp通知设置区域===========================================
 //gobot_url 填写请求地址http://127.0.0.1/send_private_msg
 //gobot_token 填写在go-cqhttp文件设置的访问密钥
@@ -101,8 +101,6 @@ let IGOT_PUSH_KEY = '';
 //PUSH_PLUS_USER： 一对多推送的“群组编码”（一对多推送下面->您的群组(如无则新建)->群组编码，如果您是创建群组人。也需点击“查看二维码”扫描绑定，否则不能接受群组消息推送）
 let PUSH_PLUS_TOKEN = '';
 let PUSH_PLUS_USER = '';
-let PUSH_PLUS_TOKEN_hxtrip = '';
-let PUSH_PLUS_USER_hxtrip = '';
 
 // ======================================= WxPusher 通知设置区域 ===========================================
 // 此处填你申请的 appToken. 官方文档：https://wxpusher.zjiecode.com/docs
@@ -129,14 +127,12 @@ let GOTIFY_URL = '';
 let GOTIFY_TOKEN = '';
 let GOTIFY_PRIORITY = 0;
 
-/**
- * sendNotify 推送通知功能
- * @param text 通知头
- * @param desp 通知体
- * @param params 某些推送通知方式点击弹窗可跳转, 例：{ url: 'https://abc.com' }
- * @param author 作者仓库等信息  例：`本通知 By：https://github.com/whyour/qinglong`
- * @returns {Promise<unknown>}
- */
+// =======================================BncrBot通知设置区域==============================================
+//BncrHost 填写BncrHost地址,如https://192.168.31.192:9090
+//BncrToken 填写Bncr的消息应用Token
+let BncrHost = '';
+let BncrToken = '';
+
 let PushErrorTime = 0;
 let strTitle = "";
 let ShowRemarkType = "1";
@@ -150,12 +146,12 @@ const {
 } = require('./ql');
 const fs = require('fs');
 let isnewql = fs.existsSync('/ql/data/config/auth.json');
-let strCKFile="";
-let strUidFile ="";
-if(isnewql){
+let strCKFile = "";
+let strUidFile = "";
+if (isnewql) {
     strCKFile = '/ql/data/scripts/CKName_cache.json';
     strUidFile = '/ql/data/scripts/CK_WxPusherUid.json';
-}else{
+} else {
     strCKFile = '/ql/scripts/CKName_cache.json';
     strUidFile = '/ql/scripts/CK_WxPusherUid.json';
 }
@@ -243,8 +239,6 @@ async function sendNotify(text, desp, params = {}, author = '\n\n本通知 By ht
         IGOT_PUSH_KEY = '';
         PUSH_PLUS_TOKEN = '';
         PUSH_PLUS_USER = '';
-        PUSH_PLUS_TOKEN_hxtrip = '';
-        PUSH_PLUS_USER_hxtrip = '';
         Notify_CKTask = "";
         Notify_SkipText = [];
 
@@ -258,11 +252,10 @@ async function sendNotify(text, desp, params = {}, author = '\n\n本通知 By ht
         var Use_qywxamNotify = true;
         var Use_iGotNotify = true;
         var Use_gobotNotify = true;
-        var Use_pushPlushxtripNotify = true;
         var Use_WxPusher = true;
         var strtext = text;
         var strdesp = desp;
-        var titleIndex =-1;
+        var titleIndex = -1;
         if (process.env.NOTIFY_NOCKFALSE) {
             Notify_NoCKFalse = process.env.NOTIFY_NOCKFALSE;
         }
@@ -314,7 +307,7 @@ async function sendNotify(text, desp, params = {}, author = '\n\n本通知 By ht
                                     tempid = temptest._id;
                                 }
                                 if (temptest.id) {
-                                    tempid =temptest.id;
+                                    tempid = temptest.id;
                                 }
                                 const DisableCkBody = await DisableCk(tempid);
                                 strPtPin = temptest.value;
@@ -510,9 +503,9 @@ async function sendNotify(text, desp, params = {}, author = '\n\n本通知 By ht
                 if (strCustomTempArr.length > 1) {
                     if (strTitle == strCustomTempArr[0]) {
                         console.log("检测到自定义设定,开始执行配置...");
-                        if(strCustomTempArr[1].indexOf("组")!=-1){
-                            UseGroupNotify = strCustomTempArr[1].replace("组","") * 1;
-                            console.log("自定义设定强制使用组"+UseGroupNotify+"配置通知...");
+                        if (strCustomTempArr[1].indexOf("组") != -1) {
+                            UseGroupNotify = strCustomTempArr[1].replace("组", "") * 1;
+                            console.log("自定义设定强制使用组" + UseGroupNotify + "配置通知...");
                         } else {
                             UseGroupNotify = 1;
                         }
@@ -520,7 +513,6 @@ async function sendNotify(text, desp, params = {}, author = '\n\n本通知 By ht
                             console.log("关闭所有通知变量...");
                             Use_serverNotify = false;
                             Use_pushPlusNotify = false;
-                            Use_pushPlushxtripNotify = false;
                             Use_BarkNotify = false;
                             Use_tgBotNotify = false;
                             Use_ddBotNotify = false;
@@ -539,10 +531,6 @@ async function sendNotify(text, desp, params = {}, author = '\n\n本通知 By ht
                                     case "pushplus":
                                         Use_pushPlusNotify = true;
                                         console.log("自定义设定启用pushplus(推送加)进行通知...");
-                                        break;
-                                    case "pushplushxtrip":
-                                        Use_pushPlushxtripNotify = true;
-                                        console.log("自定义设定启用pushplus_hxtrip(推送加)进行通知...");
                                         break;
                                     case "Bark":
                                         Use_BarkNotify = true;
@@ -688,13 +676,6 @@ async function sendNotify(text, desp, params = {}, author = '\n\n本通知 By ht
         if (process.env["PUSH_PLUS_USER" + UseGroupNotify] && Use_pushPlusNotify) {
             PUSH_PLUS_USER = process.env["PUSH_PLUS_USER" + UseGroupNotify];
         }
-
-        if (process.env["PUSH_PLUS_TOKEN_hxtrip" + UseGroupNotify] && Use_pushPlushxtripNotify) {
-            PUSH_PLUS_TOKEN_hxtrip = process.env["PUSH_PLUS_TOKEN_hxtrip" + UseGroupNotify];
-        }
-        if (process.env["PUSH_PLUS_USER_hxtrip" + UseGroupNotify] && Use_pushPlushxtripNotify) {
-            PUSH_PLUS_USER_hxtrip = process.env["PUSH_PLUS_USER_hxtrip" + UseGroupNotify];
-        }
         if (process.env["GOTIFY_URL" + UseGroupNotify]) {
             GOTIFY_URL = process.env["GOTIFY_URL" + UseGroupNotify];
         }
@@ -704,27 +685,15 @@ async function sendNotify(text, desp, params = {}, author = '\n\n本通知 By ht
         if (process.env["GOTIFY_PRIORITY" + UseGroupNotify]) {
             GOTIFY_PRIORITY = process.env["GOTIFY_PRIORITY" + UseGroupNotify];
         }
+        if (process.env["BncrHost" + UseGroupNotify]) {
+            BncrHost = process.env["BncrHost" + UseGroupNotify];
+        }
+        if (process.env["BncrToken" + UseGroupNotify]) {
+            BncrToken = process.env["BncrToken" + UseGroupNotify];
+        }
         //检查是否在不使用Remark进行名称替换的名单
         const notifySkipRemarkList = process.env.NOTIFY_SKIP_NAMETYPELIST ? process.env.NOTIFY_SKIP_NAMETYPELIST.split('&') : [];
         const titleIndex3 = notifySkipRemarkList.findIndex((item) => item === strTitle);
-
-        if (text == "京东到家果园互助码:") {
-            ShowRemarkType = "1";
-            if (desp) {
-                var arrTemp = desp.split(",");
-                var allCode = "";
-                for (let k = 0; k < arrTemp.length; k++) {
-                    if (arrTemp[k]) {
-                        if (arrTemp[k].substring(0, 1) != "@")
-                            allCode += arrTemp[k] + ",";
-                    }
-                }
-
-                if (allCode) {
-                    desp += '\n' + '\n' + "格式化后的互助码:" + '\n' + allCode;
-                }
-            }
-        }
 
         if (ShowRemarkType != "1" && titleIndex3 == -1) {
             console.log("sendNotify正在处理账号Remark.....");
@@ -800,13 +769,13 @@ async function sendNotify(text, desp, params = {}, author = '\n\n本通知 By ht
                             text = text.replace(new RegExp(`${$.UserName}|${$.nickName}`, 'gm'), $.Remark);
                             if (text == "京东资产变动" || text == "京东资产变动#2" || text == "京东资产变动#3" || text == "京东资产变动#4") {
                                 var Tempinfo = "";
-                                if(envs[i].created)
-                                    Tempinfo=getQLinfo(cookie, envs[i].created, envs[i].timestamp, envs[i].remarks);
+                                if (envs[i].created)
+                                    Tempinfo = getQLinfo(cookie, envs[i].created, envs[i].timestamp, envs[i].remarks);
                                 else
-                                if(envs[i].updatedAt)
-                                    Tempinfo=getQLinfo(cookie, envs[i].createdAt, envs[i].updatedAt, envs[i].remarks);
+                                if (envs[i].updatedAt)
+                                    Tempinfo = getQLinfo(cookie, envs[i].createdAt, envs[i].updatedAt, envs[i].remarks);
                                 else
-                                    Tempinfo=getQLinfo(cookie, envs[i].createdAt, envs[i].timestamp, envs[i].remarks);
+                                    Tempinfo = getQLinfo(cookie, envs[i].createdAt, envs[i].timestamp, envs[i].remarks);
                                 if (Tempinfo) {
                                     $.Remark += Tempinfo;
                                 }
@@ -860,23 +829,8 @@ async function sendNotify(text, desp, params = {}, author = '\n\n本通知 By ht
     }
 
     //提供6种通知
-    desp = buildLastDesp(desp, author)
-
+    desp = buildLastDesp(desp, author);
     await serverNotify(text, desp); //微信server酱
-
-    if (PUSH_PLUS_TOKEN_hxtrip) {
-        console.log("hxtrip TOKEN :" + PUSH_PLUS_TOKEN_hxtrip);
-    }
-    if (PUSH_PLUS_USER_hxtrip) {
-        console.log("hxtrip USER :" + PUSH_PLUS_USER_hxtrip);
-    }
-    PushErrorTime = 0;
-    await pushPlusNotifyhxtrip(text, desp); //pushplushxtrip(推送加)
-    if (PushErrorTime > 0) {
-        console.log("等待1分钟后重试.....");
-        await $.wait(60000);
-        await pushPlusNotifyhxtrip(text, desp);
-    }
 
     if (PUSH_PLUS_TOKEN) {
         console.log("PUSH_PLUS TOKEN :" + PUSH_PLUS_TOKEN);
@@ -909,6 +863,7 @@ async function sendNotify(text, desp, params = {}, author = '\n\n本通知 By ht
         iGotNotify(text, desp, params), //iGot
         gobotNotify(text, desp), //go-cqhttp
         gotifyNotify(text, desp), //gotify
+        bncrNotify(text, desp), //bncr
         wxpusherNotify(text, desp) // wxpusher
     ]);
 }
@@ -1061,13 +1016,13 @@ async function sendNotifybyWxPucher(text, desp, PtPin, author = '\n\n本通知 B
                             $.nickName = $.nickName.replace(new RegExp(`[*]`, 'gm'), "[*]");
 
                             var Tempinfo = "";
-                            if(tempEnv.created)
-                                Tempinfo=getQLinfo(cookie, tempEnv.created, tempEnv.timestamp, tempEnv.remarks);
+                            if (tempEnv.created)
+                                Tempinfo = getQLinfo(cookie, tempEnv.created, tempEnv.timestamp, tempEnv.remarks);
                             else
-                            if(tempEnv.updatedAt)
-                                Tempinfo=getQLinfo(cookie, tempEnv.createdAt, tempEnv.updatedAt, tempEnv.remarks);
+                            if (tempEnv.updatedAt)
+                                Tempinfo = getQLinfo(cookie, tempEnv.createdAt, tempEnv.updatedAt, tempEnv.remarks);
                             else
-                                Tempinfo=getQLinfo(cookie, tempEnv.createdAt, tempEnv.timestamp, tempEnv.remarks);
+                                Tempinfo = getQLinfo(cookie, tempEnv.createdAt, tempEnv.timestamp, tempEnv.remarks);
 
                             if (Tempinfo) {
                                 Tempinfo = $.nickName + Tempinfo;
@@ -1178,6 +1133,43 @@ async function isLoginByX1a0He(cookie) {
                 resolve();
             }
         });
+    });
+}
+
+function bncrNotify(text, desp) {
+    return new Promise(resolve => {
+        try {
+            if (BncrHost && BncrToken) {
+                const options = {
+                    url: `${BncrHost}/api/qinglongMessage`,
+                    body: `title=${encodeURIComponent(text)}&message=${encodeURIComponent(
+                        desp
+                    )}&token=${BncrToken}`,
+                    headers: {
+                        'Content-Type': 'application/x-www-form-urlencoded',
+                    },
+                };
+                $.post(options, (err, resp, data) => {
+                    if (err) {
+                        console.log('\nBncr发送通知调用API失败！！\n');
+                        console.log(err);
+                    } else {
+                        data = JSON.parse(data);
+                        if (data.code === 200) {
+                            console.log('\nBncr发送通知消息成功🎉\n');
+                        } else {
+                            console.log(`\nBncr发送通知调用API失败：${data.msg}\n`);
+                        }
+                    }
+                });
+            } else {
+                resolve();
+            }
+        } catch (e) {
+            $.logErr(`\nBncr发送通知调用API失败：`, e);
+        } finally {
+            resolve();
+        }
     });
 }
 
@@ -1305,13 +1297,13 @@ function serverNotify(text, desp, time = 2100) {
     });
 }
 
-function BarkNotify(text, desp, params = {}) {
+/* function BarkNotify(text, desp, params = {}) {
     return new Promise((resolve) => {
         if (BARK_PUSH) {
             const options = {
                 url: `${BARK_PUSH}/${encodeURIComponent(text)}/${encodeURIComponent(
-                    desp
-                )}?sound=${BARK_SOUND}&group=${BARK_GROUP}&${querystring.stringify(params)}`,
+          desp
+        )}?sound=${BARK_SOUND}&group=${BARK_GROUP}&${querystring.stringify(params)}`,
                 headers: {
                     'Content-Type': 'application/x-www-form-urlencoded',
                 },
@@ -1341,6 +1333,50 @@ function BarkNotify(text, desp, params = {}) {
             resolve();
         }
     });
+} */
+
+
+/* code from JoveYu */
+function BarkNotify(text, desp, params = {}) {
+    return new Promise((resolve) => {
+        if (BARK_PUSH) {
+            const options = {
+                url: `${BARK_PUSH}`,
+                json: {
+                    title: text,
+                    body: desp,
+                    group: `${BARK_GROUP}`,
+                    icon: `${BARK_ICON}`,
+                    sound: `${BARK_SOUND}`,
+                },
+                headers: {
+                    'Content-Type': 'application/json; charset=utf-8',
+                },
+                timeout,
+            };
+            $.post(options, (err, resp, data) => {
+                try {
+                    if (err) {
+                        console.log('Bark APP发送通知调用API失败！！\n');
+                        console.log(err);
+                    } else {
+                        data = JSON.parse(data);
+                        if (data.code === 200) {
+                            console.log('Bark APP发送通知消息成功🎉\n');
+                        } else {
+                            console.log(`${data.message}\n`);
+                        }
+                    }
+                } catch (e) {
+                    $.logErr(e, resp);
+                } finally {
+                    resolve();
+                }
+            });
+        } else {
+            resolve();
+        }
+    });
 }
 
 function tgBotNotify(text, desp) {
@@ -1351,7 +1387,7 @@ function tgBotNotify(text, desp) {
                 json: {
                     chat_id: `${TG_USER_ID}`,
                     text: `${text}\n\n${desp}`,
-                    disable_web_page_preview:true,
+                    disable_web_page_preview: true
                 },
                 headers: {
                     'Content-Type': 'application/json',
@@ -1369,7 +1405,7 @@ function tgBotNotify(text, desp) {
                         }
                     })
                 }
-                Object.assign(options, {agent})
+                Object.assign(options, { agent })
             }
             $.post(options, (err, resp, data) => {
                 try {
@@ -1599,7 +1635,7 @@ function qywxamNotify(text, desp, strsummary = "") {
                                     content_source_url: ``,
                                     content: `${html}`,
                                     digest: `${strsummary}`,
-                                }, ],
+                                },],
                             },
                         };
                 }
@@ -1682,53 +1718,6 @@ function iGotNotify(text, desp, params = {}) {
                             console.log('iGot发送通知消息成功🎉\n');
                         } else {
                             console.log(`iGot发送通知消息失败：${data.errMsg}\n`);
-                        }
-                    }
-                } catch (e) {
-                    $.logErr(e, resp);
-                }
-                finally {
-                    resolve(data);
-                }
-            });
-        } else {
-            resolve();
-        }
-    });
-}
-function pushPlusNotifyhxtrip(text, desp) {
-    return new Promise((resolve) => {
-        if (PUSH_PLUS_TOKEN_hxtrip) {
-            //desp = `<font size="3">${desp}</font>`;
-
-            desp = desp.replace(/[\n\r]/g, '<br>'); // 默认为html, 不支持plaintext
-            const body = {
-                token: `${PUSH_PLUS_TOKEN_hxtrip}`,
-                title: `${text}`,
-                content: `${desp}`,
-                topic: `${PUSH_PLUS_USER_hxtrip}`,
-            };
-            const options = {
-                url: `http://pushplus.hxtrip.com/send`,
-                body: JSON.stringify(body),
-                headers: {
-                    'Content-Type': ' application/json',
-                },
-                timeout,
-            };
-            $.post(options, (err, resp, data) => {
-                try {
-                    if (err) {
-                        console.log(`hxtrip push+发送${PUSH_PLUS_USER_hxtrip ? '一对多' : '一对一'}通知消息失败！！\n`);
-                        PushErrorTime += 1;
-                        console.log(err);
-                    } else {
-                        if (data.indexOf("200") > -1) {
-                            console.log(`hxtrip push+发送${PUSH_PLUS_USER_hxtrip ? '一对多' : '一对一'}通知消息完成。\n`);
-                            PushErrorTime = 0;
-                        } else {
-                            console.log(`hxtrip push+发送${PUSH_PLUS_USER_hxtrip ? '一对多' : '一对一'}通知消息失败：${data}\n`);
-                            PushErrorTime += 1;
                         }
                     }
                 } catch (e) {
@@ -2021,7 +2010,7 @@ function GetnickName() {
 }
 
 function GetnickName2() {
-    return new Promise(async(resolve) => {
+    return new Promise(async (resolve) => {
         const options = {
             "url": `https://wq.jd.com/user/info/QueryJDUserInfo?sceneval=2`,
             "headers": {
@@ -2071,7 +2060,7 @@ module.exports = {
 
 // prettier-ignore
 function Env(t, s) {
-    return new(class {
+    return new (class {
         constructor(t, s) {
             (this.name = t),
                 (this.data = null),
@@ -2108,7 +2097,7 @@ function Env(t, s) {
                 let o = this.getdata('@chavy_boxjs_userCfgs.httpapi_timeout');
                 (o = o ? 1 * o : 20),
                     (o = s && s.timeout ? s.timeout : o);
-                const[h, a] = i.split('@'),
+                const [h, a] = i.split('@'),
                     r = {
                         url: `http://${a}/v1/scripting/evaluate`,
                         body: {
@@ -2170,7 +2159,7 @@ function Env(t, s) {
         getdata(t) {
             let s = this.getval(t);
             if (/^@/.test(t)) {
-                const[, e, i] = /^@(.*?)\.(.*?)$/.exec(t),
+                const [, e, i] = /^@(.*?)\.(.*?)$/.exec(t),
                     o = e ? this.getval(e) : '';
                 if (o)
                     try {
@@ -2185,7 +2174,7 @@ function Env(t, s) {
         setdata(t, s) {
             let e = !1;
             if (/^@/.test(s)) {
-                const[, i, o] = /^@(.*?)\.(.*?)$/.exec(s),
+                const [, i, o] = /^@(.*?)\.(.*?)$/.exec(s),
                     h = this.getval(i),
                     a = i ? ('null' === h ? null : h || '{}') : '{}';
                 try {
@@ -2213,7 +2202,7 @@ function Env(t, s) {
                 (this.ckjar = this.ckjar ? this.ckjar : new this.cktough.CookieJar()),
             t && ((t.headers = t.headers ? t.headers : {}), void 0 === t.headers.Cookie && void 0 === t.cookieJar && (t.cookieJar = this.ckjar));
         }
-        get(t, s = () => {}) {
+        get(t, s = () => { }) {
             t.headers && (delete t.headers['Content-Type'], delete t.headers['Content-Length']),
                 this.isSurge() || this.isLoon() ? $httpClient.get(t, (t, e, i) => {
                     !t && e && ((e.body = i), (e.statusCode = e.status)),
@@ -2254,7 +2243,7 @@ function Env(t, s) {
                     }, h);
                 }, (t) => s(t)));
         }
-        post(t, s = () => {}) {
+        post(t, s = () => { }) {
             if ((t.body && t.headers && !t.headers['Content-Type'] && (t.headers['Content-Type'] = 'application/x-www-form-urlencoded'), delete t.headers['Content-Length'], this.isSurge() || this.isLoon()))
                 $httpClient.post(t, (t, e, i) => {
                     !t && e && ((e.body = i), (e.statusCode = e.status)),
